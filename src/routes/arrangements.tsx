@@ -715,3 +715,144 @@ function ViewAssignedDialog({
     </Dialog>
   );
 }
+
+// ── Edit a structure (tag, kind, class, area, max, dynamic, dims, MTO) ──
+function EditStructureDialog({
+  structure, attachedCount, onClose, onSave,
+}: {
+  structure: Structure;
+  attachedCount: number;
+  onClose: () => void;
+  onSave: (p: Partial<Structure>) => void;
+}) {
+  const [tag, setTag] = useState(structure.tag);
+  const [kind, setKind] = useState<StructureKind>(structure.kind);
+  const [cls, setCls] = useState<LoadClass>(structure.loadClass);
+  const [dynamic, setDynamic] = useState(structure.dynamic);
+  const [area, setArea] = useState(structure.area || "");
+  const [maxSupports, setMaxSupports] = useState<number>(structure.maxSupports);
+  const [notes, setNotes] = useState(structure.notes || "");
+  const [recompute, setRecompute] = useState(false);
+  const [dims, setDims] = useState<DimsInput>({
+    pipeCL: 6500, topOfSteel: 0, groupWidth: 600, sideClearance: 150, columnToCL: 800,
+  });
+
+  const meta = STRUCTURE_KINDS.find((k) => k.id === kind)!;
+  const newDimensions = useMemo(() => computeStructureDims(kind, dims), [kind, dims]);
+  const newMto = useMemo(() => buildStructureMTO(kind, cls, dynamic || cls === "Heavy"), [kind, cls, dynamic]);
+  const overCapacity = maxSupports < attachedCount;
+
+  const save = () => {
+    const patch: Partial<Structure> = {
+      tag, kind, name: meta.name, loadClass: cls, dynamic, area: area || undefined,
+      maxSupports, notes,
+    };
+    if (recompute) {
+      patch.dimensions = newDimensions;
+      patch.mto = newMto;
+    } else {
+      // class/kind/dynamic still affect MTO; refresh MTO without touching dims
+      patch.mto = newMto;
+    }
+    onSave(patch);
+  };
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Edit structure — {structure.tag}</DialogTitle>
+          <DialogDescription>
+            Update tag, kind, class, area and capacity. {attachedCount} support(s) currently attached.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label className="text-xs">Tag</Label>
+            <Input value={tag} onChange={(e) => setTag(e.target.value)} className="h-9"/>
+          </div>
+          <div>
+            <Label className="text-xs">Kind</Label>
+            <Select value={kind} onValueChange={(v) => setKind(v as StructureKind)}>
+              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
+              <SelectContent>
+                {STRUCTURE_KINDS.map((k) => <SelectItem key={k.id} value={k.id}>{k.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="text-xs">Load class</Label>
+            <Select value={cls} onValueChange={(v) => setCls(v as LoadClass)}>
+              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Light">Light</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="Heavy">Heavy</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="text-xs">Area</Label>
+            <Input value={area} onChange={(e) => setArea(e.target.value)} className="h-9"/>
+          </div>
+          <div>
+            <Label className="text-xs">Max supports</Label>
+            <Input
+              type="number"
+              min={1}
+              value={maxSupports}
+              onChange={(e) => setMaxSupports(Math.max(1, +e.target.value || 1))}
+              className="h-9"
+            />
+            {overCapacity && (
+              <p className="text-[11px] text-destructive mt-1">
+                Below currently attached count ({attachedCount}). Detach supports or raise the limit.
+              </p>
+            )}
+          </div>
+          <div className="flex items-end">
+            <Button
+              type="button"
+              size="sm"
+              variant={dynamic ? "default" : "outline"}
+              onClick={() => setDynamic((v) => !v)}
+            >
+              Dynamic / Shock: {dynamic ? "Yes" : "No"}
+            </Button>
+          </div>
+          <div className="col-span-2">
+            <Label className="text-xs">Notes</Label>
+            <Input value={notes} onChange={(e) => setNotes(e.target.value)} className="h-9"/>
+          </div>
+        </div>
+
+        <div className="rounded-md border border-border p-3 space-y-2">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={recompute} onChange={(e) => setRecompute(e.target.checked)} />
+            Recompute preliminary dimensions from new geometry
+          </label>
+          {recompute && (
+            <div className="grid gap-2 md:grid-cols-3 text-xs">
+              <div><Label className="text-[11px]">Pipe CL</Label>
+                <Input type="number" value={dims.pipeCL} onChange={(e) => setDims((d) => ({ ...d, pipeCL: +e.target.value || 0 }))} className="h-8"/></div>
+              <div><Label className="text-[11px]">Top of steel</Label>
+                <Input type="number" value={dims.topOfSteel} onChange={(e) => setDims((d) => ({ ...d, topOfSteel: +e.target.value || 0 }))} className="h-8"/></div>
+              <div><Label className="text-[11px]">Group width</Label>
+                <Input type="number" value={dims.groupWidth} onChange={(e) => setDims((d) => ({ ...d, groupWidth: +e.target.value || 0 }))} className="h-8"/></div>
+              <div><Label className="text-[11px]">Side clearance</Label>
+                <Input type="number" value={dims.sideClearance} onChange={(e) => setDims((d) => ({ ...d, sideClearance: +e.target.value || 0 }))} className="h-8"/></div>
+              <div><Label className="text-[11px]">Column → CL</Label>
+                <Input type="number" value={dims.columnToCL} onChange={(e) => setDims((d) => ({ ...d, columnToCL: +e.target.value || 0 }))} className="h-8"/></div>
+            </div>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={save} disabled={overCapacity}>Save</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
