@@ -17,7 +17,9 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterPage() {
-  const { register, removeFromRegister } = useApp();
+  const { register, removeFromRegister, structures } = useApp();
+  const counts = new Map<string, number>();
+  register.forEach((r) => { if (r.structureId) counts.set(r.structureId, (counts.get(r.structureId) ?? 0) + 1); });
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -37,20 +39,24 @@ function RegisterPage() {
             <table className="w-full text-sm">
               <thead className="text-xs uppercase text-muted-foreground bg-muted/50">
                 <tr>
-                  {["Tag","Line","Location","Type","Function","Load","Allowed","Restrained","Insul.","Stress","Struct.","Remarks",""].map((h) => (
+                  {["Tag","Line","Location","Type","Function","Structure","Shared","Allowed","Restrained","Insul.","Stress","Struct.","Remarks",""].map((h) => (
                     <th key={h} className="text-left py-2 px-3">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {register.map((e) => (
+                {register.map((e) => {
+                  const struct = structures.find((s) => s.id === e.structureId);
+                  const shared = e.structureId ? (counts.get(e.structureId) ?? 0) > 1 : false;
+                  return (
                   <tr key={e.id} className="border-t border-border align-top">
                     <td className="py-2 px-3 font-medium">{e.tag}</td>
                     <td className="py-2 px-3">{e.lineNumber}</td>
                     <td className="py-2 px-3">{e.location}</td>
                     <td className="py-2 px-3">{e.supportType}</td>
                     <td className="py-2 px-3 max-w-[200px]">{e.function}</td>
-                    <td className="py-2 px-3">{e.loadClass}</td>
+                    <td className="py-2 px-3">{struct ? <span className="font-mono">{struct.tag}</span> : <span className="text-muted-foreground">—</span>}</td>
+                    <td className="py-2 px-3">{shared ? <Badge className="bg-warning text-warning-foreground">Shared</Badge> : "—"}</td>
                     <td className="py-2 px-3">{e.movementAllowed}</td>
                     <td className="py-2 px-3">{e.movementRestrained}</td>
                     <td className="py-2 px-3">{e.insulation}</td>
@@ -59,7 +65,8 @@ function RegisterPage() {
                     <td className="py-2 px-3 max-w-[220px] text-xs text-muted-foreground">{e.remarks}</td>
                     <td className="py-2 px-3"><Button size="icon" variant="ghost" onClick={() => removeFromRegister(e.id)}><Trash2 className="h-4 w-4"/></Button></td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </CardContent>
