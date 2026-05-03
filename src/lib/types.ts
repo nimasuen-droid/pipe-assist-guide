@@ -91,6 +91,9 @@ export interface SupportRegisterEntry {
   line: LineInput;
   wizard: WizardInput;
   recommendation: SupportRecommendation;
+  structureId?: string;
+  hardware?: string;
+  pipeFunction?: string;
 }
 
 export interface MTOItem {
@@ -104,4 +107,33 @@ export interface MTOItem {
   unit: string;
   category: "Fabricated" | "Bought-out";
   remarks: string;
+}
+
+export type StructureKind =
+  | "goal-post"
+  | "inverted-l"
+  | "pipe-rack-beam"
+  | "existing-steel"
+  | "pedestal"
+  | "wall-bracket";
+
+export interface StructureMtoLine {
+  component: string;
+  qty: number;
+  size: string;
+  remarks?: string;
+}
+
+export interface Structure {
+  id: string;
+  tag: string;
+  kind: StructureKind;
+  name: string;
+  loadClass: "Light" | "Medium" | "Heavy";
+  dynamic: boolean;
+  area?: string;
+  dimensions: { label: string; value: string; formula: string }[];
+  mto: StructureMtoLine[]; // empty for existing-steel
+  maxSupports: number;     // soft limit (1 for inverted-l default)
+  notes: string;
 }
