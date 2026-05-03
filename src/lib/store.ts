@@ -45,6 +45,8 @@ interface AppState {
   register: SupportRegisterEntry[];
   savedProjects: { id: string; name: string; savedAt: string; line: LineInput; wizard: WizardInput }[];
   eulaAccepted: boolean;
+  tagging: TaggingConfig;
+  tagCounter: number;
   setLine: (p: Partial<LineInput>) => void;
   setWizard: (p: Partial<WizardInput>) => void;
   setRecommendation: (r: SupportRecommendation | null) => void;
@@ -55,7 +57,36 @@ interface AppState {
   deleteProject: (id: string) => void;
   loadSample: () => void;
   acceptEula: () => void;
+  setTagging: (p: Partial<TaggingConfig>) => void;
+  resetTagCounter: (n?: number) => void;
+  nextTag: () => string;
+  previewTag: (n: number) => string;
   reset: () => void;
+}
+
+export interface TaggingConfig {
+  prefix: string;
+  separator: string;
+  includeLine: boolean;
+  padding: number;
+  startIndex: number;
+}
+
+const defaultTagging: TaggingConfig = {
+  prefix: "SUP",
+  separator: "-",
+  includeLine: true,
+  padding: 3,
+  startIndex: 1,
+};
+
+function buildTag(t: TaggingConfig, lineNumber: string, n: number) {
+  const num = String(n).padStart(t.padding, "0");
+  const lineToken = lineNumber.replace(/[^A-Z0-9]/gi, "").slice(0, 8);
+  const parts = [t.prefix];
+  if (t.includeLine && lineToken) parts.push(lineToken);
+  parts.push(num);
+  return parts.filter(Boolean).join(t.separator);
 }
 
 const sampleLine: LineInput = {
@@ -98,6 +129,8 @@ export const useApp = create<AppState>()(
       register: [],
       savedProjects: [],
       eulaAccepted: false,
+      tagging: defaultTagging,
+      tagCounter: defaultTagging.startIndex,
       setLine: (p) => set((s) => ({ line: { ...s.line, ...p } })),
       setWizard: (p) => set((s) => ({ wizard: { ...s.wizard, ...p } })),
       setRecommendation: (r) => set({ recommendation: r }),
@@ -126,6 +159,25 @@ export const useApp = create<AppState>()(
         set((s) => ({ savedProjects: s.savedProjects.filter((p) => p.id !== id) })),
       loadSample: () => set({ line: sampleLine, wizard: sampleWizard }),
       acceptEula: () => set({ eulaAccepted: true }),
+      setTagging: (p) =>
+        set((s) => {
+          const tagging = { ...s.tagging, ...p };
+          // if startIndex changed and counter is below it, lift counter
+          const tagCounter =
+            "startIndex" in p && (p.startIndex ?? 0) > s.tagCounter ? (p.startIndex as number) : s.tagCounter;
+          return { tagging, tagCounter };
+        }),
+      resetTagCounter: (n) => set((s) => ({ tagCounter: n ?? s.tagging.startIndex })),
+      nextTag: () => {
+        const { tagging, tagCounter, line } = useApp.getState();
+        const tag = buildTag(tagging, line.lineNumber || "", tagCounter);
+        useApp.setState({ tagCounter: tagCounter + 1 });
+        return tag;
+      },
+      previewTag: (n) => {
+        const { tagging, line } = useApp.getState();
+        return buildTag(tagging, line.lineNumber || "", n);
+      },
       reset: () =>
         set({ line: defaultLine, wizard: defaultWizard, recommendation: null }),
     }),
