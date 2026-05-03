@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, FileText, AlertTriangle, Activity, Layers } from "lucide-react";
+import { ArrowRight, FileText, AlertTriangle, Activity, Layers, ShieldCheck, Upload, Wrench, BookMarked } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,6 +63,50 @@ function ProjectPage() {
         <StatTile icon={Activity} label="Active line NPS" value={`${line.pipeSize || "—"}"`} />
         <StatTile icon={AlertTriangle} label="Risk flags" value={warnings ? String(warnings) : "—"} accent={warnings > 0} />
       </div>
+
+      <Card className="border-primary/30">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-primary" /> Getting Started
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            This tool walks you through practical engineering questions, recommends a pipe support, generates the MTO and
+            keeps a project register — every output traces back to your input.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <StepCard n={1} icon={Upload} title="Enter Design Basis" desc="Service, temperature, layout, insulation, phase." />
+            <StepCard n={2} icon={Wrench} title="Run Selection Wizard" desc="Orientation, restraints, vibration, special service." />
+            <StepCard n={3} icon={FileText} title="Generate Report" desc="Recommendation, risk flags, references, MTO." />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+            <BookMarked className="h-3.5 w-3.5" /> Supported Codes & Standards
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+            {[
+              "ASME B31.3 — Process Piping",
+              "MSS SP-58 — Hangers & Supports",
+              "MSS SP-69 — Selection & Application",
+              "MSS SP-89 — Fabrication & Installation",
+              "MSS SP-127 — Bracing for Piping",
+              "PFI ES-26 — Welded Attachments",
+              "PIP Standards (where applicable)",
+              "Vendor Nozzle Allowables (API 610 / NEMA SM-23)",
+              "Project Pipe Support Standards",
+            ].map((s) => (
+              <div key={s} className="rounded-md border border-border bg-muted/30 px-3 py-2">{s}</div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
