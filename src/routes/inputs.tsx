@@ -11,7 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Database, Save, FolderOpen, Trash2, RotateCcw, FileDown, FileUp } from "lucide-react";
+import { toast } from "sonner";
+import { useRef } from "react";
 
 export const Route = createFileRoute("/inputs")({
   head: () => ({
@@ -37,8 +39,36 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function InputsPage() {
-  const { line, setLine } = useApp();
+  const { line, setLine, wizard, setWizard, savedProjects, saveProject, loadProject, deleteProject, loadSample, reset } = useApp();
   const nav = useNavigate();
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleExport = () => {
+    const blob = new Blob([JSON.stringify({ line, wizard }, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${line.projectName || "project"}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(String(reader.result));
+        if (data.line) setLine(data.line);
+        if (data.wizard) setWizard(data.wizard);
+        toast.success("Project imported");
+      } catch {
+        toast.error("Invalid project file");
+      }
+    };
+    reader.readAsText(f);
+  };
   return (
     <div className="space-y-6">
       <div>
@@ -47,6 +77,55 @@ function InputsPage() {
           Capture the design basis. These inputs drive every recommendation downstream.
         </p>
       </div>
+
+      <Card className="border-primary/30">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Database className="h-4 w-4 text-primary" /> Project Management
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="secondary" onClick={() => { loadSample(); toast.success("Sample data loaded"); }}>
+              <Database className="h-3.5 w-3.5 mr-1.5" /> Load Sample Data
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => { saveProject(); toast.success("Project saved"); }}>
+              <Save className="h-3.5 w-3.5 mr-1.5" /> Save Project
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleExport}>
+              <FileDown className="h-3.5 w-3.5 mr-1.5" /> Export JSON
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
+              <FileUp className="h-3.5 w-3.5 mr-1.5" /> Import JSON
+            </Button>
+            <input ref={fileRef} type="file" accept=".json" hidden onChange={handleImport} />
+            <Button size="sm" variant="ghost" onClick={() => { reset(); toast.success("Inputs reset"); }}>
+              <RotateCcw className="h-3.5 w-3.5 mr-1.5" /> Reset
+            </Button>
+          </div>
+          {savedProjects.length > 0 && (
+            <div className="border-t border-border pt-3">
+              <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2 flex items-center gap-1.5">
+                <FolderOpen className="h-3.5 w-3.5" /> Saved Projects ({savedProjects.length})
+              </div>
+              <div className="space-y-1.5">
+                {savedProjects.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium truncate">{p.name}</div>
+                      <div className="text-[11px] text-muted-foreground">{new Date(p.savedAt).toLocaleString()}</div>
+                    </div>
+                    <Button size="sm" variant="ghost" onClick={() => { loadProject(p.id); toast.success("Project loaded"); }}>Load</Button>
+                    <Button size="sm" variant="ghost" onClick={() => deleteProject(p.id)}>
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

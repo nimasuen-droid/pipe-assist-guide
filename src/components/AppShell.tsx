@@ -10,6 +10,8 @@ import {
   HardHat,
   BookMarked,
   Sparkles,
+  BookOpen,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
@@ -23,8 +25,10 @@ const nav = [
   { to: "/report", label: "Recommendation", icon: FileBarChart2 },
   { to: "/register", label: "Support Register", icon: ListChecks },
   { to: "/mto", label: "Material Take-Off", icon: Boxes },
-  { to: "/codes", label: "Codes & References", icon: BookMarked, locked: true },
-  { to: "/eula", label: "Disclaimer", icon: HardHat, locked: true },
+  { to: "/codes", label: "Codes & References", icon: BookMarked },
+  { to: "/manual", label: "User Manual", icon: BookOpen },
+  { to: "/about", label: "About & Releases", icon: Info },
+  { to: "/eula", label: "EULA & Disclaimer", icon: HardHat },
 ] as const;
 
 export function AppShell() {
@@ -60,7 +64,6 @@ export function AppShell() {
             {nav.map((item, i) => {
               const Icon = item.icon;
               const active = item.to === loc.pathname;
-              const locked = "locked" in item && item.locked;
               return (
                 <Link
                   key={`${item.label}-${i}`}
@@ -74,9 +77,6 @@ export function AppShell() {
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span className="flex-1">{item.label}</span>
-                  {locked && (
-                    <span className="text-[10px] text-muted-foreground">soon</span>
-                  )}
                 </Link>
               );
             })}
