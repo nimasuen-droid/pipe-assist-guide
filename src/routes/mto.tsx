@@ -57,9 +57,22 @@ function summarizeBOM(items: MTOItem[]): BomRow[] {
 }
 
 function MTOPage() {
-  const { register } = useApp();
+  const { register, structures } = useApp();
   const all = register.flatMap(generateMTO);
   const bom = summarizeBOM(all);
+  // Structure MTO: only structures actually referenced by at least one support
+  const usedStructureIds = new Set(register.map((r) => r.structureId).filter(Boolean) as string[]);
+  const usedStructures = structures.filter((s) => usedStructureIds.has(s.id));
+  const structureMtoRows = usedStructures.flatMap((s) => {
+    const attached = register.filter((r) => r.structureId === s.id).length;
+    return s.mto.map((m) => ({
+      structTag: s.tag,
+      structName: s.name,
+      attached,
+      shared: attached > 1,
+      ...m,
+    }));
+  });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [bomOpen, setBomOpen] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
