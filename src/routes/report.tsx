@@ -245,6 +245,54 @@ function ReportPage() {
           </div>
         )}
 
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Wrench className="h-4 w-4 text-primary" /> Assigned structure
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-2 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <Label className="text-[11px] uppercase text-muted-foreground">Carry this support on</Label>
+              <Select value={structureId} onValueChange={(v) => setStructureId(v as string)}>
+                <SelectTrigger className="h-9"><SelectValue placeholder="Select structure" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">— No structure assigned —</SelectItem>
+                  {structures.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.tag} · {s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {selectedStructure ? (
+                <>
+                  Currently carrying <b className="text-foreground">{attachedCount}</b> / {selectedStructure.maxSupports} supports.
+                  {willBeShared && (
+                    <span className="ml-2"><Badge className="bg-warning text-warning-foreground">Will be shared</Badge></span>
+                  )}
+                </>
+              ) : (
+                <>No structure assigned. Create one in <i>Structures</i>.</>
+              )}
+            </div>
+            {overCapacity && (
+              <div className="md:col-span-2 text-xs text-warning flex items-center gap-1.5">
+                <AlertTriangle className="h-3.5 w-3.5"/>
+                Adding {qty} would exceed the structure's max ({selectedStructure?.maxSupports}). Combined load verification required.
+              </div>
+            )}
+            {willBeShared && (
+              <div className="md:col-span-2 text-xs text-muted-foreground border-t border-border pt-2">
+                <AlertTriangle className="inline h-3.5 w-3.5 text-warning mr-1"/>
+                Multiple supports on a single structure require <b>combined load verification</b> by structural design.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader><CardTitle className="text-sm flex items-center gap-2"><Wrench className="h-4 w-4"/>Why this support</CardTitle></CardHeader>
