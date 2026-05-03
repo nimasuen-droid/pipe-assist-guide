@@ -14,6 +14,7 @@ import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MtoRouteImport } from './routes/mto'
 import { Route as InputsRouteImport } from './routes/inputs'
+import { Route as CodesRouteImport } from './routes/codes'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WizardRoute = WizardRouteImport.update({
@@ -41,6 +42,11 @@ const InputsRoute = InputsRouteImport.update({
   path: '/inputs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CodesRoute = CodesRouteImport.update({
+  id: '/codes',
+  path: '/codes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,6 +55,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/codes': typeof CodesRoute
   '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/codes': typeof CodesRoute
   '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/codes': typeof CodesRoute
   '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
@@ -74,12 +83,20 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/inputs' | '/mto' | '/register' | '/report' | '/wizard'
+  fullPaths:
+    | '/'
+    | '/codes'
+    | '/inputs'
+    | '/mto'
+    | '/register'
+    | '/report'
+    | '/wizard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/inputs' | '/mto' | '/register' | '/report' | '/wizard'
+  to: '/' | '/codes' | '/inputs' | '/mto' | '/register' | '/report' | '/wizard'
   id:
     | '__root__'
     | '/'
+    | '/codes'
     | '/inputs'
     | '/mto'
     | '/register'
@@ -89,6 +106,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CodesRoute: typeof CodesRoute
   InputsRoute: typeof InputsRoute
   MtoRoute: typeof MtoRoute
   RegisterRoute: typeof RegisterRoute
@@ -133,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InputsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/codes': {
+      id: '/codes'
+      path: '/codes'
+      fullPath: '/codes'
+      preLoaderRoute: typeof CodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -145,6 +170,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CodesRoute: CodesRoute,
   InputsRoute: InputsRoute,
   MtoRoute: MtoRoute,
   RegisterRoute: RegisterRoute,
@@ -154,3 +180,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
