@@ -122,7 +122,7 @@ const sampleWizard: WizardInput = {
 
 export const useApp = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       line: defaultLine,
       wizard: defaultWizard,
       recommendation: null,
@@ -168,14 +168,14 @@ export const useApp = create<AppState>()(
           return { tagging, tagCounter };
         }),
       resetTagCounter: (n) => set((s) => ({ tagCounter: n ?? s.tagging.startIndex })),
-      nextTag: () => {
-        const { tagging, tagCounter, line } = useApp.getState();
+      nextTag: (): string => {
+        const { tagging, tagCounter, line } = get();
         const tag = buildTag(tagging, line.lineNumber || "", tagCounter);
-        useApp.setState({ tagCounter: tagCounter + 1 });
+        set({ tagCounter: tagCounter + 1 });
         return tag;
       },
-      previewTag: (n) => {
-        const { tagging, line } = useApp.getState();
+      previewTag: (n: number): string => {
+        const { tagging, line } = get();
         return buildTag(tagging, line.lineNumber || "", n);
       },
       reset: () =>
