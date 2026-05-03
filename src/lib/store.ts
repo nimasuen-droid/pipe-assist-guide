@@ -5,6 +5,7 @@ import type {
   WizardInput,
   SupportRecommendation,
   SupportRegisterEntry,
+  Structure,
 } from "./types";
 
 const defaultLine: LineInput = {
@@ -43,6 +44,7 @@ interface AppState {
   wizard: WizardInput;
   recommendation: SupportRecommendation | null;
   register: SupportRegisterEntry[];
+  structures: Structure[];
   savedProjects: { id: string; name: string; savedAt: string; line: LineInput; wizard: WizardInput }[];
   eulaAccepted: boolean;
   tagging: TaggingConfig;
@@ -53,6 +55,9 @@ interface AppState {
   setRecommendation: (r: SupportRecommendation | null) => void;
   addToRegister: (e: SupportRegisterEntry) => void;
   removeFromRegister: (id: string) => void;
+  addStructure: (s: Structure) => void;
+  updateStructure: (id: string, p: Partial<Structure>) => void;
+  removeStructure: (id: string) => void;
   saveProject: () => void;
   loadProject: (id: string) => void;
   deleteProject: (id: string) => void;
@@ -339,6 +344,7 @@ export const useApp = create<AppState>()(
       wizard: defaultWizard,
       recommendation: null,
       register: [],
+      structures: [],
       savedProjects: [],
       eulaAccepted: false,
       tagging: defaultTagging,
@@ -350,6 +356,15 @@ export const useApp = create<AppState>()(
       addToRegister: (e) => set((s) => ({ register: [...s.register, e] })),
       removeFromRegister: (id) =>
         set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
+      addStructure: (st) => set((s) => ({ structures: [...s.structures, st] })),
+      updateStructure: (id, p) =>
+        set((s) => ({ structures: s.structures.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
+      removeStructure: (id) =>
+        set((s) => ({
+          structures: s.structures.filter((x) => x.id !== id),
+          // detach any supports that pointed to this structure
+          register: s.register.map((r) => (r.structureId === id ? { ...r, structureId: undefined } : r)),
+        })),
       saveProject: () =>
         set((s) => ({
           savedProjects: [
