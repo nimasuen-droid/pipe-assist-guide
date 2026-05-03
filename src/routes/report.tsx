@@ -70,8 +70,11 @@ function ReportPage() {
     resetTagCounter,
     nextTag,
     previewTag,
+    structures,
+    register,
   } = useApp();
   const [qty, setQty] = useState(1);
+  const [structureId, setStructureId] = useState<string | "none">("none");
 
   const buildEntry = (tag: string): SupportRegisterEntry | null => {
     if (!recommendation) return null;
@@ -92,13 +95,14 @@ function ReportPage() {
       line,
       wizard,
       recommendation,
+      structureId: structureId === "none" ? undefined : structureId,
     };
   };
 
   const entry: SupportRegisterEntry | null = useMemo(
     () => buildEntry(previewTag(tagCounter)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [recommendation, line, wizard, tagging, tagCounter],
+    [recommendation, line, wizard, tagging, tagCounter, structureId],
   );
 
   if (!recommendation || !entry) {
