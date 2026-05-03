@@ -358,6 +358,13 @@ export const useApp = create<AppState>()(
       addToRegister: (e) => set((s) => ({ register: [...s.register, e] })),
       removeFromRegister: (id) =>
         set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
+      updateRegisterEntry: (id, p) =>
+        set((s) => ({ register: s.register.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
+      bulkUpdateRegister: (ids, p) =>
+        set((s) => {
+          const idSet = new Set(ids);
+          return { register: s.register.map((x) => (idSet.has(x.id) ? { ...x, ...p } : x)) };
+        }),
       addStructure: (st) => set((s) => ({ structures: [...s.structures, st] })),
       updateStructure: (id, p) =>
         set((s) => ({ structures: s.structures.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
