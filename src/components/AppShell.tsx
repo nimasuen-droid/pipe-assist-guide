@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
+import { AlertTriangle } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Home", icon: Home },
@@ -123,6 +124,20 @@ export function AppShell() {
           })}
         </div>
       </nav>
+    </div>
+  );
+}
+
+function DisclaimerBanner() {
+  return (
+    <div className="rounded-md border border-warning/40 bg-warning/10 p-3 flex items-start gap-3 text-sm">
+      <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+      <p className="text-foreground/90">
+        <b>For engineering support only.</b> Final support design shall be reviewed and approved by a qualified piping
+        engineer against project specifications, stress analysis, structural capacity, applicable codes (ASME B31.3, MSS
+        SP-58/69/89/127, PFI ES-26) and client standards. This software is a decision-support tool and does not replace
+        professional engineering judgement.
+      </p>
     </div>
   );
 }
