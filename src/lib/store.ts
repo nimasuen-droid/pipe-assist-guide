@@ -78,7 +78,7 @@ export interface TaggingConfig {
 export interface SupportStandard {
   id: string;
   name: string;
-  category: "Rigid" | "Variable" | "Constant" | "Restraint" | "Guide" | "Anchor" | "Special";
+  category: "Rigid" | "Variable" | "Constant" | "Restraint" | "Guide" | "Anchor" | "Special" | "Structure";
   function: string;
   typicalUse: string;
   movementAllowed: string[];
@@ -208,6 +208,79 @@ const defaultStandards: SupportStandard[] = [
     codes: ["MSS SP-58", "PFI ES-26"],
     tagPrefix: "SP",
     notes: "Reduces friction coefficient to ~0.10–0.15.",
+  },
+  // ── Structural arrangements (carry hardware; not pipe support hardware themselves) ──
+  {
+    id: "str-rack-beam",
+    name: "Pipe Rack Beam",
+    category: "Structure",
+    function: "Primary horizontal steel carrying multiple pipes on a rack tier",
+    typicalUse: "Main process pipe racks, sleepers",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["AISC 360", "PIP STE05121"],
+    tagPrefix: "RB",
+    notes: "Structural member, not pipe hardware. Sized by structural design.",
+  },
+  {
+    id: "str-goal-post",
+    name: "Goal Post (Portal Frame)",
+    category: "Structure",
+    function: "Two vertical posts + top beam carrying single pipe or small group",
+    typicalUse: "Standalone runs, road crossings, rack extensions",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["AISC 360", "PIP STE05121"],
+    tagPrefix: "GP",
+    notes: "Carries pipe support hardware (shoe, guide, U-bolt). Final size per structural design.",
+  },
+  {
+    id: "str-inverted-l",
+    name: "Inverted L Cantilever",
+    category: "Structure",
+    function: "Vertical post (or column tie-in) with cantilever beam supporting pipe",
+    typicalUse: "Single pipes off existing column/wall, tight corridors",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["AISC 360", "PIP STE05121"],
+    tagPrefix: "IL",
+    notes: "Cantilever deflection and connection moment govern design.",
+  },
+  {
+    id: "str-wall-bracket",
+    name: "Wall Bracket",
+    category: "Structure",
+    function: "Bracket fixed to wall/structure carrying pipe hardware",
+    typicalUse: "Building penetrations, utility runs along walls",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["AISC 360"],
+    tagPrefix: "WB",
+    notes: "Verify wall capacity and anchor pull-out.",
+  },
+  {
+    id: "str-existing-steel",
+    name: "Existing Steel Tie-In",
+    category: "Structure",
+    function: "Reuse of existing structural member to carry new pipe hardware",
+    typicalUse: "Brownfield, retrofit additions",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["AISC 360", "Owner brownfield procedure"],
+    tagPrefix: "EX",
+    notes: "Requires structural verification of spare capacity before tie-in.",
+  },
+  {
+    id: "str-pedestal",
+    name: "Ground-Mounted Pedestal",
+    category: "Structure",
+    function: "Concrete or steel pedestal from grade carrying low-elevation pipe",
+    typicalUse: "Sleeper alternatives, isolated runs at low elevation",
+    movementAllowed: [],
+    movementRestrained: [],
+    codes: ["ACI 318", "AISC 360"],
+    tagPrefix: "PD",
+    notes: "Foundation design and settlement check required.",
   },
 ];
 
