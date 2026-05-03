@@ -13,6 +13,7 @@ import { Route as WizardRouteImport } from './routes/wizard'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MtoRouteImport } from './routes/mto'
+import { Route as ManualRouteImport } from './routes/manual'
 import { Route as InputsRouteImport } from './routes/inputs'
 import { Route as EulaRouteImport } from './routes/eula'
 import { Route as CodesRouteImport } from './routes/codes'
@@ -36,6 +37,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const MtoRoute = MtoRouteImport.update({
   id: '/mto',
   path: '/mto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManualRoute = ManualRouteImport.update({
+  id: '/manual',
+  path: '/manual',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InputsRoute = InputsRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
+  '/manual': typeof ManualRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
+  '/manual': typeof ManualRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
+  '/manual': typeof ManualRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/codes'
     | '/eula'
     | '/inputs'
+    | '/manual'
     | '/mto'
     | '/register'
     | '/report'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/codes'
     | '/eula'
     | '/inputs'
+    | '/manual'
     | '/mto'
     | '/register'
     | '/report'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/codes'
     | '/eula'
     | '/inputs'
+    | '/manual'
     | '/mto'
     | '/register'
     | '/report'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   CodesRoute: typeof CodesRoute
   EulaRoute: typeof EulaRoute
   InputsRoute: typeof InputsRoute
+  ManualRoute: typeof ManualRoute
   MtoRoute: typeof MtoRoute
   RegisterRoute: typeof RegisterRoute
   ReportRoute: typeof ReportRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/mto'
       fullPath: '/mto'
       preLoaderRoute: typeof MtoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manual': {
+      id: '/manual'
+      path: '/manual'
+      fullPath: '/manual'
+      preLoaderRoute: typeof ManualRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inputs': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   CodesRoute: CodesRoute,
   EulaRoute: EulaRoute,
   InputsRoute: InputsRoute,
+  ManualRoute: ManualRoute,
   MtoRoute: MtoRoute,
   RegisterRoute: RegisterRoute,
   ReportRoute: ReportRoute,
