@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowRight, FileText, AlertTriangle, Activity, Layers } from "lucide-react";
-import { useApp } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
