@@ -34,6 +34,7 @@ import {
   Link2,
   Eye,
   X,
+  Pencil,
 } from "lucide-react";
 import {
   STRUCTURE_KINDS,
@@ -65,6 +66,7 @@ function ArrangementsPage() {
     structures,
     register,
     addStructure,
+    updateStructure,
     removeStructure,
     addToRegister,
     updateRegisterEntry,
@@ -132,6 +134,7 @@ function ArrangementsPage() {
   const [quickAddFor, setQuickAddFor] = useState<Structure | null>(null);
   const [assignFor, setAssignFor] = useState<Structure | null>(null);
   const [viewFor, setViewFor] = useState<Structure | null>(null);
+  const [editFor, setEditFor] = useState<Structure | null>(null);
 
   return (
     <div className="space-y-5">
@@ -328,6 +331,9 @@ function ArrangementsPage() {
                           <Button size="sm" variant="ghost" onClick={() => setViewFor(s)} title="View assigned supports">
                             <Eye className="h-3.5 w-3.5 mr-1"/>View ({attached})
                           </Button>
+                          <Button size="icon" variant="ghost" onClick={() => setEditFor(s)} title="Edit structure">
+                            <Pencil className="h-4 w-4"/>
+                          </Button>
                           <Button size="icon" variant="ghost" onClick={() => removeStructure(s.id)} disabled={attached > 0} title={attached > 0 ? "Detach supports first" : "Delete"}>
                             <Trash2 className="h-4 w-4"/>
                           </Button>
@@ -385,6 +391,19 @@ function ArrangementsPage() {
           onDelete={(id) => {
             removeFromRegister(id);
             toast.success("Support deleted");
+          }}
+        />
+      )}
+
+      {editFor && (
+        <EditStructureDialog
+          structure={editFor}
+          attachedCount={supportsByStructure.get(editFor.id) ?? 0}
+          onClose={() => setEditFor(null)}
+          onSave={(patch) => {
+            updateStructure(editFor.id, patch);
+            toast.success(`Structure ${editFor.tag} updated`);
+            setEditFor(null);
           }}
         />
       )}
