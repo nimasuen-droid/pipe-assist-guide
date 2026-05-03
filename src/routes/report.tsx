@@ -3,6 +3,14 @@ import { useApp } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
@@ -18,10 +26,15 @@ import {
   Info,
   ListPlus,
   Wrench,
+  Settings2,
+  Plus,
+  Minus,
+  RotateCcw,
+  Hash,
 } from "lucide-react";
 import { exportReportPDF } from "@/lib/export";
 import { generateMTO } from "@/lib/mto";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { SupportRegisterEntry } from "@/lib/types";
 import { toast } from "sonner";
 
