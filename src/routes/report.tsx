@@ -12,6 +12,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -117,6 +124,12 @@ function ReportPage() {
   const r = recommendation;
   const mto = generateMTO(entry);
   const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) => previewTag(tagCounter + i));
+  const selectedStructure = structures.find((s) => s.id === structureId);
+  const attachedCount = selectedStructure
+    ? register.filter((r) => r.structureId === selectedStructure.id).length
+    : 0;
+  const willBeShared = selectedStructure ? attachedCount + qty > 1 : false;
+  const overCapacity = selectedStructure ? attachedCount + qty > selectedStructure.maxSupports : false;
 
   const handleAdd = () => {
     if (!recommendation) return;
