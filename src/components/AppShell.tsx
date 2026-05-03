@@ -53,8 +53,8 @@ export function AppShell() {
       </header>
 
       <div className="flex flex-1 min-h-0">
-        {/* Sidebar */}
-        <aside className="hidden md:flex w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
+        {/* Sidebar — fixed, does not scroll with main */}
+        <aside className="hidden md:flex sticky top-12 self-start h-[calc(100vh-3rem)] w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
           <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
             {nav.map((item, i) => {
               const Icon = item.icon;
@@ -88,8 +88,9 @@ export function AppShell() {
         </aside>
 
         <main className="flex-1 min-w-0 px-4 md:px-8 py-6 pb-24 md:pb-10">
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-5xl space-y-6">
             <Outlet />
+            <DisclaimerBanner />
           </div>
         </main>
       </div>
