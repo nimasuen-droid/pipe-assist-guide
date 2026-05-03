@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, Factory } from "lucide-react";
+import { ArrowRight, FileText, AlertTriangle, Activity, Layers } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,20 +45,23 @@ function Field({
 }
 
 function ProjectPage() {
-  const { line, setLine } = useApp();
+  const { line, setLine, register, recommendation } = useApp();
   const nav = useNavigate();
+  const warnings = recommendation?.riskFlags.length ?? 0;
   return (
     <div className="space-y-6">
-      <div className="flex items-start gap-3">
-        <div className="h-10 w-10 rounded-lg bg-accent/10 text-accent grid place-items-center">
-          <Factory className="h-5 w-5" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Project & Line Input</h1>
-          <p className="text-sm text-muted-foreground">
-            Define the line. Inputs feed the wizard, recommendation engine, register and MTO.
-          </p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Pipe Support Smart Assist</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Comprehensive support selection with engineering decision logic and full source traceability.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatTile icon={Layers} label="Lines configured" value={line.lineNumber ? "1" : "0"} />
+        <StatTile icon={FileText} label="Supports in register" value={String(register.length)} />
+        <StatTile icon={Activity} label="Active line NPS" value={`${line.pipeSize || "—"}"`} />
+        <StatTile icon={AlertTriangle} label="Risk flags" value={warnings ? String(warnings) : "—"} accent={warnings > 0} />
       </div>
 
       <Card>
@@ -150,6 +153,28 @@ function ProjectPage() {
           Continue to Wizard <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
+    </div>
+  );
+}
+
+function StatTile({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-4 flex flex-col gap-2">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
+        <Icon className={`h-4 w-4 ${accent ? "text-warning" : "text-primary"}`} />
+        {label}
+      </div>
+      <div className={`text-2xl font-semibold ${accent ? "text-warning" : ""}`}>{value}</div>
     </div>
   );
 }
