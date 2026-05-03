@@ -102,6 +102,19 @@ function MTOPage() {
     }));
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detailed), "Detailed MTO");
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(summary), "Summary BOM");
+    if (structureMtoRows.length) {
+      const struct = structureMtoRows.map((r) => ({
+        "Structure Tag": r.structTag,
+        Structure: r.structName,
+        "Attached Supports": r.attached,
+        Shared: r.shared ? "Yes" : "No",
+        Component: r.component,
+        Qty: r.qty,
+        Size: r.size,
+        Remarks: r.remarks ?? "",
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(struct), "Structure MTO");
+    }
     XLSX.writeFile(wb, "support-mto.xlsx");
   };
 
@@ -155,6 +168,51 @@ function MTOPage() {
       <p className="text-sm bg-accent/5 border border-accent/30 rounded-md p-3">
         Pipe supports are fabricated assemblies. <b>Selection</b> defines function; <b>MTO</b> defines what gets built and procured.
       </p>
+
+      {/* Structure MTO (shared, deduped) */}
+      {usedStructures.length > 0 && (
+        <Card>
+          <CardContent className="p-0 overflow-x-auto">
+            <div className="px-4 pt-4 pb-2 flex items-center justify-between">
+              <h2 className="text-sm font-semibold">A · Structure MTO (shared)</h2>
+              <span className="text-xs text-muted-foreground">{usedStructures.length} structure(s) — quantities count once per structure</span>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase text-muted-foreground bg-muted/50">
+                <tr>
+                  {["Structure","Kind","Attached","Shared","Component","Qty","Size","Remarks"].map((h) => (
+                    <th key={h} className="text-left py-2 px-3">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {structureMtoRows.map((r, i) => (
+                  <tr key={i} className="border-t border-border">
+                    <td className="py-2 px-3 font-medium">{r.structTag}</td>
+                    <td className="py-2 px-3">{r.structName}</td>
+                    <td className="py-2 px-3">{r.attached}</td>
+                    <td className="py-2 px-3">{r.shared ? <Badge className="bg-warning text-warning-foreground">Shared</Badge> : "—"}</td>
+                    <td className="py-2 px-3">{r.component}</td>
+                    <td className="py-2 px-3">{r.qty}</td>
+                    <td className="py-2 px-3 font-mono text-xs">{r.size}</td>
+                    <td className="py-2 px-3 text-muted-foreground">{r.remarks ?? ""}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      )}
+      {structureMtoRows.some((r) => r.shared) && (
+        <p className="text-xs text-warning flex items-center gap-1.5">
+          <AlertTriangle className="h-3.5 w-3.5"/>
+          Multiple supports on a single structure require combined load verification by structural design.
+        </p>
+      )}
+
+      {all.length > 0 && (
+        <h2 className="text-sm font-semibold pt-2">B · Pipe support MTO (per support)</h2>
+      )}
       {all.length === 0 ? (
         <Card><CardContent className="py-12 text-center text-muted-foreground">No items. Add supports to the register to populate the MTO.</CardContent></Card>
       ) : (
