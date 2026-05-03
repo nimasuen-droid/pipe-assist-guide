@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WizardRouteImport } from './routes/wizard'
+import { Route as StandardsRouteImport } from './routes/standards'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MtoRouteImport } from './routes/mto'
@@ -23,6 +24,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const WizardRoute = WizardRouteImport.update({
   id: '/wizard',
   path: '/wizard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandardsRoute = StandardsRouteImport.update({
+  id: '/standards',
+  path: '/standards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportRoute = ReportRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
+  '/standards': typeof StandardsRoute
   '/wizard': typeof WizardRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
+  '/standards': typeof StandardsRoute
   '/wizard': typeof WizardRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
+  '/standards': typeof StandardsRoute
   '/wizard': typeof WizardRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/mto'
     | '/register'
     | '/report'
+    | '/standards'
     | '/wizard'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/mto'
     | '/register'
     | '/report'
+    | '/standards'
     | '/wizard'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/mto'
     | '/register'
     | '/report'
+    | '/standards'
     | '/wizard'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   MtoRoute: typeof MtoRoute
   RegisterRoute: typeof RegisterRoute
   ReportRoute: typeof ReportRoute
+  StandardsRoute: typeof StandardsRoute
   WizardRoute: typeof WizardRoute
 }
 
@@ -167,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/wizard'
       fullPath: '/wizard'
       preLoaderRoute: typeof WizardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/standards': {
+      id: '/standards'
+      path: '/standards'
+      fullPath: '/standards'
+      preLoaderRoute: typeof StandardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/report': {
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   MtoRoute: MtoRoute,
   RegisterRoute: RegisterRoute,
   ReportRoute: ReportRoute,
+  StandardsRoute: StandardsRoute,
   WizardRoute: WizardRoute,
 }
 export const routeTree = rootRouteImport
