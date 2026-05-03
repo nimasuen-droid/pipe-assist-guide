@@ -270,6 +270,7 @@ export const useApp = create<AppState>()(
       eulaAccepted: false,
       tagging: defaultTagging,
       tagCounter: defaultTagging.startIndex,
+      standards: defaultStandards,
       setLine: (p) => set((s) => ({ line: { ...s.line, ...p } })),
       setWizard: (p) => set((s) => ({ wizard: { ...s.wizard, ...p } })),
       setRecommendation: (r) => set({ recommendation: r }),
@@ -317,6 +318,11 @@ export const useApp = create<AppState>()(
         const { tagging, line } = get();
         return buildTag(tagging, line.lineNumber || "", n);
       },
+      updateStandard: (id, p) =>
+        set((s) => ({
+          standards: s.standards.map((x) => (x.id === id ? { ...x, ...p } : x)),
+        })),
+      resetStandards: () => set({ standards: defaultStandards }),
       reset: () =>
         set({ line: defaultLine, wizard: defaultWizard, recommendation: null }),
     }),
