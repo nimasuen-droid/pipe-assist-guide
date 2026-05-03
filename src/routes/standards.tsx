@@ -27,7 +27,7 @@ export const Route = createFileRoute("/standards")({
   component: StandardsPage,
 });
 
-const categories = ["All", "Rigid", "Variable", "Constant", "Restraint", "Guide", "Anchor", "Special"] as const;
+const categories = ["All", "Rigid", "Variable", "Constant", "Restraint", "Guide", "Anchor", "Special", "Structure"] as const;
 
 function StandardsPage() {
   const { standards, updateStandard, resetStandards } = useApp();
