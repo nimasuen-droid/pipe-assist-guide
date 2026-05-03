@@ -35,10 +35,14 @@ export const Route = createRootRoute({
       { name: "description", content: "Industry-grade decision support for pipe support selection, recommendations, register and MTO." },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Pipe Support Smart Assist" },
-      { property: "og:description", content: "Engineering decision support for pipe support selection." },
+      { property: "og:description", content: "Industry-grade decision support for pipe support selection, recommendations, register and MTO." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Pipe Support Smart Assist" },
+      { name: "twitter:description", content: "Industry-grade decision support for pipe support selection, recommendations, register and MTO." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/435fc17e-84ab-47a6-883f-94e8f7bee80e" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/435fc17e-84ab-47a6-883f-94e8f7bee80e" },
     ],
     links: [
       {
