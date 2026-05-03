@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WizardRouteImport } from './routes/wizard'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as MtoRouteImport } from './routes/mto'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WizardRoute = WizardRouteImport.update({
@@ -29,6 +30,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MtoRoute = MtoRouteImport.update({
+  id: '/mto',
+  path: '/mto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
   '/wizard': typeof WizardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
   '/wizard': typeof WizardRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
   '/wizard': typeof WizardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/register' | '/report' | '/wizard'
+  fullPaths: '/' | '/mto' | '/register' | '/report' | '/wizard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/register' | '/report' | '/wizard'
-  id: '__root__' | '/' | '/register' | '/report' | '/wizard'
+  to: '/' | '/mto' | '/register' | '/report' | '/wizard'
+  id: '__root__' | '/' | '/mto' | '/register' | '/report' | '/wizard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MtoRoute: typeof MtoRoute
   RegisterRoute: typeof RegisterRoute
   ReportRoute: typeof ReportRoute
   WizardRoute: typeof WizardRoute
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mto': {
+      id: '/mto'
+      path: '/mto'
+      fullPath: '/mto'
+      preLoaderRoute: typeof MtoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MtoRoute: MtoRoute,
   RegisterRoute: RegisterRoute,
   ReportRoute: ReportRoute,
   WizardRoute: WizardRoute,
