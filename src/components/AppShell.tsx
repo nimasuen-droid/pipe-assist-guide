@@ -12,6 +12,7 @@ import {
   Sparkles,
   BookOpen,
   Info,
+  Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
@@ -26,6 +27,7 @@ const nav = [
   { to: "/register", label: "Support Register", icon: ListChecks },
   { to: "/mto", label: "Material Take-Off", icon: Boxes },
   { to: "/standards", label: "Support Standards", icon: Anchor },
+  { to: "/arrangements", label: "Structure Arrangements", icon: Building2 },
   { to: "/codes", label: "Codes & References", icon: BookMarked },
   { to: "/manual", label: "User Manual", icon: BookOpen },
   { to: "/about", label: "About & Releases", icon: Info },
