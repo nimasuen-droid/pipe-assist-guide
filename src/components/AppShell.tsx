@@ -18,7 +18,7 @@ import { AlertTriangle } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/", label: "Project Inputs", icon: Gauge, alias: "inputs" },
+  { to: "/inputs", label: "Project Inputs", icon: Gauge },
   { to: "/wizard", label: "Selection Wizard", icon: Sparkles },
   { to: "/report", label: "Recommendation", icon: FileBarChart2 },
   { to: "/register", label: "Support Register", icon: ListChecks },
@@ -59,9 +59,7 @@ export function AppShell() {
           <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
             {nav.map((item, i) => {
               const Icon = item.icon;
-              const active =
-                (item.to === loc.pathname) ||
-                (item.to === "/" && "alias" in item && loc.pathname === "/" && i === 1);
+              const active = item.to === loc.pathname;
               const locked = "locked" in item && item.locked;
               return (
                 <Link
