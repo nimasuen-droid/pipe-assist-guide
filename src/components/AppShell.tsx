@@ -25,6 +25,7 @@ const nav = [
   { to: "/report", label: "Recommendation", icon: FileBarChart2 },
   { to: "/register", label: "Support Register", icon: ListChecks },
   { to: "/mto", label: "Material Take-Off", icon: Boxes },
+  { to: "/standards", label: "Support Standards", icon: Anchor },
   { to: "/codes", label: "Codes & References", icon: BookMarked },
   { to: "/manual", label: "User Manual", icon: BookOpen },
   { to: "/about", label: "About & Releases", icon: Info },
