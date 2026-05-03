@@ -72,6 +72,142 @@ export interface TaggingConfig {
   startIndex: number;
 }
 
+export interface SupportStandard {
+  id: string;
+  name: string;
+  category: "Rigid" | "Variable" | "Constant" | "Restraint" | "Guide" | "Anchor" | "Special";
+  function: string;
+  typicalUse: string;
+  movementAllowed: string[];
+  movementRestrained: string[];
+  codes: string[];
+  tagPrefix: string; // editable
+  notes: string;
+}
+
+const defaultStandards: SupportStandard[] = [
+  {
+    id: "rest-shoe",
+    name: "Pipe Shoe (Resting)",
+    category: "Rigid",
+    function: "Vertical load transfer; allows axial & lateral sliding",
+    typicalUse: "Horizontal lines on pipe rack / sleeper",
+    movementAllowed: ["Axial", "Lateral"],
+    movementRestrained: ["Vertical (down)"],
+    codes: ["MSS SP-58 Type 36", "PFI ES-26"],
+    tagPrefix: "RS",
+    notes: "T-shoe or rectangular shoe; height suits insulation thickness.",
+  },
+  {
+    id: "guide",
+    name: "Pipe Guide",
+    category: "Guide",
+    function: "Restrains lateral movement; allows axial movement",
+    typicalUse: "Long straight runs, near expansion loops",
+    movementAllowed: ["Axial"],
+    movementRestrained: ["Lateral"],
+    codes: ["MSS SP-58 Type 35", "ASME B31.3"],
+    tagPrefix: "GD",
+    notes: "Maintain clearance for thermal growth in axial direction.",
+  },
+  {
+    id: "anchor",
+    name: "Anchor",
+    category: "Anchor",
+    function: "Restrains all six DoF",
+    typicalUse: "Loop midpoints, equipment isolation",
+    movementAllowed: [],
+    movementRestrained: ["Axial", "Lateral", "Vertical", "Rotational"],
+    codes: ["MSS SP-58", "ASME B31.3"],
+    tagPrefix: "AN",
+    notes: "Requires structural and stress verification.",
+  },
+  {
+    id: "ubolt",
+    name: "U-Bolt",
+    category: "Restraint",
+    function: "Two-direction restraint (lateral + vertical up)",
+    typicalUse: "Small-bore lines, uplift restraint",
+    movementAllowed: ["Axial"],
+    movementRestrained: ["Lateral", "Vertical (up)"],
+    codes: ["MSS SP-58 Type 24"],
+    tagPrefix: "UB",
+    notes: "Avoid on hot insulated lines without saddle.",
+  },
+  {
+    id: "clamp",
+    name: "Riser / Pipe Clamp",
+    category: "Rigid",
+    function: "Vertical pipe weight support",
+    typicalUse: "Vertical risers",
+    movementAllowed: [],
+    movementRestrained: ["Vertical (down)"],
+    codes: ["MSS SP-58 Type 8"],
+    tagPrefix: "CL",
+    notes: "Use lugs welded to pipe for hot service.",
+  },
+  {
+    id: "trunnion",
+    name: "Trunnion (Dummy Leg)",
+    category: "Rigid",
+    function: "Off-elbow vertical support",
+    typicalUse: "Elbows, corners with insulation",
+    movementAllowed: ["Axial (small)"],
+    movementRestrained: ["Vertical"],
+    codes: ["MSS SP-58", "PFI ES-26"],
+    tagPrefix: "TR",
+    notes: "Stress check required at elbow attachment.",
+  },
+  {
+    id: "spring-variable",
+    name: "Variable Spring Hanger",
+    category: "Variable",
+    function: "Supports weight while allowing thermal vertical movement",
+    typicalUse: "Hot lines with vertical thermal growth",
+    movementAllowed: ["Vertical"],
+    movementRestrained: [],
+    codes: ["MSS SP-58 Type 51-59", "MSS SP-69"],
+    tagPrefix: "VS",
+    notes: "Acceptable load variation typically <25%.",
+  },
+  {
+    id: "spring-constant",
+    name: "Constant Spring Hanger",
+    category: "Constant",
+    function: "Constant load through full vertical travel",
+    typicalUse: "Critical hot lines, equipment nozzle relief",
+    movementAllowed: ["Vertical (large)"],
+    movementRestrained: [],
+    codes: ["MSS SP-58 Type 55", "MSS SP-69"],
+    tagPrefix: "CS",
+    notes: "Use when load variation >25% or near sensitive nozzles.",
+  },
+  {
+    id: "snubber",
+    name: "Hydraulic / Mechanical Snubber",
+    category: "Special",
+    function: "Restrains dynamic/shock loads, allows thermal motion",
+    typicalUse: "Seismic, water hammer, slug flow",
+    movementAllowed: ["Slow thermal"],
+    movementRestrained: ["Dynamic / shock"],
+    codes: ["MSS SP-58", "ASME B31.3 Appendix S"],
+    tagPrefix: "SN",
+    notes: "Periodic functional testing required.",
+  },
+  {
+    id: "slide-plate",
+    name: "Low-Friction Slide Plate (PTFE/Graphite)",
+    category: "Rigid",
+    function: "Reduces friction at sliding shoe interface",
+    typicalUse: "High thermal movement, hot lines on rack",
+    movementAllowed: ["Axial", "Lateral"],
+    movementRestrained: ["Vertical (down)"],
+    codes: ["MSS SP-58", "PFI ES-26"],
+    tagPrefix: "SP",
+    notes: "Reduces friction coefficient to ~0.10–0.15.",
+  },
+];
+
 const defaultTagging: TaggingConfig = {
   prefix: "SUP",
   separator: "-",
