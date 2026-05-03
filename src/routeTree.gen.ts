@@ -13,6 +13,7 @@ import { Route as WizardRouteImport } from './routes/wizard'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MtoRouteImport } from './routes/mto'
+import { Route as InputsRouteImport } from './routes/inputs'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WizardRoute = WizardRouteImport.update({
@@ -35,6 +36,11 @@ const MtoRoute = MtoRouteImport.update({
   path: '/mto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InputsRoute = InputsRouteImport.update({
+  id: '/inputs',
+  path: '/inputs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/inputs': typeof InputsRoute
   '/mto': typeof MtoRoute
   '/register': typeof RegisterRoute
   '/report': typeof ReportRoute
@@ -65,14 +74,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mto' | '/register' | '/report' | '/wizard'
+  fullPaths: '/' | '/inputs' | '/mto' | '/register' | '/report' | '/wizard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mto' | '/register' | '/report' | '/wizard'
-  id: '__root__' | '/' | '/mto' | '/register' | '/report' | '/wizard'
+  to: '/' | '/inputs' | '/mto' | '/register' | '/report' | '/wizard'
+  id:
+    | '__root__'
+    | '/'
+    | '/inputs'
+    | '/mto'
+    | '/register'
+    | '/report'
+    | '/wizard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InputsRoute: typeof InputsRoute
   MtoRoute: typeof MtoRoute
   RegisterRoute: typeof RegisterRoute
   ReportRoute: typeof ReportRoute
@@ -109,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MtoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inputs': {
+      id: '/inputs'
+      path: '/inputs'
+      fullPath: '/inputs'
+      preLoaderRoute: typeof InputsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +145,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InputsRoute: InputsRoute,
   MtoRoute: MtoRoute,
   RegisterRoute: RegisterRoute,
   ReportRoute: ReportRoute,
@@ -129,3 +154,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
