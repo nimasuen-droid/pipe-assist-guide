@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, Database, Save, FolderOpen, Trash2, RotateCcw, FileDown, FileUp } from "lucide-react";
+import { ArrowRight, DatabaseZap, Save, FolderOpen, Trash2, RotateCcw, FileDown, FileUp, Eraser } from "lucide-react";
 import { toast } from "sonner";
 import { useRef } from "react";
 
@@ -87,7 +87,15 @@ function InputsPage() {
         <CardContent className="space-y-3">
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="secondary" onClick={() => { loadSample(); toast.success("Sample data loaded"); }}>
-              <Database className="h-3.5 w-3.5 mr-1.5" /> Load Sample Data
+              <DatabaseZap className="h-3.5 w-3.5 mr-1.5" /> Load Sample Data
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => { reset(); toast.success("All fields cleared"); }}
+              className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <Eraser className="h-3.5 w-3.5 mr-1.5" /> Clear All Fields
             </Button>
             <Button size="sm" variant="outline" onClick={() => { saveProject(); toast.success("Project saved"); }}>
               <Save className="h-3.5 w-3.5 mr-1.5" /> Save Project
@@ -99,9 +107,6 @@ function InputsPage() {
               <FileUp className="h-3.5 w-3.5 mr-1.5" /> Import JSON
             </Button>
             <input ref={fileRef} type="file" accept=".json" hidden onChange={handleImport} />
-            <Button size="sm" variant="ghost" onClick={() => { reset(); toast.success("Inputs reset"); }}>
-              <RotateCcw className="h-3.5 w-3.5 mr-1.5" /> Reset
-            </Button>
           </div>
           {savedProjects.length > 0 && (
             <div className="border-t border-border pt-3">
