@@ -77,9 +77,6 @@ export function AppShell() {
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span className="flex-1">{item.label}</span>
-                  {locked && (
-                    <span className="text-[10px] text-muted-foreground">soon</span>
-                  )}
                 </Link>
               );
             })}
