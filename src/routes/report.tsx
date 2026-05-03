@@ -59,13 +59,25 @@ function VerdictBadge({ v }: { v: string }) {
 }
 
 function ReportPage() {
-  const { line, wizard, recommendation, addToRegister } = useApp();
+  const {
+    line,
+    wizard,
+    recommendation,
+    addToRegister,
+    tagging,
+    tagCounter,
+    setTagging,
+    resetTagCounter,
+    nextTag,
+    previewTag,
+  } = useApp();
+  const [qty, setQty] = useState(1);
 
-  const entry: SupportRegisterEntry | null = useMemo(() => {
+  const buildEntry = (tag: string): SupportRegisterEntry | null => {
     if (!recommendation) return null;
     return {
       id: crypto.randomUUID(),
-      tag: `SUP-${(line.lineNumber || "L1").replace(/[^A-Z0-9]/gi, "").slice(0, 8) || "L1"}-${Math.floor(Math.random() * 900 + 100)}`,
+      tag,
       lineNumber: line.lineNumber || "—",
       location: `${line.area || "—"} / ${wizard.nearFeature}`,
       supportType: recommendation.primary,
@@ -81,7 +93,13 @@ function ReportPage() {
       wizard,
       recommendation,
     };
-  }, [recommendation, line, wizard]);
+  };
+
+  const entry: SupportRegisterEntry | null = useMemo(
+    () => buildEntry(previewTag(tagCounter)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [recommendation, line, wizard, tagging, tagCounter],
+  );
 
   if (!recommendation || !entry) {
     return (
@@ -94,6 +112,18 @@ function ReportPage() {
 
   const r = recommendation;
   const mto = generateMTO(entry);
+  const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) => previewTag(tagCounter + i));
+
+  const handleAdd = () => {
+    if (!recommendation) return;
+    const n = Math.max(1, qty);
+    for (let i = 0; i < n; i++) {
+      const tag = nextTag();
+      const e = buildEntry(tag);
+      if (e) addToRegister(e);
+    }
+    toast.success(`Added ${n} support${n > 1 ? "s" : ""} to register`);
+  };
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -112,15 +142,91 @@ function ReportPage() {
               <span>T_des <b className="text-foreground">{line.designTemp}°C</b></span>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings2 className="mr-1.5 h-3.5 w-3.5" /> Tag Format
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 space-y-3">
+                <div className="text-sm font-semibold flex items-center gap-1.5">
+                  <Hash className="h-3.5 w-3.5 text-primary" /> Tagging Procedure
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label className="text-[11px] uppercase text-muted-foreground">Prefix</Label>
+                    <Input value={tagging.prefix} onChange={(e) => setTagging({ prefix: e.target.value.toUpperCase() })} />
+                  </div>
+                  <div>
+                    <Label className="text-[11px] uppercase text-muted-foreground">Separator</Label>
+                    <Input value={tagging.separator} maxLength={3} onChange={(e) => setTagging({ separator: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label className="text-[11px] uppercase text-muted-foreground">Padding</Label>
+                    <Input type="number" min={1} max={6} value={tagging.padding} onChange={(e) => setTagging({ padding: Math.max(1, Math.min(6, +e.target.value || 1)) })} />
+                  </div>
+                  <div>
+                    <Label className="text-[11px] uppercase text-muted-foreground">Start Index</Label>
+                    <Input type="number" min={0} value={tagging.startIndex} onChange={(e) => setTagging({ startIndex: +e.target.value || 0 })} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <Label className="text-xs">Include line token</Label>
+                  <Switch checked={tagging.includeLine} onCheckedChange={(v) => setTagging({ includeLine: v })} />
+                </div>
+                <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs">
+                  <div className="text-muted-foreground mb-0.5">Next tag preview</div>
+                  <div className="font-mono text-sm text-primary">{previewTag(tagCounter)}</div>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Counter at <b className="text-foreground">{tagCounter}</b></span>
+                  <Button size="sm" variant="ghost" onClick={() => { resetTagCounter(); toast.success("Counter reset"); }}>
+                    <RotateCcw className="h-3 w-3 mr-1" /> Reset
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <div className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5">
+              <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setQty((q) => Math.max(1, q - 1))}>
+                <Minus className="h-3.5 w-3.5" />
+              </Button>
+              <Input
+                value={qty}
+                onChange={(e) => setQty(Math.max(1, Math.min(999, +e.target.value || 1)))}
+                className="h-8 w-14 text-center border-0 bg-transparent focus-visible:ring-0"
+                aria-label="Quantity"
+              />
+              <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setQty((q) => Math.min(999, q + 1))}>
+                <Plus className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+
             <Button variant="secondary" onClick={() => exportReportPDF(entry)}>
               <Download className="mr-2 h-4 w-4" /> PDF
             </Button>
-            <Button onClick={() => { addToRegister(entry); toast.success("Added to support register"); }}>
-              <ListPlus className="mr-2 h-4 w-4" /> Add to Register
+            <Button onClick={handleAdd}>
+              <ListPlus className="mr-2 h-4 w-4" /> Add {qty > 1 ? `${qty} ` : ""}to Register
             </Button>
           </div>
         </div>
+
+        {qty > 1 && (
+          <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-xs">
+            <div className="flex items-center gap-1.5 text-muted-foreground mb-1.5">
+              <Hash className="h-3.5 w-3.5 text-primary" /> Tags that will be generated
+            </div>
+            <div className="flex flex-wrap gap-1.5 font-mono">
+              {previewTags.slice(0, 10).map((t) => (
+                <Badge key={t} variant="outline" className="border-primary/40 text-primary">{t}</Badge>
+              ))}
+              {previewTags.length > 10 && (
+                <span className="text-muted-foreground self-center">+{previewTags.length - 10} more</span>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
