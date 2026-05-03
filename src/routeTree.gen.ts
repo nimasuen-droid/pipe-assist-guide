@@ -17,6 +17,7 @@ import { Route as ManualRouteImport } from './routes/manual'
 import { Route as InputsRouteImport } from './routes/inputs'
 import { Route as EulaRouteImport } from './routes/eula'
 import { Route as CodesRouteImport } from './routes/codes'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WizardRoute = WizardRouteImport.update({
@@ -59,6 +60,11 @@ const CodesRoute = CodesRouteImport.update({
   path: '/codes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -67,6 +73,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/codes': typeof CodesRoute
   '/eula': typeof EulaRoute
   '/inputs': typeof InputsRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/codes'
     | '/eula'
     | '/inputs'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/codes'
     | '/eula'
     | '/inputs'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/codes'
     | '/eula'
     | '/inputs'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   CodesRoute: typeof CodesRoute
   EulaRoute: typeof EulaRoute
   InputsRoute: typeof InputsRoute
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CodesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -217,6 +237,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   CodesRoute: CodesRoute,
   EulaRoute: EulaRoute,
   InputsRoute: InputsRoute,
