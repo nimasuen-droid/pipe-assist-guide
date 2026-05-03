@@ -55,6 +55,8 @@ interface AppState {
   setRecommendation: (r: SupportRecommendation | null) => void;
   addToRegister: (e: SupportRegisterEntry) => void;
   removeFromRegister: (id: string) => void;
+  updateRegisterEntry: (id: string, p: Partial<SupportRegisterEntry>) => void;
+  bulkUpdateRegister: (ids: string[], p: Partial<SupportRegisterEntry>) => void;
   addStructure: (s: Structure) => void;
   updateStructure: (id: string, p: Partial<Structure>) => void;
   removeStructure: (id: string) => void;
@@ -356,6 +358,13 @@ export const useApp = create<AppState>()(
       addToRegister: (e) => set((s) => ({ register: [...s.register, e] })),
       removeFromRegister: (id) =>
         set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
+      updateRegisterEntry: (id, p) =>
+        set((s) => ({ register: s.register.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
+      bulkUpdateRegister: (ids, p) =>
+        set((s) => {
+          const idSet = new Set(ids);
+          return { register: s.register.map((x) => (idSet.has(x.id) ? { ...x, ...p } : x)) };
+        }),
       addStructure: (st) => set((s) => ({ structures: [...s.structures, st] })),
       updateStructure: (id, p) =>
         set((s) => ({ structures: s.structures.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
