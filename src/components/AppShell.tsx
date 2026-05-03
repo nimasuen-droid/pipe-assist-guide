@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
+import { AlertTriangle } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Home", icon: Home },
@@ -53,8 +54,8 @@ export function AppShell() {
       </header>
 
       <div className="flex flex-1 min-h-0">
-        {/* Sidebar */}
-        <aside className="hidden md:flex w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
+        {/* Sidebar — fixed, does not scroll with main */}
+        <aside className="hidden md:flex sticky top-12 self-start h-[calc(100vh-3rem)] w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
           <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
             {nav.map((item, i) => {
               const Icon = item.icon;
@@ -88,8 +89,9 @@ export function AppShell() {
         </aside>
 
         <main className="flex-1 min-w-0 px-4 md:px-8 py-6 pb-24 md:pb-10">
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-5xl space-y-6">
             <Outlet />
+            <DisclaimerBanner />
           </div>
         </main>
       </div>
@@ -122,6 +124,20 @@ export function AppShell() {
           })}
         </div>
       </nav>
+    </div>
+  );
+}
+
+function DisclaimerBanner() {
+  return (
+    <div className="rounded-md border border-warning/40 bg-warning/10 p-3 flex items-start gap-3 text-sm">
+      <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+      <p className="text-foreground/90">
+        <b>For engineering support only.</b> Final support design shall be reviewed and approved by a qualified piping
+        engineer against project specifications, stress analysis, structural capacity, applicable codes (ASME B31.3, MSS
+        SP-58/69/89/127, PFI ES-26) and client standards. This software is a decision-support tool and does not replace
+        professional engineering judgement.
+      </p>
     </div>
   );
 }
