@@ -55,6 +55,8 @@ interface AppState {
   setRecommendation: (r: SupportRecommendation | null) => void;
   addToRegister: (e: SupportRegisterEntry) => void;
   removeFromRegister: (id: string) => void;
+  updateRegisterEntry: (id: string, p: Partial<SupportRegisterEntry>) => void;
+  bulkUpdateRegister: (ids: string[], p: Partial<SupportRegisterEntry>) => void;
   addStructure: (s: Structure) => void;
   updateStructure: (id: string, p: Partial<Structure>) => void;
   removeStructure: (id: string) => void;
