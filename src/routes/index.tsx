@@ -222,3 +222,26 @@ function StatTile({
     </div>
   );
 }
+
+function StepCard({
+  n,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  n: number;
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="rounded-md border border-border bg-muted/30 p-3">
+      <div className="flex items-center gap-2 mb-1">
+        <Icon className="h-4 w-4 text-primary" />
+        <span className="text-xs font-mono text-muted-foreground">STEP {n}</span>
+      </div>
+      <div className="text-sm font-medium">{title}</div>
+      <div className="text-xs text-muted-foreground mt-0.5">{desc}</div>
+    </div>
+  );
+}
