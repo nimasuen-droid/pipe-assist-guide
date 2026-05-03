@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, DatabaseZap, Save, FolderOpen, Trash2, RotateCcw, FileDown, FileUp, Eraser } from "lucide-react";
+import { ArrowRight, DatabaseZap, Database, Save, FolderOpen, Trash2, FileDown, FileUp, Eraser } from "lucide-react";
 import { toast } from "sonner";
 import { useRef } from "react";
 
