@@ -58,8 +58,7 @@ function summarizeBOM(items: MTOItem[]): BomRow[] {
 
 function MTOPage() {
   const { register, structures } = useApp();
-  const all = register.flatMap(generateMTO);
-  const bom = summarizeBOM(all);
+  const supportItems = register.flatMap(generateMTO);
   // Structure MTO: only structures actually referenced by at least one support
   const usedStructureIds = new Set(register.map((r) => r.structureId).filter(Boolean) as string[]);
   const usedStructures = structures.filter((s) => usedStructureIds.has(s.id));
@@ -73,6 +72,26 @@ function MTOPage() {
       ...m,
     }));
   });
+  // Lift structure MTO into MTOItem shape so it flows into BOM, preview, print and exports.
+  const structureItems: MTOItem[] = usedStructures.flatMap((s) => {
+    const attached = register.filter((r) => r.structureId === s.id).length;
+    return s.mto.map((m) => ({
+      supportTag: s.tag,
+      lineNumber: "—",
+      supportType: `Structure · ${s.name}`,
+      component: m.component,
+      material: "—",
+      size: m.size,
+      qty: m.qty,
+      unit: "ea",
+      category: "Fabricated" as const,
+      remarks: [attached > 1 ? `Shared by ${attached} supports` : `Attached: ${attached}`, m.remarks]
+        .filter(Boolean)
+        .join(" — "),
+    }));
+  });
+  const all = [...structureItems, ...supportItems];
+  const bom = summarizeBOM(all);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [bomOpen, setBomOpen] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
