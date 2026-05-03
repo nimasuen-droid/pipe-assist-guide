@@ -47,6 +47,7 @@ interface AppState {
   eulaAccepted: boolean;
   tagging: TaggingConfig;
   tagCounter: number;
+  standards: SupportStandard[];
   setLine: (p: Partial<LineInput>) => void;
   setWizard: (p: Partial<WizardInput>) => void;
   setRecommendation: (r: SupportRecommendation | null) => void;
@@ -61,6 +62,8 @@ interface AppState {
   resetTagCounter: (n?: number) => void;
   nextTag: () => string;
   previewTag: (n: number) => string;
+  updateStandard: (id: string, p: Partial<SupportStandard>) => void;
+  resetStandards: () => void;
   reset: () => void;
 }
 
