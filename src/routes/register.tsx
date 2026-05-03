@@ -16,7 +16,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import type { SupportRegisterEntry } from "@/lib/types";
+import type { SupportRegisterEntry, Structure } from "@/lib/types";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -145,7 +145,7 @@ function EditDialog({
   entry, structures, onClose, onSave,
 }: {
   entry: SupportRegisterEntry;
-  structures: ReturnType<typeof useApp>["structures"];
+  structures: Structure[];
   onClose: () => void;
   onSave: (p: Partial<SupportRegisterEntry>) => void;
 }) {
@@ -218,7 +218,7 @@ function BulkEditDialog({
 }: {
   open: boolean;
   count: number;
-  structures: ReturnType<typeof useApp>["structures"];
+  structures: Structure[];
   onClose: () => void;
   onApply: (p: Partial<SupportRegisterEntry>) => void;
 }) {
