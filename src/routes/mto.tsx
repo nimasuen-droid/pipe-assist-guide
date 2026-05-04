@@ -307,7 +307,7 @@ function MTOPage() {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-[90vw] max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>MTO Preview</DialogTitle></DialogHeader>
           <div className="text-xs text-muted-foreground mb-2">
             {all.length} components across {register.length} supports.
@@ -344,7 +344,7 @@ function MTOPage() {
       </Dialog>
 
       <Dialog open={bomOpen} onOpenChange={setBomOpen}>
-        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-[85vw] max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>Summary BOM</DialogTitle></DialogHeader>
           <div className="text-xs text-muted-foreground mb-2">
             {bom.length} unique items aggregated by component / material / size.
