@@ -99,7 +99,7 @@ function RegisterPage() {
                     <td className="py-2 px-3">{e.lineNumber}</td>
                     <td className="py-2 px-3">{e.location}</td>
                     <td className="py-2 px-3">{e.supportType}</td>
-                    <td className="py-2 px-3 max-w-[200px]">{e.function}</td>
+                    <td className="py-2 px-3">{e.function}</td>
                     <td className="py-2 px-3">{struct ? <span className="font-mono">{struct.tag}</span> : <span className="text-muted-foreground">—</span>}</td>
                     <td className="py-2 px-3">{shared ? <Badge className="bg-warning text-warning-foreground">Shared</Badge> : "—"}</td>
                     <td className="py-2 px-3">{e.movementAllowed}</td>
@@ -107,7 +107,7 @@ function RegisterPage() {
                     <td className="py-2 px-3">{e.insulation}</td>
                     <td className="py-2 px-3">{e.stressReview ? <Badge className="bg-warning text-warning-foreground">Yes</Badge> : "—"}</td>
                     <td className="py-2 px-3">{e.structuralReview ? <Badge className="bg-warning text-warning-foreground">Yes</Badge> : "—"}</td>
-                    <td className="py-2 px-3 max-w-[220px] text-xs text-muted-foreground">{e.remarks}</td>
+                    <td className="py-2 px-3 text-xs text-muted-foreground">{e.remarks}</td>
                     <td className="py-2 px-3 whitespace-nowrap">
                       <Button size="icon" variant="ghost" onClick={() => setEditing(e)} aria-label="Edit"><Pencil className="h-4 w-4"/></Button>
                       <Button size="icon" variant="ghost" onClick={() => removeFromRegister(e.id)} aria-label="Delete"><Trash2 className="h-4 w-4"/></Button>
@@ -165,7 +165,7 @@ function EditDialog({
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit support — {entry.tag}</DialogTitle>
           <DialogDescription>Update tagging, function, movement, reviews and structure assignment.</DialogDescription>
@@ -261,7 +261,7 @@ function BulkEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Bulk edit · {count} support(s)</DialogTitle>
           <DialogDescription>Tick a field to apply that value to every selected support. Untouched fields are left as-is.</DialogDescription>
