@@ -90,7 +90,7 @@ export function AppShell() {
         </aside>
 
         <main className="flex-1 min-w-0 px-4 md:px-8 py-6 pb-24 md:pb-10">
-          <div className="mx-auto max-w-5xl space-y-6">
+          <div className="mx-auto max-w-[1600px] space-y-6">
             <Outlet />
             <DisclaimerBanner />
           </div>
