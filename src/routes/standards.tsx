@@ -16,6 +16,7 @@ import {
 import { BookMarked, Pencil, RotateCcw, Search, CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import type { SupportStandard } from "@/lib/store";
+import { SupportStandardGraphic } from "@/components/SupportStandardGraphic";
 
 export const Route = createFileRoute("/standards")({
   head: () => ({
@@ -126,6 +127,7 @@ function StandardsPage() {
               </div>
             </CardHeader>
             <CardContent className="text-sm space-y-2.5">
+              <SupportStandardGraphic id={s.id} />
               <p>{s.function}</p>
               <p className="text-xs text-muted-foreground"><b className="text-foreground">Typical use:</b> {s.typicalUse}</p>
               <div className="grid grid-cols-2 gap-2 text-xs">
