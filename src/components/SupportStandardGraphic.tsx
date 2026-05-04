@@ -44,7 +44,7 @@ function Pipe({ cx = 100, cy = 40, r = 14 }: { cx?: number; cy?: number; r?: num
   );
 }
 
-function GroundFn({ y = 80 }: { y?: number } = {}) {
+function GroundLine({ y = 80 }: { y?: number }) {
   return (
     <>
       <line x1={10} y1={y} x2={190} y2={y} stroke={STEEL} strokeWidth={1.5} />
