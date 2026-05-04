@@ -165,7 +165,7 @@ function EditDialog({
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit support — {entry.tag}</DialogTitle>
           <DialogDescription>Update tagging, function, movement, reviews and structure assignment.</DialogDescription>
@@ -261,7 +261,7 @@ function BulkEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Bulk edit · {count} support(s)</DialogTitle>
           <DialogDescription>Tick a field to apply that value to every selected support. Untouched fields are left as-is.</DialogDescription>
