@@ -44,7 +44,7 @@ function Pipe({ cx = 100, cy = 40, r = 14 }: { cx?: number; cy?: number; r?: num
   );
 }
 
-function Ground(y = 80) {
+function GroundFn({ y = 80 }: { y?: number } = {}) {
   return (
     <>
       <line x1={10} y1={y} x2={190} y2={y} stroke={STEEL} strokeWidth={1.5} />
@@ -64,7 +64,7 @@ function renderShape(id: string) {
           {/* shoe */}
           <rect x={82} y={54} width={36} height={8} fill={STEEL} stroke={STEEL} />
           <rect x={70} y={62} width={60} height={6} fill={ACCENT} opacity={0.7} stroke={ACCENT} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "guide":
@@ -75,7 +75,7 @@ function renderShape(id: string) {
           <path d="M70 40 L70 60 L130 60 L130 40" stroke={ACCENT} strokeWidth={2} />
           <line x1={70} y1={60} x2={70} y2={78} stroke={STEEL} />
           <line x1={130} y1={60} x2={130} y2={78} stroke={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "anchor":
@@ -88,7 +88,7 @@ function renderShape(id: string) {
           <line x1={70} y1={78} x2={130} y2={78} stroke={STEEL} strokeWidth={2.5} />
           <line x1={85} y1={70} x2={100} y2={54} stroke={STEEL} />
           <line x1={115} y1={70} x2={100} y2={54} stroke={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "ubolt":
@@ -100,7 +100,7 @@ function renderShape(id: string) {
           <rect x={70} y={54} width={60} height={6} fill={STEEL} />
           <line x1={82} y1={22} x2={82} y2={18} stroke={ACCENT} />
           <line x1={118} y1={22} x2={118} y2={18} stroke={ACCENT} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "clamp":
@@ -123,7 +123,7 @@ function renderShape(id: string) {
           {/* trunnion stub welded to bottom */}
           <rect x={94} y={46} width={12} height={26} fill={PIPE_FILL} stroke={ACCENT} strokeWidth={1.8} />
           <rect x={80} y={72} width={40} height={6} fill={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "spring-variable":
@@ -161,7 +161,7 @@ function renderShape(id: string) {
           <rect x={138} y={66} width={28} height={12} fill={PIPE_FILL} stroke={ACCENT} strokeWidth={1.8} transform="rotate(28 152 72)" />
           <circle cx={100} cy={53} r={2.5} fill={ACCENT} />
           <circle cx={170} cy={82} r={2.5} fill={ACCENT} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "slide-plate":
@@ -176,7 +176,7 @@ function renderShape(id: string) {
           <path d="M50 61 L54 58 M50 61 L54 64" stroke={ACCENT} />
           <line x1={138} y1={61} x2={150} y2={61} stroke={ACCENT} strokeWidth={1.2} />
           <path d="M150 61 L146 58 M150 61 L146 64" stroke={ACCENT} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "str-rack-beam":
@@ -190,7 +190,7 @@ function renderShape(id: string) {
           <Pipe cx={70} cy={48} r={7} />
           <Pipe cx={100} cy={48} r={7} />
           <Pipe cx={130} cy={48} r={7} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "str-goal-post":
@@ -203,7 +203,7 @@ function renderShape(id: string) {
           <Pipe cx={125} cy={36} r={8} />
           <rect x={30} y={78} width={20} height={4} fill={STEEL} />
           <rect x={150} y={78} width={20} height={4} fill={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "str-inverted-l":
@@ -215,7 +215,7 @@ function renderShape(id: string) {
           {/* gusset */}
           <path d="M40 32 L60 32 L40 52 Z" fill={STEEL} opacity={0.4} stroke={STEEL} />
           <rect x={30} y={78} width={20} height={4} fill={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
     case "str-wall-bracket":
@@ -255,7 +255,7 @@ function renderShape(id: string) {
           <line x1={86} y1={70} x2={114} y2={70} stroke={STEEL} strokeWidth={0.6} />
           <rect x={74} y={32} width={52} height={5} fill={ACCENT} opacity={0.8} />
           <Pipe cx={100} cy={20} r={9} />
-          <Ground />
+          <GroundLine />
         </>
       );
     default:
@@ -263,7 +263,7 @@ function renderShape(id: string) {
         <>
           <Pipe />
           <rect x={70} y={54} width={60} height={6} fill={STEEL} />
-          <Ground />
+          <GroundLine />
         </>
       );
   }
