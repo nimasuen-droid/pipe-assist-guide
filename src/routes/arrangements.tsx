@@ -450,7 +450,7 @@ function QuickAddDialog({
   const [remarks, setRemarks] = useState("");
 
   const submit = () => {
-    const tag = nextTag();
+    const tag = nextTag(`${hardware} (${pipeFunction})`);
     const entry: SupportRegisterEntry = {
       id: crypto.randomUUID(),
       tag,
