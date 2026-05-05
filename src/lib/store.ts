@@ -67,8 +67,8 @@ interface AppState {
   acceptEula: () => void;
   setTagging: (p: Partial<TaggingConfig>) => void;
   resetTagCounter: (n?: number) => void;
-  nextTag: () => string;
-  previewTag: (n: number) => string;
+  nextTag: (supportType?: string) => string;
+  previewTag: (n: number, supportType?: string) => string;
   updateStandard: (id: string, p: Partial<SupportStandard>) => void;
   resetStandards: () => void;
   reset: () => void;
