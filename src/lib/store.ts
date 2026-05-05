@@ -299,13 +299,41 @@ const defaultTagging: TaggingConfig = {
   startIndex: 1,
 };
 
-function buildTag(t: TaggingConfig, lineNumber: string, n: number) {
+function buildTag(t: TaggingConfig, lineNumber: string, n: number, prefixOverride?: string) {
   const num = String(n).padStart(t.padding, "0");
   const lineToken = lineNumber.replace(/[^A-Z0-9]/gi, "").slice(0, 8);
-  const parts = [t.prefix];
+  const parts = [prefixOverride || t.prefix];
   if (t.includeLine && lineToken) parts.push(lineToken);
   parts.push(num);
   return parts.filter(Boolean).join(t.separator);
+}
+
+function resolveTypePrefix(standards: SupportStandard[], supportType?: string): string | undefined {
+  if (!supportType) return undefined;
+  const t = supportType.toLowerCase();
+  // Direct keyword map for common recommendation phrasings not exactly matching standard names
+  const aliases: { match: RegExp; id: string }[] = [
+    { match: /constant\s*spring/, id: "spring-constant" },
+    { match: /variable\s*spring|spring\s*hanger/, id: "spring-variable" },
+    { match: /u-?bolt/, id: "ubolt" },
+    { match: /guide/, id: "guide" },
+    { match: /anchor/, id: "anchor" },
+    { match: /snubber|vibration/, id: "snubber" },
+    { match: /trunnion|dummy\s*leg/, id: "trunnion" },
+    { match: /riser|hold-?down|clamp/, id: "clamp" },
+    { match: /slide\s*plate|ptfe|graphite/, id: "slide-plate" },
+    { match: /shoe|rest/, id: "rest-shoe" },
+    { match: /stop/, id: "anchor" },
+  ];
+  for (const a of aliases) {
+    if (a.match.test(t)) {
+      const std = standards.find((s) => s.id === a.id);
+      if (std?.tagPrefix) return std.tagPrefix;
+    }
+  }
+  // Fallback: substring match against standard names
+  const std = standards.find((s) => t.includes(s.name.toLowerCase()));
+  return std?.tagPrefix;
 }
 
 const sampleLine: LineInput = {
