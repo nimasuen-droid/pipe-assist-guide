@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useApp } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -41,7 +41,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function InputsPage() {
   const { line, setLine, wizard, setWizard, savedProjects, saveProject, loadProject, deleteProject, loadSample, reset } = useApp();
-  const nav = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
