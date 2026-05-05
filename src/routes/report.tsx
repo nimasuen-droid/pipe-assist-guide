@@ -107,7 +107,7 @@ function ReportPage() {
   };
 
   const entry: SupportRegisterEntry | null = useMemo(
-    () => buildEntry(previewTag(tagCounter)),
+    () => buildEntry(previewTag(tagCounter, recommendation?.primary)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [recommendation, line, wizard, tagging, tagCounter, structureId],
   );
@@ -123,7 +123,9 @@ function ReportPage() {
 
   const r = recommendation;
   const mto = generateMTO(entry);
-  const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) => previewTag(tagCounter + i));
+  const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) =>
+    previewTag(tagCounter + i, recommendation?.primary),
+  );
   const selectedStructure = structures.find((s) => s.id === structureId);
   const attachedCount = selectedStructure
     ? register.filter((r) => r.structureId === selectedStructure.id).length
@@ -135,7 +137,7 @@ function ReportPage() {
     if (!recommendation) return;
     const n = Math.max(1, qty);
     for (let i = 0; i < n; i++) {
-      const tag = nextTag();
+      const tag = nextTag(recommendation?.primary);
       const e = buildEntry(tag);
       if (e) addToRegister(e);
     }
