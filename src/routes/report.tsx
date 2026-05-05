@@ -196,7 +196,7 @@ function ReportPage() {
                 </div>
                 <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs">
                   <div className="text-muted-foreground mb-0.5">Next tag preview</div>
-                  <div className="font-mono text-sm text-primary">{previewTag(tagCounter)}</div>
+                  <div className="font-mono text-sm text-primary">{previewTag(tagCounter, recommendation?.primary)}</div>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Counter at <b className="text-foreground">{tagCounter}</b></span>
