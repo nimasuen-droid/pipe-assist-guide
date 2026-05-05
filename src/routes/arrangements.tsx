@@ -420,6 +420,9 @@ function ArrangementsPage() {
           </p>
         </CardContent>
       </Card>
+      <FlowFooter
+        hint={structures.length ? `${structures.length} structure(s) defined.` : "Optional — skip if no structures needed."}
+      />
     </div>
   );
 }
