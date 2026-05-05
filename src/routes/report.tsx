@@ -107,7 +107,7 @@ function ReportPage() {
   };
 
   const entry: SupportRegisterEntry | null = useMemo(
-    () => buildEntry(previewTag(tagCounter)),
+    () => buildEntry(previewTag(tagCounter, recommendation?.primary)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [recommendation, line, wizard, tagging, tagCounter, structureId],
   );
@@ -123,7 +123,9 @@ function ReportPage() {
 
   const r = recommendation;
   const mto = generateMTO(entry);
-  const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) => previewTag(tagCounter + i));
+  const previewTags = Array.from({ length: Math.max(1, qty) }, (_, i) =>
+    previewTag(tagCounter + i, recommendation?.primary),
+  );
   const selectedStructure = structures.find((s) => s.id === structureId);
   const attachedCount = selectedStructure
     ? register.filter((r) => r.structureId === selectedStructure.id).length
@@ -135,7 +137,7 @@ function ReportPage() {
     if (!recommendation) return;
     const n = Math.max(1, qty);
     for (let i = 0; i < n; i++) {
-      const tag = nextTag();
+      const tag = nextTag(recommendation?.primary);
       const e = buildEntry(tag);
       if (e) addToRegister(e);
     }
@@ -194,7 +196,7 @@ function ReportPage() {
                 </div>
                 <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs">
                   <div className="text-muted-foreground mb-0.5">Next tag preview</div>
-                  <div className="font-mono text-sm text-primary">{previewTag(tagCounter)}</div>
+                  <div className="font-mono text-sm text-primary">{previewTag(tagCounter, recommendation?.primary)}</div>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Counter at <b className="text-foreground">{tagCounter}</b></span>
