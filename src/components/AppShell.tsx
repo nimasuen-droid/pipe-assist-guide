@@ -22,6 +22,10 @@ import { AlertTriangle } from "lucide-react";
 import { FlowStepper } from "@/components/FlowStepper";
 import { isFlowPath } from "@/lib/flow";
 
+const homeNav = [
+  { to: "/", label: "Home", icon: Home },
+] as const;
+
 const flowNav = [
   { to: "/inputs", label: "1 · Project Context", icon: Gauge },
   { to: "/wizard", label: "2 · Selection Wizard", icon: Sparkles },
@@ -36,7 +40,6 @@ const dataNav = [
 ] as const;
 
 const toolsNav = [
-  { to: "/", label: "Home", icon: Home },
   { to: "/standards", label: "Support Standards", icon: Anchor },
   { to: "/codes", label: "Codes & References", icon: BookMarked },
   { to: "/manual", label: "User Manual", icon: BookOpen },
@@ -75,6 +78,7 @@ export function AppShell() {
         {/* Sidebar — fixed, does not scroll with main */}
         <aside className="hidden md:flex sticky top-12 self-start h-[calc(100vh-3rem)] w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
           <nav className="flex-1 p-2 overflow-y-auto">
+            <NavGroup label="Start" items={homeNav} pathname={loc.pathname} />
             <NavGroup label="Workflow" items={flowNav} pathname={loc.pathname} />
             <NavGroup label="Data" items={dataNav} pathname={loc.pathname} />
             <NavGroup label="Library & Help" items={toolsNav} pathname={loc.pathname} />
