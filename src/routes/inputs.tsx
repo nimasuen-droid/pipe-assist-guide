@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, DatabaseZap, Database, Save, FolderOpen, Trash2, FileDown, FileUp, Eraser } from "lucide-react";
+import { DatabaseZap, Database, Save, FolderOpen, Trash2, FileDown, FileUp, Eraser } from "lucide-react";
 import { toast } from "sonner";
 import { useRef } from "react";
+import { FlowFooter } from "@/components/FlowFooter";
 
 export const Route = createFileRoute("/inputs")({
   head: () => ({
@@ -216,11 +217,10 @@ function InputsPage() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button size="lg" onClick={() => nav({ to: "/wizard" })}>
-          Continue to Wizard <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <FlowFooter
+        hint={line.projectName ? "Project context captured." : "Add at least project name and line number."}
+        primaryDisabled={!(line.projectName && line.lineNumber)}
+      />
     </div>
   );
 }
