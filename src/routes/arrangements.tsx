@@ -439,7 +439,7 @@ function QuickAddDialog({
   defaultInsulation: string;
   onClose: () => void;
   onCreate: (e: SupportRegisterEntry) => void;
-  nextTag: () => string;
+  nextTag: (supportType?: string) => string;
 }) {
   const remaining = structure.maxSupports - attachedCount;
   const elevation = structure.dimensions.find((d) => /post height|cantilever/i.test(d.label))?.value;
