@@ -95,11 +95,14 @@ function renderShape(id: string) {
       return (
         <>
           <Pipe />
-          {/* U-bolt */}
-          <path d="M82 22 L82 40 A18 18 0 0 0 118 40 L118 22" stroke={ACCENT} strokeWidth={2} />
+          {/* U-bolt: U wraps over top of pipe, threaded legs go down through support plate */}
+          <path d="M82 40 L82 22 A18 18 0 0 1 118 22 L118 40" stroke={ACCENT} strokeWidth={2} />
+          <line x1={82} y1={40} x2={82} y2={66} stroke={ACCENT} strokeWidth={2} />
+          <line x1={118} y1={40} x2={118} y2={66} stroke={ACCENT} strokeWidth={2} />
           <rect x={70} y={54} width={60} height={6} fill={STEEL} />
-          <line x1={82} y1={22} x2={82} y2={18} stroke={ACCENT} />
-          <line x1={118} y1={22} x2={118} y2={18} stroke={ACCENT} />
+          {/* nuts under plate */}
+          <rect x={78} y={60} width={8} height={4} fill={STEEL} />
+          <rect x={114} y={60} width={8} height={4} fill={STEEL} />
           <GroundLine />
         </>
       );
