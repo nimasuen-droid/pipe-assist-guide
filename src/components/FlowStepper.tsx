@@ -43,8 +43,8 @@ export function FlowStepper() {
             <li key={step.id} className="flex items-center flex-1 min-w-fit">
               <Link
                 to={step.to}
-                disabled={blocked}
                 aria-current={status === "current" ? "step" : undefined}
+                aria-disabled={blocked || undefined}
                 onClick={(e) => {
                   if (blocked) e.preventDefault();
                 }}
