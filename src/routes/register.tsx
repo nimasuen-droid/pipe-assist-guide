@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, Trash2, Pencil, Layers } from "lucide-react";
 import { exportRegisterCSV } from "@/lib/export";
+import { FlowFooter } from "@/components/FlowFooter";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -136,6 +137,10 @@ function RegisterPage() {
         structures={structures}
         onClose={() => setBulkOpen(false)}
         onApply={(patch) => { bulkUpdateRegister(selectedIds, patch); setBulkOpen(false); setSelected(new Set()); }}
+      />
+      <FlowFooter
+        primaryDisabled={register.length === 0}
+        hint={register.length === 0 ? "Add at least one support to continue." : undefined}
       />
     </div>
   );
