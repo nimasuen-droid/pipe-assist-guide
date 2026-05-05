@@ -433,15 +433,17 @@ export const useApp = create<AppState>()(
           return { tagging, tagCounter };
         }),
       resetTagCounter: (n) => set((s) => ({ tagCounter: n ?? s.tagging.startIndex })),
-      nextTag: (): string => {
-        const { tagging, tagCounter, line } = get();
-        const tag = buildTag(tagging, line.lineNumber || "", tagCounter);
+      nextTag: (supportType?: string): string => {
+        const { tagging, tagCounter, line, standards } = get();
+        const prefix = resolveTypePrefix(standards, supportType);
+        const tag = buildTag(tagging, line.lineNumber || "", tagCounter, prefix);
         set({ tagCounter: tagCounter + 1 });
         return tag;
       },
-      previewTag: (n: number): string => {
-        const { tagging, line } = get();
-        return buildTag(tagging, line.lineNumber || "", n);
+      previewTag: (n: number, supportType?: string): string => {
+        const { tagging, line, standards } = get();
+        const prefix = resolveTypePrefix(standards, supportType);
+        return buildTag(tagging, line.lineNumber || "", n, prefix);
       },
       updateStandard: (id, p) =>
         set((s) => ({
