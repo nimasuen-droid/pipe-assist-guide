@@ -4,7 +4,6 @@ import { recommendSupport } from "@/lib/recommend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles } from "lucide-react";
 import { FlowFooter } from "@/components/FlowFooter";
 
 export const Route = createFileRoute("/wizard")({
