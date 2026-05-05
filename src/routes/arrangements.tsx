@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useApp } from "@/lib/store";
+import { FlowFooter } from "@/components/FlowFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -420,6 +421,9 @@ function ArrangementsPage() {
           </p>
         </CardContent>
       </Card>
+      <FlowFooter
+        hint={structures.length ? `${structures.length} structure(s) defined.` : "Optional — skip if no structures needed."}
+      />
     </div>
   );
 }

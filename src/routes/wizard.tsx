@@ -4,7 +4,6 @@ import { recommendSupport } from "@/lib/recommend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles } from "lucide-react";
+import { FlowFooter } from "@/components/FlowFooter";
 
 export const Route = createFileRoute("/wizard")({
   head: () => ({
@@ -149,11 +148,11 @@ function WizardPage() {
         </CardContent>
       </Card>
 
-      <div className="fixed bottom-16 md:static inset-x-0 px-4 md:px-0 md:flex md:justify-end z-20">
-        <Button size="lg" className="w-full md:w-auto shadow-lg" onClick={generate}>
-          <Sparkles className="mr-2 h-4 w-4" /> Generate Recommendation
-        </Button>
-      </div>
+      <FlowFooter
+        primaryLabel="Generate Recommendation"
+        onPrimary={generate}
+        hint="Answers drive the recommendation engine."
+      />
     </div>
   );
 }

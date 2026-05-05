@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef } from "react";
 import * as XLSX from "xlsx";
 import { useApp } from "@/lib/store";
+import { FlowFooter } from "@/components/FlowFooter";
 import { generateMTO } from "@/lib/mto";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -379,6 +380,7 @@ function MTOPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <FlowFooter hint="Use Export Excel / Print above to save the deliverable." />
     </div>
   );
 }
