@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useApp } from "@/lib/store";
+import { FlowFooter } from "@/components/FlowFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -410,6 +411,7 @@ function ReportPage() {
         <p className="text-xs text-muted-foreground italic border-t border-border pt-4">
           This is a decision support tool for preliminary support selection. Final support design shall be verified against project specifications, stress analysis, structural capacity, site conditions, and applicable codes.
         </p>
+        <FlowFooter hint="Add this support to the register, then move on to structures." />
       </div>
     </TooltipProvider>
   );
