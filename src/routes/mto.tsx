@@ -380,11 +380,7 @@ function MTOPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <FlowFooter
-        primaryLabel="Save & Finish"
-        onPrimary={() => { /* no-op: export buttons above handle saving */ }}
-        hint="Use Export Excel / Print above to save the deliverable."
-      />
+      <FlowFooter hint="Use Export Excel / Print above to save the deliverable." />
     </div>
   );
 }
