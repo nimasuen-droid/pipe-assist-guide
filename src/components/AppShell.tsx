@@ -32,11 +32,8 @@ const flowNav = [
   { to: "/report", label: "3 · Recommendation", icon: FileBarChart2 },
   { to: "/arrangements", label: "4 · Structure & Linking", icon: Building2 },
   { to: "/review", label: "5 · Review Inputs", icon: ClipboardCheck },
-  { to: "/mto", label: "6 · Material Take-Off", icon: Boxes },
-] as const;
-
-const dataNav = [
-  { to: "/register", label: "Support Register", icon: ListChecks },
+  { to: "/register", label: "6 · Support Register", icon: ListChecks },
+  { to: "/mto", label: "7 · Material Take-Off", icon: Boxes },
 ] as const;
 
 const toolsNav = [
@@ -80,7 +77,6 @@ export function AppShell() {
           <nav className="flex-1 p-2 overflow-y-auto">
             <NavGroup label="Start" items={homeNav} pathname={loc.pathname} />
             <NavGroup label="Workflow" items={flowNav} pathname={loc.pathname} />
-            <NavGroup label="Data" items={dataNav} pathname={loc.pathname} />
             <NavGroup label="Library & Help" items={toolsNav} pathname={loc.pathname} />
           </nav>
           <div className="border-t border-sidebar-border p-3 text-[11px] text-muted-foreground">

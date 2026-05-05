@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Gauge, Sparkles, FileBarChart2, Building2, ClipboardCheck, Boxes } from "lucide-react";
+import { Gauge, Sparkles, FileBarChart2, Building2, ClipboardCheck, Boxes, ListChecks } from "lucide-react";
 
 export interface FlowStep {
   id: string;
@@ -22,7 +22,9 @@ export const FLOW_STEPS: FlowStep[] = [
     blurb: "Place structures and link supports to them." },
   { id: "review", num: 5, to: "/review", label: "Review Inputs", short: "Review", icon: ClipboardCheck,
     blurb: "Verify everything before generating MTO." },
-  { id: "output", num: 6, to: "/mto", label: "Material Take-Off", short: "Output", icon: Boxes,
+  { id: "register", num: 6, to: "/register", label: "Support Register", short: "Register", icon: ListChecks,
+    blurb: "Confirm the project support register before MTO." },
+  { id: "output", num: 7, to: "/mto", label: "Material Take-Off", short: "Output", icon: Boxes,
     blurb: "Generate, export and save the final output." },
 ];
 
@@ -81,6 +83,9 @@ export function computeStepStatus(stepId: string, currentPath: string, s: FlowSt
     case "review":
       if (!s.hasContext) return "blocked";
       return isCurrent ? "current" : "available";
+    case "register":
+      if (!s.hasContext) return "blocked";
+      return isCurrent ? "current" : s.hasRegister ? "complete" : "available";
     case "output":
       if (!s.hasRegister) return "blocked";
       return isCurrent ? "current" : "available";
