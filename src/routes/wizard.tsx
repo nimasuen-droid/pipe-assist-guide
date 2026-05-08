@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FlowFooter } from "@/components/FlowFooter";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Info } from "lucide-react";
 
 export const Route = createFileRoute("/wizard")({
   head: () => ({
@@ -55,6 +57,8 @@ function WizardPage() {
     nav({ to: "/report" });
   };
 
+  const override = !!wizard.overrideMode;
+
   return (
     <div className="space-y-6 pb-24">
       <div>
@@ -62,6 +66,88 @@ function WizardPage() {
         <p className="text-sm text-muted-foreground">Answer the practical questions a piping engineer would ask on site.</p>
       </div>
 
+      <Card className="border-accent/40 bg-accent/5">
+        <CardContent className="pt-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <Checkbox
+              id="override-mode"
+              checked={override}
+              onCheckedChange={(v) => setWizard({ overrideMode: !!v })}
+              className="mt-0.5"
+            />
+            <div className="flex-1">
+              <Label htmlFor="override-mode" className="text-sm font-medium cursor-pointer">
+                Override wizard logic / Use markup-based support function
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5 flex items-start gap-1.5">
+                <Info className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" />
+                Pick the support function from your isometric / GA / stress markup. The app will still recommend the actual hardware and run validation checks.
+              </p>
+            </div>
+          </div>
+
+          {override && (
+            <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-accent/30">
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Support function (from markup)</Label>
+                <Select
+                  value={wizard.manualFunction ?? "rest"}
+                  onValueChange={(v) => setWizard({ manualFunction: v as never })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rest">Rest</SelectItem>
+                    <SelectItem value="guide">Guide</SelectItem>
+                    <SelectItem value="anchor">Anchor</SelectItem>
+                    <SelectItem value="line-stop">Line Stop / Axial Stop</SelectItem>
+                    <SelectItem value="hold-down">Hold-down</SelectItem>
+                    <SelectItem value="spring">Spring Support</SelectItem>
+                    <SelectItem value="hanger">Hanger</SelectItem>
+                    <SelectItem value="vibration-restraint">Vibration Restraint</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Line orientation / location</Label>
+                <Select
+                  value={wizard.orientation}
+                  onValueChange={(v) => setWizard({ orientation: v as never })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="horizontal">Horizontal run</SelectItem>
+                    <SelectItem value="vertical">Vertical run</SelectItem>
+                    <SelectItem value="sloped">Sloped line</SelectItem>
+                    <SelectItem value="change-direction">Elbow / change in direction</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="sm:col-span-2">
+                <Label className="text-xs uppercase text-muted-foreground">At feature</Label>
+                <Select value={wizard.nearFeature} onValueChange={(v) => setWizard({ nearFeature: v as never })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Mid-run</SelectItem>
+                    <SelectItem value="branch">Branch connection</SelectItem>
+                    <SelectItem value="equipment-nozzle">Equipment nozzle connection</SelectItem>
+                    <SelectItem value="valve">Valve</SelectItem>
+                    <SelectItem value="flange">Flange</SelectItem>
+                    <SelectItem value="bend">Bend</SelectItem>
+                    <SelectItem value="anchor-point">Anchor point</SelectItem>
+                    <SelectItem value="expansion-loop">Expansion loop</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="sm:col-span-2 text-xs text-muted-foreground italic">
+                Markup mode selects the intended support function only. Hardware, movement and validations are still derived from line data, insulation, temperature and structure availability.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {!override && (
+        <>
       <Card>
         <CardHeader><CardTitle className="text-base">Geometry & location</CardTitle></CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2">
@@ -147,11 +233,13 @@ function WizardPage() {
           </div>
         </CardContent>
       </Card>
+        </>
+      )}
 
       <FlowFooter
         primaryLabel="Generate Recommendation"
         onPrimary={generate}
-        hint="Answers drive the recommendation engine."
+        hint={override ? "Markup mode: app validates your selection and recommends hardware." : "Answers drive the recommendation engine."}
       />
     </div>
   );

@@ -37,6 +37,8 @@ const defaultWizard: WizardInput = {
   permanent: true,
   weldingAllowed: true,
   specialService: "none",
+  overrideMode: false,
+  manualFunction: "rest",
 };
 
 interface AppState {
