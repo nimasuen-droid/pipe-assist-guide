@@ -156,6 +156,13 @@ function ReportPage() {
             </div>
             <p className="text-sm text-muted-foreground mt-1">{r.function}</p>
             <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+              <Badge variant="outline" className={wizard.overrideMode ? "border-accent text-accent" : ""}>
+                {wizard.overrideMode ? "Markup Override Mode" : "Wizard Mode"}
+              </Badge>
+              {wizard.overrideMode && wizard.manualFunction && (
+                <span>Function <b className="text-foreground capitalize">{wizard.manualFunction.replace("-", " ")}</b></span>
+              )}
+              <span>Orientation <b className="text-foreground capitalize">{wizard.orientation.replace("-", " ")}</b></span>
               <span>Tag <b className="text-foreground">{entry.tag}</b></span>
               <span>Line <b className="text-foreground">{entry.lineNumber}</b></span>
               <span>Service <b className="text-foreground">{line.service || "—"}</b></span>
