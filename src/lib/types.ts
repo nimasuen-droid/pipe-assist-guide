@@ -14,6 +14,16 @@ export type Verdict =
   | "STRESS CHECK REQUIRED"
   | "NOT RECOMMENDED";
 
+export type SupportFunction =
+  | "rest"
+  | "guide"
+  | "anchor"
+  | "line-stop"
+  | "hold-down"
+  | "spring"
+  | "hanger"
+  | "vibration-restraint";
+
 export interface LineInput {
   projectName: string;
   area: string;
@@ -57,6 +67,8 @@ export interface WizardInput {
     | "sour"
     | "corrosive"
     | "firewater";
+  overrideMode?: boolean;
+  manualFunction?: SupportFunction;
 }
 
 export interface SupportRecommendation {
