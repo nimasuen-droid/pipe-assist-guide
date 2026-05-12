@@ -24,7 +24,8 @@ function materialFor(line: LineInput) {
 }
 
 export function generateMTO(entry: SupportRegisterEntry): MTOItem[] {
-  const dn = parseFloat(entry.line.pipeSize || "4");
+  const dnRaw = parseFloat(entry.line.pipeSize || "4");
+  const dn = Number.isFinite(dnRaw) && dnRaw > 0 ? dnRaw : 4;
   const mat = materialFor(entry.line);
   const th = thicknessFor(dn);
   const bolt = boltSizeFor(dn);
