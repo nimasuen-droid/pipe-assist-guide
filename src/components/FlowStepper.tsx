@@ -53,7 +53,8 @@ export function FlowStepper() {
                   "group flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium transition flex-1",
                   status === "current" && "bg-primary text-primary-foreground shadow-sm",
                   status === "complete" && "text-foreground hover:bg-muted",
-                  status === "available" && "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  status === "available" &&
+                    "text-muted-foreground hover:bg-muted hover:text-foreground",
                   status === "blocked" && "text-muted-foreground/50 cursor-not-allowed",
                 )}
                 title={blocked ? "Complete previous step first" : step.label}
@@ -63,7 +64,8 @@ export function FlowStepper() {
                     "h-5 w-5 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold",
                     status === "current" && "bg-primary-foreground/20 text-primary-foreground",
                     status === "complete" && "bg-success/20 text-success",
-                    status === "available" && "bg-muted text-muted-foreground group-hover:bg-foreground/10",
+                    status === "available" &&
+                      "bg-muted text-muted-foreground group-hover:bg-foreground/10",
                     status === "blocked" && "bg-muted/40",
                   )}
                 >

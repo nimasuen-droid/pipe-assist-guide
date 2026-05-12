@@ -60,13 +60,7 @@ export interface WizardInput {
   verticalAdjustment: boolean;
   permanent: boolean;
   weldingAllowed: boolean;
-  specialService:
-    | "none"
-    | "cryogenic"
-    | "hot"
-    | "sour"
-    | "corrosive"
-    | "firewater";
+  specialService: "none" | "cryogenic" | "hot" | "sour" | "corrosive" | "firewater";
   overrideMode?: boolean;
   manualFunction?: SupportFunction;
 }
@@ -146,6 +140,6 @@ export interface Structure {
   area?: string;
   dimensions: { label: string; value: string; formula: string }[];
   mto: StructureMtoLine[]; // empty for existing-steel
-  maxSupports: number;     // soft limit (1 for inverted-l default)
+  maxSupports: number; // soft limit (1 for inverted-l default)
   notes: string;
 }

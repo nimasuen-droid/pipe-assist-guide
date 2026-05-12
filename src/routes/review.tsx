@@ -20,7 +20,8 @@ export const Route = createFileRoute("/review")({
       { title: "Review Inputs — Pipe Support Smart Assist" },
       {
         name: "description",
-        content: "Verify project context, supports and structures before generating the material take-off.",
+        content:
+          "Verify project context, supports and structures before generating the material take-off.",
       },
     ],
   }),
@@ -56,11 +57,17 @@ function StatusRow({
             <Icon className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-sm font-medium">{label}</span>
             {ok ? (
-              <Badge variant="outline" className="border-success/40 text-success bg-success/10 text-[10px]">
+              <Badge
+                variant="outline"
+                className="border-success/40 text-success bg-success/10 text-[10px]"
+              >
                 Ready
               </Badge>
             ) : (
-              <Badge variant="outline" className="border-warning/40 text-warning bg-warning/10 text-[10px]">
+              <Badge
+                variant="outline"
+                className="border-warning/40 text-warning bg-warning/10 text-[10px]"
+              >
                 Action needed
               </Badge>
             )}
@@ -92,7 +99,8 @@ function ReviewPage() {
   if (!regOk) blockers.push("No supports added to register");
 
   const warnings: string[] = [];
-  if (!strOk) warnings.push("No structures defined — supports will not be grouped to racks/pedestals.");
+  if (!strOk)
+    warnings.push("No structures defined — supports will not be grouped to racks/pedestals.");
   if (unlinked > 0) warnings.push(`${unlinked} support(s) not linked to a structure.`);
   if (!recOk) warnings.push("No recommendation generated yet.");
 
@@ -103,7 +111,8 @@ function ReviewPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Review Inputs</h1>
         <p className="text-sm text-muted-foreground">
-          Quick check before generating the Material Take-Off. Edit any item below or jump back via the stepper above.
+          Quick check before generating the Material Take-Off. Edit any item below or jump back via
+          the stepper above.
         </p>
       </div>
 
@@ -206,7 +215,9 @@ function ReviewPage() {
               className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm"
             >
               <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-              <span><b>Blocker:</b> {b}</span>
+              <span>
+                <b>Blocker:</b> {b}
+              </span>
             </div>
           ))}
           {warnings.map((w) => (
@@ -215,7 +226,9 @@ function ReviewPage() {
               className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm"
             >
               <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-              <span><b>Warning:</b> {w}</span>
+              <span>
+                <b>Warning:</b> {w}
+              </span>
             </div>
           ))}
         </div>

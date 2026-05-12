@@ -54,7 +54,8 @@ export const Route = createFileRoute("/arrangements")({
       { title: "Structures — Pipe Support Smart Assist" },
       {
         name: "description",
-        content: "Define support structures (Goal Post, Inverted L, Pedestal, Existing Steel) that carry one or more pipe supports.",
+        content:
+          "Define support structures (Goal Post, Inverted L, Pedestal, Existing Steel) that carry one or more pipe supports.",
       },
     ],
   }),
@@ -108,7 +109,8 @@ function ArrangementsPage() {
       dimensions: computed,
       mto,
       maxSupports: effectiveMax,
-      notes: kind === "existing-steel" ? "Verify spare capacity of existing member before tie-in." : "",
+      notes:
+        kind === "existing-steel" ? "Verify spare capacity of existing member before tie-in." : "",
     };
     addStructure(s);
     toast.success(`Structure ${tag} created`);
@@ -145,8 +147,9 @@ function ArrangementsPage() {
           <h1 className="text-2xl font-semibold tracking-tight">Structures</h1>
         </div>
         <p className="text-sm text-muted-foreground mt-1">
-          A <em>structure</em> (Goal Post, Inverted L, Pedestal, Pipe Rack Beam, Existing Steel) <em>carries</em> one or more pipe supports.
-          Pipe supports (function + hardware) are then created in the Recommendation tab and assigned to a structure.
+          A <em>structure</em> (Goal Post, Inverted L, Pedestal, Pipe Rack Beam, Existing Steel){" "}
+          <em>carries</em> one or more pipe supports. Pipe supports (function + hardware) are then
+          created in the Recommendation tab and assigned to a structure.
         </p>
       </div>
 
@@ -160,17 +163,31 @@ function ArrangementsPage() {
         <CardContent className="grid gap-3 md:grid-cols-3">
           <div>
             <Label className="text-[11px] uppercase text-muted-foreground">Kind</Label>
-            <Select value={kind} onValueChange={(v) => { setKind(v as StructureKind); setMaxSupports(null); }}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+            <Select
+              value={kind}
+              onValueChange={(v) => {
+                setKind(v as StructureKind);
+                setMaxSupports(null);
+              }}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {STRUCTURE_KINDS.map((k) => <SelectItem key={k.id} value={k.id}>{k.name}</SelectItem>)}
+                {STRUCTURE_KINDS.map((k) => (
+                  <SelectItem key={k.id} value={k.id}>
+                    {k.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-[11px] uppercase text-muted-foreground">Load class</Label>
             <Select value={cls} onValueChange={(v) => setCls(v as LoadClass)}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Light">Light</SelectItem>
                 <SelectItem value="Medium">Medium</SelectItem>
@@ -180,15 +197,24 @@ function ArrangementsPage() {
           </div>
           <div>
             <Label className="text-[11px] uppercase text-muted-foreground">Area</Label>
-            <Input value={area} onChange={(e) => setArea(e.target.value)} placeholder={line.area || "Plant area"} className="h-9" />
+            <Input
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              placeholder={line.area || "Plant area"}
+              className="h-9"
+            />
           </div>
           <div className="md:col-span-3 text-xs text-muted-foreground">
-            <Badge variant="outline" className="mr-2 border-primary/40 text-primary">{meta.prefix}</Badge>
+            <Badge variant="outline" className="mr-2 border-primary/40 text-primary">
+              {meta.prefix}
+            </Badge>
             {meta.description}
           </div>
 
           <div>
-            <Label className="text-[11px] uppercase text-muted-foreground">Max supports on this structure</Label>
+            <Label className="text-[11px] uppercase text-muted-foreground">
+              Max supports on this structure
+            </Label>
             <Input
               type="number"
               min={1}
@@ -224,20 +250,39 @@ function ArrangementsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3 text-xs">
-          <div><Label className="text-[11px]">Pipe CL elevation</Label>{num("pipeCL")}</div>
-          <div><Label className="text-[11px]">Foundation / top of steel</Label>{num("topOfSteel")}</div>
-          <div><Label className="text-[11px]">Pipe group width</Label>{num("groupWidth")}</div>
-          <div><Label className="text-[11px]">Side clearance</Label>{num("sideClearance")}</div>
-          <div><Label className="text-[11px]">Column/wall → pipe CL</Label>{num("columnToCL")}</div>
+          <div>
+            <Label className="text-[11px]">Pipe CL elevation</Label>
+            {num("pipeCL")}
+          </div>
+          <div>
+            <Label className="text-[11px]">Foundation / top of steel</Label>
+            {num("topOfSteel")}
+          </div>
+          <div>
+            <Label className="text-[11px]">Pipe group width</Label>
+            {num("groupWidth")}
+          </div>
+          <div>
+            <Label className="text-[11px]">Side clearance</Label>
+            {num("sideClearance")}
+          </div>
+          <div>
+            <Label className="text-[11px]">Column/wall → pipe CL</Label>
+            {num("columnToCL")}
+          </div>
         </CardContent>
       </Card>
 
       {/* Preview dims + MTO */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Preliminary dimensions</CardTitle></CardHeader>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Preliminary dimensions</CardTitle>
+          </CardHeader>
           <CardContent className="grid gap-2 text-sm">
-            {computed.length === 0 && <p className="text-xs text-muted-foreground">No dimensions for this kind.</p>}
+            {computed.length === 0 && (
+              <p className="text-xs text-muted-foreground">No dimensions for this kind.</p>
+            )}
             {computed.map((c) => (
               <div key={c.label} className="rounded-md border border-border bg-muted/30 p-2">
                 <div className="flex items-baseline justify-between">
@@ -250,16 +295,33 @@ function ArrangementsPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><ListChecks className="h-4 w-4 text-primary"/>Structure MTO (shared)</CardTitle></CardHeader>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <ListChecks className="h-4 w-4 text-primary" />
+              Structure MTO (shared)
+            </CardTitle>
+          </CardHeader>
           <CardContent>
             {mto.length === 0 ? (
-              <p className="text-xs text-muted-foreground">No structural MTO — connection check only.</p>
+              <p className="text-xs text-muted-foreground">
+                No structural MTO — connection check only.
+              </p>
             ) : (
               <table className="w-full text-xs">
-                <thead className="text-muted-foreground"><tr><th className="text-left py-1">Component</th><th className="text-left py-1">Qty</th><th className="text-left py-1">Size</th></tr></thead>
+                <thead className="text-muted-foreground">
+                  <tr>
+                    <th className="text-left py-1">Component</th>
+                    <th className="text-left py-1">Qty</th>
+                    <th className="text-left py-1">Size</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {mto.map((m, i) => (
-                    <tr key={i} className="border-t border-border/60"><td className="py-1">{m.component}</td><td className="py-1">{m.qty}</td><td className="py-1 font-mono">{m.size}</td></tr>
+                    <tr key={i} className="border-t border-border/60">
+                      <td className="py-1">{m.component}</td>
+                      <td className="py-1">{m.qty}</td>
+                      <td className="py-1 font-mono">{m.size}</td>
+                    </tr>
                   ))}
                 </tbody>
               </table>
@@ -272,15 +334,22 @@ function ArrangementsPage() {
       <div className="rounded-md border border-warning/50 bg-warning/10 p-4 flex items-start gap-3">
         <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
         <p className="text-sm text-foreground/90">
-          <b>Multiple supports on a single structure require combined load verification by structural design.</b> Preliminary
-          sizes shown here assume one governing support; reactions from all attached supports must be summed in the final check.
+          <b>
+            Multiple supports on a single structure require combined load verification by structural
+            design.
+          </b>{" "}
+          Preliminary sizes shown here assume one governing support; reactions from all attached
+          supports must be summed in the final check.
         </p>
       </div>
 
       {/* Structure register */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2"><Building2 className="h-4 w-4 text-primary"/>Structure register</CardTitle>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Building2 className="h-4 w-4 text-primary" />
+            Structure register
+          </CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto p-0">
           {structures.length === 0 ? (
@@ -289,8 +358,20 @@ function ArrangementsPage() {
             <table className="w-full text-sm">
               <thead className="text-xs uppercase text-muted-foreground bg-muted/50">
                 <tr>
-                  {["Tag","Kind","Area","Class","Max","Attached","Shared","MTO lines",""].map((h) => (
-                    <th key={h} className="text-left py-2 px-3">{h}</th>
+                  {[
+                    "Tag",
+                    "Kind",
+                    "Area",
+                    "Class",
+                    "Max",
+                    "Attached",
+                    "Shared",
+                    "MTO lines",
+                    "",
+                  ].map((h) => (
+                    <th key={h} className="text-left py-2 px-3">
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -305,12 +386,21 @@ function ArrangementsPage() {
                       <td className="py-2 px-3 font-medium">{s.tag}</td>
                       <td className="py-2 px-3">{s.name}</td>
                       <td className="py-2 px-3">{s.area || "—"}</td>
-                      <td className="py-2 px-3">{s.loadClass}{s.dynamic ? " · dyn" : ""}</td>
+                      <td className="py-2 px-3">
+                        {s.loadClass}
+                        {s.dynamic ? " · dyn" : ""}
+                      </td>
                       <td className="py-2 px-3">{s.maxSupports}</td>
                       <td className="py-2 px-3">
                         <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5"/>{attached} / {s.maxSupports}</span>
-                          <div className="h-1.5 w-16 rounded-full bg-muted overflow-hidden" title={`${util}% utilization`}>
+                          <span className="inline-flex items-center gap-1">
+                            <Users className="h-3.5 w-3.5" />
+                            {attached} / {s.maxSupports}
+                          </span>
+                          <div
+                            className="h-1.5 w-16 rounded-full bg-muted overflow-hidden"
+                            title={`${util}% utilization`}
+                          >
                             <div
                               className={`h-full ${util >= 100 ? "bg-destructive" : util >= 75 ? "bg-warning" : "bg-primary"}`}
                               style={{ width: `${Math.min(100, util)}%` }}
@@ -319,24 +409,61 @@ function ArrangementsPage() {
                           <span className="text-[11px] text-muted-foreground">{util}%</span>
                         </div>
                       </td>
-                      <td className="py-2 px-3">{shared ? <Badge className="bg-warning text-warning-foreground">Shared</Badge> : "—"}</td>
+                      <td className="py-2 px-3">
+                        {shared ? (
+                          <Badge className="bg-warning text-warning-foreground">Shared</Badge>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
                       <td className="py-2 px-3">{s.mto.length}</td>
                       <td className="py-2 px-3">
                         <div className="flex items-center gap-1 whitespace-nowrap">
-                          <Button size="sm" variant="outline" onClick={() => setQuickAddFor(s)} disabled={full} title={full ? "At max capacity" : "Add new support to this structure"}>
-                            <UserPlus className="h-3.5 w-3.5 mr-1"/>Add
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setQuickAddFor(s)}
+                            disabled={full}
+                            title={full ? "At max capacity" : "Add new support to this structure"}
+                          >
+                            <UserPlus className="h-3.5 w-3.5 mr-1" />
+                            Add
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => setAssignFor(s)} disabled={full} title="Assign existing support">
-                            <Link2 className="h-3.5 w-3.5 mr-1"/>Assign
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setAssignFor(s)}
+                            disabled={full}
+                            title="Assign existing support"
+                          >
+                            <Link2 className="h-3.5 w-3.5 mr-1" />
+                            Assign
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => setViewFor(s)} title="View assigned supports">
-                            <Eye className="h-3.5 w-3.5 mr-1"/>View ({attached})
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setViewFor(s)}
+                            title="View assigned supports"
+                          >
+                            <Eye className="h-3.5 w-3.5 mr-1" />
+                            View ({attached})
                           </Button>
-                          <Button size="icon" variant="ghost" onClick={() => setEditFor(s)} title="Edit structure">
-                            <Pencil className="h-4 w-4"/>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => setEditFor(s)}
+                            title="Edit structure"
+                          >
+                            <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" onClick={() => removeStructure(s.id)} disabled={attached > 0} title={attached > 0 ? "Detach supports first" : "Delete"}>
-                            <Trash2 className="h-4 w-4"/>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => removeStructure(s.id)}
+                            disabled={attached > 0}
+                            title={attached > 0 ? "Detach supports first" : "Delete"}
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </td>
@@ -409,18 +536,26 @@ function ArrangementsPage() {
 
       <Card className="bg-accent/5 border-accent/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2"><GraduationCap className="h-4 w-4 text-accent"/>Learning moment</CardTitle>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-accent" />
+            Learning moment
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm">
-            A goal post or inverted L is a <b>structure</b>, not a pipe support type. The pipe still rests on a shoe or is restrained by a U-bolt;
-            the structure simply carries that hardware. Pipe supports reference a structure ID — multiple supports may share one structure,
-            but structural quantities count once.
+            A goal post or inverted L is a <b>structure</b>, not a pipe support type. The pipe still
+            rests on a shoe or is restrained by a U-bolt; the structure simply carries that
+            hardware. Pipe supports reference a structure ID — multiple supports may share one
+            structure, but structural quantities count once.
           </p>
         </CardContent>
       </Card>
       <FlowFooter
-        hint={structures.length ? `${structures.length} structure(s) defined.` : "Optional — skip if no structures needed."}
+        hint={
+          structures.length
+            ? `${structures.length} structure(s) defined.`
+            : "Optional — skip if no structures needed."
+        }
       />
     </div>
   );
@@ -428,11 +563,23 @@ function ArrangementsPage() {
 
 // ── Quick-add a new support directly attached to this structure ──
 const PIPE_FUNCTIONS = ["Rest", "Guide", "Stop", "Anchor", "Hold-down"];
-const HARDWARE = ["Shoe", "Clamp", "U-bolt", "Wear Pad", "Sliding Plate", "Spring Hanger", "Trunnion"];
+const HARDWARE = [
+  "Shoe",
+  "Clamp",
+  "U-bolt",
+  "Wear Pad",
+  "Sliding Plate",
+  "Spring Hanger",
+  "Trunnion",
+];
 
 function QuickAddDialog({
-  structure, attachedCount, parentLine,
-  onClose, onCreate, nextTag,
+  structure,
+  attachedCount,
+  parentLine,
+  onClose,
+  onCreate,
+  nextTag,
 }: {
   structure: Structure;
   attachedCount: number;
@@ -442,17 +589,25 @@ function QuickAddDialog({
   nextTag: (supportType?: string) => string;
 }) {
   const remaining = structure.maxSupports - attachedCount;
-  const elevation = structure.dimensions.find((d) => /post height|cantilever/i.test(d.label))?.value;
+  const elevation = structure.dimensions.find((d) =>
+    /post height|cantilever/i.test(d.label),
+  )?.value;
   const [pipeFunction, setPipeFunction] = useState("Rest");
   const [hardware, setHardware] = useState("Shoe");
   const [lineNumber, setLineNumber] = useState(parentLine.lineNumber || "");
-  const [location, setLocation] = useState(`${parentLine.area || structure.area || ""}${elevation ? ` @ ${elevation}` : ""}`);
+  const [location, setLocation] = useState(
+    `${parentLine.area || structure.area || ""}${elevation ? ` @ ${elevation}` : ""}`,
+  );
   const [remarks, setRemarks] = useState("");
 
   const submit = () => {
     const tag = nextTag(`${hardware} (${pipeFunction})`);
     // Inherit the active project line so downstream MTO uses the real DN, material, temperature and insulation.
-    const inheritedLine = { ...parentLine, lineNumber: lineNumber || parentLine.lineNumber, area: parentLine.area || structure.area || "" };
+    const inheritedLine = {
+      ...parentLine,
+      lineNumber: lineNumber || parentLine.lineNumber,
+      area: parentLine.area || structure.area || "",
+    };
     const entry: SupportRegisterEntry = {
       id: crypto.randomUUID(),
       tag,
@@ -469,18 +624,31 @@ function QuickAddDialog({
       remarks: remarks || `Created from structure ${structure.tag}`,
       line: inheritedLine,
       wizard: {
-        orientation: "horizontal", nearFeature: "none", thermalMovement: true,
-        upliftPossible: false, vibration: false, axialMovement: "allow",
-        lateralMovement: "allow", verticalAdjustment: false, permanent: true,
-        weldingAllowed: true, specialService: "none",
+        orientation: "horizontal",
+        nearFeature: "none",
+        thermalMovement: true,
+        upliftPossible: false,
+        vibration: false,
+        axialMovement: "allow",
+        lateralMovement: "allow",
+        verticalAdjustment: false,
+        permanent: true,
+        weldingAllowed: true,
+        specialService: "none",
       },
       recommendation: {
         primary: `${hardware} (${pipeFunction})`,
-        alternates: [], function: pipeFunction,
+        alternates: [],
+        function: pipeFunction,
         why: [`Created directly on structure ${structure.tag}`],
-        movementAllowed: [], movementRestrained: [],
-        designChecks: [], followUpChecks: [], references: [],
-        riskFlags: [], learningMoment: "", verdict: "REVIEW REQUIRED",
+        movementAllowed: [],
+        movementRestrained: [],
+        designChecks: [],
+        followUpChecks: [],
+        references: [],
+        riskFlags: [],
+        learningMoment: "",
+        verdict: "REVIEW REQUIRED",
       },
       structureId: structure.id,
       hardware,
@@ -495,57 +663,95 @@ function QuickAddDialog({
         <DialogHeader>
           <DialogTitle>Add new support to {structure.tag}</DialogTitle>
           <DialogDescription>
-            Pre-filled from structure. Capacity: <b>{attachedCount}</b> / {structure.maxSupports} ({remaining} slot{remaining === 1 ? "" : "s"} left).
+            Pre-filled from structure. Capacity: <b>{attachedCount}</b> / {structure.maxSupports} (
+            {remaining} slot{remaining === 1 ? "" : "s"} left).
           </DialogDescription>
         </DialogHeader>
 
         <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-xs grid grid-cols-2 gap-2">
-          <div><span className="text-muted-foreground">Structure ID:</span> <b>{structure.tag}</b></div>
-          <div><span className="text-muted-foreground">Type:</span> <b>{structure.name}</b></div>
-          <div><span className="text-muted-foreground">Area:</span> <b>{structure.area || "—"}</b></div>
-          <div><span className="text-muted-foreground">Load class:</span> <b>{structure.loadClass}</b></div>
-          {elevation && <div className="col-span-2"><span className="text-muted-foreground">Elevation ref:</span> <b>{elevation}</b></div>}
+          <div>
+            <span className="text-muted-foreground">Structure ID:</span> <b>{structure.tag}</b>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Type:</span> <b>{structure.name}</b>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Area:</span> <b>{structure.area || "—"}</b>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Load class:</span> <b>{structure.loadClass}</b>
+          </div>
+          {elevation && (
+            <div className="col-span-2">
+              <span className="text-muted-foreground">Elevation ref:</span> <b>{elevation}</b>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Pipe function</Label>
             <Select value={pipeFunction} onValueChange={setPipeFunction}>
-              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
-              <SelectContent>{PIPE_FUNCTIONS.map((f) => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PIPE_FUNCTIONS.map((f) => (
+                  <SelectItem key={f} value={f}>
+                    {f}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs">Hardware</Label>
             <Select value={hardware} onValueChange={setHardware}>
-              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
-              <SelectContent>{HARDWARE.map((h) => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {HARDWARE.map((h) => (
+                  <SelectItem key={h} value={h}>
+                    {h}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs">Line number</Label>
-            <Input value={lineNumber} onChange={(e) => setLineNumber(e.target.value)} className="h-9"/>
+            <Input
+              value={lineNumber}
+              onChange={(e) => setLineNumber(e.target.value)}
+              className="h-9"
+            />
           </div>
           <div>
             <Label className="text-xs">Location</Label>
-            <Input value={location} onChange={(e) => setLocation(e.target.value)} className="h-9"/>
+            <Input value={location} onChange={(e) => setLocation(e.target.value)} className="h-9" />
           </div>
           <div className="col-span-2">
             <Label className="text-xs">Remarks</Label>
-            <Input value={remarks} onChange={(e) => setRemarks(e.target.value)} className="h-9"/>
+            <Input value={remarks} onChange={(e) => setRemarks(e.target.value)} className="h-9" />
           </div>
         </div>
 
         {attachedCount + 1 > 1 && (
           <div className="text-xs flex items-start gap-1.5 text-warning">
-            <AlertTriangle className="h-3.5 w-3.5 mt-0.5"/>
-            Multiple supports on a single structure require combined load verification by structural design.
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5" />
+            Multiple supports on a single structure require combined load verification by structural
+            design.
           </div>
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={submit} disabled={remaining <= 0}>Create support</Button>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={submit} disabled={remaining <= 0}>
+            Create support
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -554,7 +760,12 @@ function QuickAddDialog({
 
 // ── Assign / reassign an existing support ──
 function AssignDialog({
-  structure, register, structures, attachedCount, onClose, onAssign,
+  structure,
+  register,
+  structures,
+  attachedCount,
+  onClose,
+  onAssign,
 }: {
   structure: Structure;
   register: SupportRegisterEntry[];
@@ -569,7 +780,10 @@ function AssignDialog({
 
   const handlePick = (r: SupportRegisterEntry) => {
     if (r.structureId) setPendingReassign(r);
-    else { onAssign(r.id); onClose(); }
+    else {
+      onAssign(r.id);
+      onClose();
+    }
   };
 
   return (
@@ -578,12 +792,15 @@ function AssignDialog({
         <DialogHeader>
           <DialogTitle>Assign support to {structure.tag}</DialogTitle>
           <DialogDescription>
-            {remaining} slot{remaining === 1 ? "" : "s"} available. Unassigned supports first; reassignable supports show their current structure.
+            {remaining} slot{remaining === 1 ? "" : "s"} available. Unassigned supports first;
+            reassignable supports show their current structure.
           </DialogDescription>
         </DialogHeader>
 
         {candidates.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">No supports available to assign. Create one first.</p>
+          <p className="text-sm text-muted-foreground py-6 text-center">
+            No supports available to assign. Create one first.
+          </p>
         ) : (
           <table className="w-full text-sm">
             <thead className="text-xs uppercase text-muted-foreground bg-muted/40">
@@ -606,10 +823,19 @@ function AssignDialog({
                       <td className="py-2 px-2">{r.lineNumber}</td>
                       <td className="py-2 px-2">{r.supportType}</td>
                       <td className="py-2 px-2">
-                        {cur ? <Badge variant="outline">{cur.tag}</Badge> : <span className="text-muted-foreground">— Unassigned —</span>}
+                        {cur ? (
+                          <Badge variant="outline">{cur.tag}</Badge>
+                        ) : (
+                          <span className="text-muted-foreground">— Unassigned —</span>
+                        )}
                       </td>
                       <td className="py-2 px-2 text-right">
-                        <Button size="sm" variant="outline" onClick={() => handlePick(r)} disabled={remaining <= 0}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handlePick(r)}
+                          disabled={remaining <= 0}
+                        >
                           {cur ? "Reassign" : "Assign"}
                         </Button>
                       </td>
@@ -621,7 +847,9 @@ function AssignDialog({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
 
@@ -629,17 +857,29 @@ function AssignDialog({
         <Dialog open onOpenChange={(o) => !o && setPendingReassign(null)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2"><AlertTriangle className="h-4 w-4 text-warning"/>Confirm reassignment</DialogTitle>
+              <DialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-warning" />
+                Confirm reassignment
+              </DialogTitle>
               <DialogDescription>
-                This support is currently assigned to another structure. Reassigning it will update the support register and MTO.
+                This support is currently assigned to another structure. Reassigning it will update
+                the support register and MTO.
               </DialogDescription>
             </DialogHeader>
             <div className="rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
               Move <b>{pendingReassign.tag}</b> → <b>{structure.tag}</b>?
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setPendingReassign(null)}>Cancel</Button>
-              <Button onClick={() => { onAssign(pendingReassign.id); setPendingReassign(null); onClose(); }}>
+              <Button variant="outline" onClick={() => setPendingReassign(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  onAssign(pendingReassign.id);
+                  setPendingReassign(null);
+                  onClose();
+                }}
+              >
                 Reassign
               </Button>
             </DialogFooter>
@@ -652,7 +892,11 @@ function AssignDialog({
 
 // ── View supports currently attached to a structure ──
 function ViewAssignedDialog({
-  structure, register, onClose, onUnassign, onDelete,
+  structure,
+  register,
+  onClose,
+  onUnassign,
+  onDelete,
 }: {
   structure: Structure;
   register: SupportRegisterEntry[];
@@ -671,7 +915,9 @@ function ViewAssignedDialog({
           </DialogDescription>
         </DialogHeader>
         {register.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">No supports assigned to this structure yet.</p>
+          <p className="text-sm text-muted-foreground py-6 text-center">
+            No supports assigned to this structure yet.
+          </p>
         ) : (
           <table className="w-full text-sm">
             <thead className="text-xs uppercase text-muted-foreground bg-muted/40">
@@ -691,11 +937,22 @@ function ViewAssignedDialog({
                   <td className="py-2 px-2">{r.supportType}</td>
                   <td className="py-2 px-2">{r.function}</td>
                   <td className="py-2 px-2 text-right whitespace-nowrap">
-                    <Button size="sm" variant="ghost" onClick={() => onUnassign(r.id)} title="Detach from this structure">
-                      <X className="h-3.5 w-3.5 mr-1"/>Unassign
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onUnassign(r.id)}
+                      title="Detach from this structure"
+                    >
+                      <X className="h-3.5 w-3.5 mr-1" />
+                      Unassign
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={() => onDelete(r.id)} title="Delete support">
-                      <Trash2 className="h-4 w-4"/>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => onDelete(r.id)}
+                      title="Delete support"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>
@@ -704,7 +961,9 @@ function ViewAssignedDialog({
           </table>
         )}
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -713,7 +972,10 @@ function ViewAssignedDialog({
 
 // ── Edit a structure (tag, kind, class, area, max, dynamic, dims, MTO) ──
 function EditStructureDialog({
-  structure, attachedCount, onClose, onSave,
+  structure,
+  attachedCount,
+  onClose,
+  onSave,
 }: {
   structure: Structure;
   attachedCount: number;
@@ -729,18 +991,31 @@ function EditStructureDialog({
   const [notes, setNotes] = useState(structure.notes || "");
   const [recompute, setRecompute] = useState(false);
   const [dims, setDims] = useState<DimsInput>({
-    pipeCL: 6500, topOfSteel: 0, groupWidth: 600, sideClearance: 150, columnToCL: 800,
+    pipeCL: 6500,
+    topOfSteel: 0,
+    groupWidth: 600,
+    sideClearance: 150,
+    columnToCL: 800,
   });
 
   const meta = STRUCTURE_KINDS.find((k) => k.id === kind)!;
   const newDimensions = useMemo(() => computeStructureDims(kind, dims), [kind, dims]);
-  const newMto = useMemo(() => buildStructureMTO(kind, cls, dynamic || cls === "Heavy"), [kind, cls, dynamic]);
+  const newMto = useMemo(
+    () => buildStructureMTO(kind, cls, dynamic || cls === "Heavy"),
+    [kind, cls, dynamic],
+  );
   const overCapacity = maxSupports < attachedCount;
 
   const save = () => {
     const patch: Partial<Structure> = {
-      tag, kind, name: meta.name, loadClass: cls, dynamic, area: area || undefined,
-      maxSupports, notes,
+      tag,
+      kind,
+      name: meta.name,
+      loadClass: cls,
+      dynamic,
+      area: area || undefined,
+      maxSupports,
+      notes,
     };
     if (recompute) {
       patch.dimensions = newDimensions;
@@ -758,28 +1033,37 @@ function EditStructureDialog({
         <DialogHeader>
           <DialogTitle>Edit structure — {structure.tag}</DialogTitle>
           <DialogDescription>
-            Update tag, kind, class, area and capacity. {attachedCount} support(s) currently attached.
+            Update tag, kind, class, area and capacity. {attachedCount} support(s) currently
+            attached.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Tag</Label>
-            <Input value={tag} onChange={(e) => setTag(e.target.value)} className="h-9"/>
+            <Input value={tag} onChange={(e) => setTag(e.target.value)} className="h-9" />
           </div>
           <div>
             <Label className="text-xs">Kind</Label>
             <Select value={kind} onValueChange={(v) => setKind(v as StructureKind)}>
-              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {STRUCTURE_KINDS.map((k) => <SelectItem key={k.id} value={k.id}>{k.name}</SelectItem>)}
+                {STRUCTURE_KINDS.map((k) => (
+                  <SelectItem key={k.id} value={k.id}>
+                    {k.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs">Load class</Label>
             <Select value={cls} onValueChange={(v) => setCls(v as LoadClass)}>
-              <SelectTrigger className="h-9"><SelectValue/></SelectTrigger>
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Light">Light</SelectItem>
                 <SelectItem value="Medium">Medium</SelectItem>
@@ -789,7 +1073,7 @@ function EditStructureDialog({
           </div>
           <div>
             <Label className="text-xs">Area</Label>
-            <Input value={area} onChange={(e) => setArea(e.target.value)} className="h-9"/>
+            <Input value={area} onChange={(e) => setArea(e.target.value)} className="h-9" />
           </div>
           <div>
             <Label className="text-xs">Max supports</Label>
@@ -802,7 +1086,8 @@ function EditStructureDialog({
             />
             {overCapacity && (
               <p className="text-[11px] text-destructive mt-1">
-                Below currently attached count ({attachedCount}). Detach supports or raise the limit.
+                Below currently attached count ({attachedCount}). Detach supports or raise the
+                limit.
               </p>
             )}
           </div>
@@ -818,34 +1103,77 @@ function EditStructureDialog({
           </div>
           <div className="col-span-2">
             <Label className="text-xs">Notes</Label>
-            <Input value={notes} onChange={(e) => setNotes(e.target.value)} className="h-9"/>
+            <Input value={notes} onChange={(e) => setNotes(e.target.value)} className="h-9" />
           </div>
         </div>
 
         <div className="rounded-md border border-border p-3 space-y-2">
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={recompute} onChange={(e) => setRecompute(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={recompute}
+              onChange={(e) => setRecompute(e.target.checked)}
+            />
             Recompute preliminary dimensions from new geometry
           </label>
           {recompute && (
             <div className="grid gap-2 md:grid-cols-3 text-xs">
-              <div><Label className="text-[11px]">Pipe CL</Label>
-                <Input type="number" value={dims.pipeCL} onChange={(e) => setDims((d) => ({ ...d, pipeCL: +e.target.value || 0 }))} className="h-8"/></div>
-              <div><Label className="text-[11px]">Top of steel</Label>
-                <Input type="number" value={dims.topOfSteel} onChange={(e) => setDims((d) => ({ ...d, topOfSteel: +e.target.value || 0 }))} className="h-8"/></div>
-              <div><Label className="text-[11px]">Group width</Label>
-                <Input type="number" value={dims.groupWidth} onChange={(e) => setDims((d) => ({ ...d, groupWidth: +e.target.value || 0 }))} className="h-8"/></div>
-              <div><Label className="text-[11px]">Side clearance</Label>
-                <Input type="number" value={dims.sideClearance} onChange={(e) => setDims((d) => ({ ...d, sideClearance: +e.target.value || 0 }))} className="h-8"/></div>
-              <div><Label className="text-[11px]">Column → CL</Label>
-                <Input type="number" value={dims.columnToCL} onChange={(e) => setDims((d) => ({ ...d, columnToCL: +e.target.value || 0 }))} className="h-8"/></div>
+              <div>
+                <Label className="text-[11px]">Pipe CL</Label>
+                <Input
+                  type="number"
+                  value={dims.pipeCL}
+                  onChange={(e) => setDims((d) => ({ ...d, pipeCL: +e.target.value || 0 }))}
+                  className="h-8"
+                />
+              </div>
+              <div>
+                <Label className="text-[11px]">Top of steel</Label>
+                <Input
+                  type="number"
+                  value={dims.topOfSteel}
+                  onChange={(e) => setDims((d) => ({ ...d, topOfSteel: +e.target.value || 0 }))}
+                  className="h-8"
+                />
+              </div>
+              <div>
+                <Label className="text-[11px]">Group width</Label>
+                <Input
+                  type="number"
+                  value={dims.groupWidth}
+                  onChange={(e) => setDims((d) => ({ ...d, groupWidth: +e.target.value || 0 }))}
+                  className="h-8"
+                />
+              </div>
+              <div>
+                <Label className="text-[11px]">Side clearance</Label>
+                <Input
+                  type="number"
+                  value={dims.sideClearance}
+                  onChange={(e) => setDims((d) => ({ ...d, sideClearance: +e.target.value || 0 }))}
+                  className="h-8"
+                />
+              </div>
+              <div>
+                <Label className="text-[11px]">Column → CL</Label>
+                <Input
+                  type="number"
+                  value={dims.columnToCL}
+                  onChange={(e) => setDims((d) => ({ ...d, columnToCL: +e.target.value || 0 }))}
+                  className="h-8"
+                />
+              </div>
             </div>
           )}
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={save} disabled={overCapacity}>Save</Button>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={save} disabled={overCapacity}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

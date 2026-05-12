@@ -40,10 +40,10 @@ function HomePage() {
   const resumeStep = !line.lineNumber
     ? FLOW_STEPS[0]
     : !recommendation
-    ? FLOW_STEPS[1]
-    : register.length === 0
-    ? FLOW_STEPS[2]
-    : FLOW_STEPS[5];
+      ? FLOW_STEPS[1]
+      : register.length === 0
+        ? FLOW_STEPS[2]
+        : FLOW_STEPS[5];
 
   return (
     <div className="space-y-10">
@@ -57,8 +57,7 @@ function HomePage() {
             backgroundImage:
               "linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
-            maskImage:
-              "radial-gradient(ellipse at 70% 30%, black 40%, transparent 75%)",
+            maskImage: "radial-gradient(ellipse at 70% 30%, black 40%, transparent 75%)",
           }}
         />
         <div
@@ -74,13 +73,17 @@ function HomePage() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]">
               Engineer pipe supports
               <br />
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-hero)" }}>
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: "var(--gradient-hero)" }}
+              >
                 with confidence.
               </span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground max-w-xl">
               A guided, code-aware workflow that takes you from project context to a fully traceable
-              support register and material take-off — aligned with ASME B31.3, MSS SP-58/69/89/127 and PFI ES-26.
+              support register and material take-off — aligned with ASME B31.3, MSS SP-58/69/89/127
+              and PFI ES-26.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               {hasSession ? (
@@ -104,9 +107,15 @@ function HomePage() {
               )}
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-success" /> Code-traceable outputs</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-success" /> Markup override mode</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-success" /> MTO & register export</span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-success" /> Code-traceable outputs
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-success" /> Markup override mode
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-success" /> MTO & register export
+              </span>
             </div>
           </div>
 
@@ -120,19 +129,28 @@ function HomePage() {
                 <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
                   <Compass className="h-3.5 w-3.5 text-primary" /> Session snapshot
                 </div>
-                <Badge variant="outline" className="text-[10px] border-success/40 text-success bg-success/10">Live</Badge>
+                <Badge
+                  variant="outline"
+                  className="text-[10px] border-success/40 text-success bg-success/10"
+                >
+                  Live
+                </Badge>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Stat label="Active line" value={line.lineNumber || "—"} />
                 <Stat label="NPS" value={line.pipeSize ? `${line.pipeSize}"` : "—"} />
                 <Stat label="Register" value={String(register.length)} />
-                <Stat label="Risk flags" value={warnings ? String(warnings) : "—"} accent={warnings > 0} />
+                <Stat
+                  label="Risk flags"
+                  value={warnings ? String(warnings) : "—"}
+                  accent={warnings > 0}
+                />
               </div>
               <div className="mt-5 rounded-md border border-border bg-muted/40 p-3 flex items-start gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <span>
-                  Every recommendation links back to your inputs, code references and override decisions —
-                  ready for engineering review.
+                  Every recommendation links back to your inputs, code references and override
+                  decisions — ready for engineering review.
                 </span>
               </div>
             </div>
@@ -147,7 +165,9 @@ function HomePage() {
             <div className="text-xs uppercase tracking-wider text-primary font-semibold flex items-center gap-1.5">
               <Workflow className="h-3.5 w-3.5" /> The workflow
             </div>
-            <h2 className="text-2xl font-semibold tracking-tight mt-1">Seven steps. One source of truth.</h2>
+            <h2 className="text-2xl font-semibold tracking-tight mt-1">
+              Seven steps. One source of truth.
+            </h2>
           </div>
           <Button variant="ghost" size="sm" onClick={() => nav({ to: "/inputs" })}>
             Jump to Step 1 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -214,7 +234,10 @@ function HomePage() {
             "API 610 / NEMA SM-23 — Nozzle Loads",
             "PIP & Project Standards",
           ].map((s) => (
-            <div key={s} className="rounded-md border border-border bg-background/40 px-3 py-2 flex items-center gap-2">
+            <div
+              key={s}
+              className="rounded-md border border-border bg-background/40 px-3 py-2 flex items-center gap-2"
+            >
               <Anchor className="h-3 w-3 text-primary shrink-0" />
               <span className="truncate">{s}</span>
             </div>
@@ -233,7 +256,12 @@ function HomePage() {
             Set your project context and let the wizard do the heavy lifting.
           </div>
         </div>
-        <Button size="lg" variant="secondary" onClick={() => nav({ to: "/inputs" })} className="shrink-0">
+        <Button
+          size="lg"
+          variant="secondary"
+          onClick={() => nav({ to: "/inputs" })}
+          className="shrink-0"
+        >
           Enter Project Inputs <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </section>

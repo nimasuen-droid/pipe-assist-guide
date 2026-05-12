@@ -23,12 +23,14 @@ Every output traces back to its inputs and the governing code clause.
 ## What has been built
 
 ### Core flows
+
 - **Project Inputs** (`/inputs`) — design basis form, sample data, save/load, JSON import/export.
 - **Selection Wizard** (`/wizard`) — engineering questions feeding the recommendation engine.
 - **Recommendation engine** (`src/lib/recommend.ts`) — primary + alternates, verdict (`ACCEPTABLE` / `REVIEW REQUIRED` / `STRESS CHECK REQUIRED` / `NOT RECOMMENDED`), risk flags, design and follow-up checks, code references, learning moment.
 - **Report** (`/report`) — printable recommendation summary.
 
 ### Registers
+
 - **Support Register** (`/register`)
   - Add supports from a recommendation.
   - Edit a single support or **bulk-edit** a group of supports.
@@ -45,23 +47,27 @@ Every output traces back to its inputs and the governing code clause.
   - Edit structures inline.
 
 ### Support Standards library
+
 - **Support Standards** (`/standards`) — 16 standards across `Rigid / Variable / Constant / Restraint / Guide / Anchor / Special / Structure` categories.
 - Editable tag prefixes per standard.
 - Each card shows an inline **SVG schematic** (`SupportStandardGraphic`) of the hardware.
 
 ### Material Take-Off
+
 - **MTO** (`/mto`) — auto-generated from the register.
   - De-duplicates pipe-rack and shared structure components (counted once per structure).
   - Pipe-contact hardware counted per support.
   - Wide preview / BOM dialogs.
 
 ### Reference & governance
+
 - **Codes & References** (`/codes`) — library of supported standards.
 - **User Manual** (`/manual`).
 - **EULA** (`/eula`) and disclaimer banner.
 - **About / Releases** (`/about`).
 
 ### Supported codes & standards
+
 - ASME B31.3 — Process Piping
 - MSS SP-58 — Hangers & Supports
 - MSS SP-69 — Selection & Application
@@ -86,7 +92,7 @@ Every output traces back to its inputs and the governing code clause.
 - **UI:** Tailwind CSS v4 (tokens in `src/styles.css`), shadcn/ui (Radix), lucide-react.
 - **State:** Zustand with `persist` middleware (`src/lib/store.ts`).
 - **Forms / validation:** react-hook-form + zod.
-- **Exports:** `jspdf`, `jspdf-autotable`, `xlsx`.
+- **Exports:** `jspdf`, `jspdf-autotable`, CSV.
 - **Lang:** TypeScript (strict).
 
 ## Project structure

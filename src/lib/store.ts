@@ -47,7 +47,13 @@ interface AppState {
   recommendation: SupportRecommendation | null;
   register: SupportRegisterEntry[];
   structures: Structure[];
-  savedProjects: { id: string; name: string; savedAt: string; line: LineInput; wizard: WizardInput }[];
+  savedProjects: {
+    id: string;
+    name: string;
+    savedAt: string;
+    line: LineInput;
+    wizard: WizardInput;
+  }[];
   eulaAccepted: boolean;
   tagging: TaggingConfig;
   tagCounter: number;
@@ -67,6 +73,7 @@ interface AppState {
   deleteProject: (id: string) => void;
   loadSample: () => void;
   acceptEula: () => void;
+  revokeEula: () => void;
   setTagging: (p: Partial<TaggingConfig>) => void;
   resetTagCounter: (n?: number) => void;
   nextTag: (supportType?: string) => string;
@@ -87,7 +94,15 @@ export interface TaggingConfig {
 export interface SupportStandard {
   id: string;
   name: string;
-  category: "Rigid" | "Variable" | "Constant" | "Restraint" | "Guide" | "Anchor" | "Special" | "Structure";
+  category:
+    | "Rigid"
+    | "Variable"
+    | "Constant"
+    | "Restraint"
+    | "Guide"
+    | "Anchor"
+    | "Special"
+    | "Structure";
   function: string;
   typicalUse: string;
   movementAllowed: string[];
@@ -341,7 +356,7 @@ function resolveTypePrefix(standards: SupportStandard[], supportType?: string): 
 const sampleLine: LineInput = {
   projectName: "PX Revamp Phase 2",
   area: "Unit 200 — Aromatics",
-  lineNumber: "8\"-P-2104-A1A-H",
+  lineNumber: '8"-P-2104-A1A-H',
   pipeSize: "8",
   schedule: "40",
   material: "CS A106 Gr.B",
@@ -386,8 +401,7 @@ export const useApp = create<AppState>()(
       setWizard: (p) => set((s) => ({ wizard: { ...s.wizard, ...p } })),
       setRecommendation: (r) => set({ recommendation: r }),
       addToRegister: (e) => set((s) => ({ register: [...s.register, e] })),
-      removeFromRegister: (id) =>
-        set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
+      removeFromRegister: (id) => set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
       updateRegisterEntry: (id, p) =>
         set((s) => ({ register: s.register.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
       bulkUpdateRegister: (ids, p) =>
@@ -402,7 +416,9 @@ export const useApp = create<AppState>()(
         set((s) => ({
           structures: s.structures.filter((x) => x.id !== id),
           // detach any supports that pointed to this structure
-          register: s.register.map((r) => (r.structureId === id ? { ...r, structureId: undefined } : r)),
+          register: s.register.map((r) =>
+            r.structureId === id ? { ...r, structureId: undefined } : r,
+          ),
         })),
       saveProject: () =>
         set((s) => ({
@@ -426,12 +442,15 @@ export const useApp = create<AppState>()(
         set((s) => ({ savedProjects: s.savedProjects.filter((p) => p.id !== id) })),
       loadSample: () => set({ line: sampleLine, wizard: sampleWizard }),
       acceptEula: () => set({ eulaAccepted: true }),
+      revokeEula: () => set({ eulaAccepted: false }),
       setTagging: (p) =>
         set((s) => {
           const tagging = { ...s.tagging, ...p };
           // if startIndex changed and counter is below it, lift counter
           const tagCounter =
-            "startIndex" in p && (p.startIndex ?? 0) > s.tagCounter ? (p.startIndex as number) : s.tagCounter;
+            "startIndex" in p && (p.startIndex ?? 0) > s.tagCounter
+              ? (p.startIndex as number)
+              : s.tagCounter;
           return { tagging, tagCounter };
         }),
       resetTagCounter: (n) => set((s) => ({ tagCounter: n ?? s.tagging.startIndex })),
@@ -452,9 +471,12 @@ export const useApp = create<AppState>()(
           standards: s.standards.map((x) => (x.id === id ? { ...x, ...p } : x)),
         })),
       resetStandards: () => set({ standards: defaultStandards }),
-      reset: () =>
-        set({ line: defaultLine, wizard: defaultWizard, recommendation: null }),
+      reset: () => set({ line: defaultLine, wizard: defaultWizard, recommendation: null }),
     }),
-    { name: "pipe-support-smart-assist" },
+    {
+      name: "pipe-support-smart-assist",
+      version: 1,
+      migrate: (persisted) => persisted as AppState,
+    },
   ),
 );

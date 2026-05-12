@@ -1,5 +1,13 @@
 import type { LucideIcon } from "lucide-react";
-import { Gauge, Sparkles, FileBarChart2, Building2, ClipboardCheck, Boxes, ListChecks } from "lucide-react";
+import {
+  Gauge,
+  Sparkles,
+  FileBarChart2,
+  Building2,
+  ClipboardCheck,
+  Boxes,
+  ListChecks,
+} from "lucide-react";
 
 export interface FlowStep {
   id: string;
@@ -12,20 +20,69 @@ export interface FlowStep {
 }
 
 export const FLOW_STEPS: FlowStep[] = [
-  { id: "context", num: 1, to: "/inputs", label: "Project Context", short: "Context", icon: Gauge,
-    blurb: "Define project, line and area data." },
-  { id: "select", num: 2, to: "/wizard", label: "Support Selection", short: "Select", icon: Sparkles,
-    blurb: "Answer engineering questions to drive selection." },
-  { id: "recommend", num: 3, to: "/report", label: "Recommendation", short: "Recommend", icon: FileBarChart2,
-    blurb: "Review the recommended support and add to register." },
-  { id: "structure", num: 4, to: "/arrangements", label: "Structure & Linking", short: "Structure", icon: Building2,
-    blurb: "Place structures and link supports to them." },
-  { id: "review", num: 5, to: "/review", label: "Review Inputs", short: "Review", icon: ClipboardCheck,
-    blurb: "Verify everything before generating MTO." },
-  { id: "register", num: 6, to: "/register", label: "Support Register", short: "Register", icon: ListChecks,
-    blurb: "Confirm the project support register before MTO." },
-  { id: "output", num: 7, to: "/mto", label: "Material Take-Off", short: "Output", icon: Boxes,
-    blurb: "Generate, export and save the final output." },
+  {
+    id: "context",
+    num: 1,
+    to: "/inputs",
+    label: "Project Context",
+    short: "Context",
+    icon: Gauge,
+    blurb: "Define project, line and area data.",
+  },
+  {
+    id: "select",
+    num: 2,
+    to: "/wizard",
+    label: "Support Selection",
+    short: "Select",
+    icon: Sparkles,
+    blurb: "Answer engineering questions to drive selection.",
+  },
+  {
+    id: "recommend",
+    num: 3,
+    to: "/report",
+    label: "Recommendation",
+    short: "Recommend",
+    icon: FileBarChart2,
+    blurb: "Review the recommended support and add to register.",
+  },
+  {
+    id: "structure",
+    num: 4,
+    to: "/arrangements",
+    label: "Structure & Linking",
+    short: "Structure",
+    icon: Building2,
+    blurb: "Place structures and link supports to them.",
+  },
+  {
+    id: "review",
+    num: 5,
+    to: "/review",
+    label: "Review Inputs",
+    short: "Review",
+    icon: ClipboardCheck,
+    blurb: "Verify everything before generating MTO.",
+  },
+  {
+    id: "register",
+    num: 6,
+    to: "/register",
+    label: "Support Register",
+    short: "Register",
+    icon: ListChecks,
+    blurb: "Confirm the project support register before MTO.",
+  },
+  {
+    id: "output",
+    num: 7,
+    to: "/mto",
+    label: "Material Take-Off",
+    short: "Output",
+    icon: Boxes,
+    blurb: "Generate, export and save the final output.",
+  },
 ];
 
 export const FLOW_PATHS = FLOW_STEPS.map((s) => s.to);
@@ -83,8 +140,8 @@ export function computeStepStatus(stepId: string, currentPath: string, s: FlowSt
       return isCurrent
         ? "current"
         : s.hasStructures && s.hasLinkedSupport
-        ? "complete"
-        : "available";
+          ? "complete"
+          : "available";
     case "review":
       if (!s.hasContext) return "blocked";
       return isCurrent ? "current" : "available";

@@ -11,10 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatabaseZap, Database, Save, FolderOpen, Trash2, FileDown, FileUp, Eraser } from "lucide-react";
+import {
+  DatabaseZap,
+  Database,
+  Save,
+  FolderOpen,
+  Trash2,
+  FileDown,
+  FileUp,
+  Eraser,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useRef } from "react";
 import { FlowFooter } from "@/components/FlowFooter";
+import { projectImportSchema } from "@/lib/schemas";
 
 export const Route = createFileRoute("/inputs")({
   head: () => ({
@@ -22,8 +32,7 @@ export const Route = createFileRoute("/inputs")({
       { title: "Project Inputs — Pipe Support Smart Assist" },
       {
         name: "description",
-        content:
-          "Enter project, line, service and layout data to drive support recommendations.",
+        content: "Enter project, line, service and layout data to drive support recommendations.",
       },
     ],
   }),
@@ -40,11 +49,24 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function InputsPage() {
-  const { line, setLine, wizard, setWizard, savedProjects, saveProject, loadProject, deleteProject, loadSample, reset } = useApp();
+  const {
+    line,
+    setLine,
+    wizard,
+    setWizard,
+    savedProjects,
+    saveProject,
+    loadProject,
+    deleteProject,
+    loadSample,
+    reset,
+  } = useApp();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
-    const blob = new Blob([JSON.stringify({ line, wizard }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ line, wizard }, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -59,12 +81,12 @@ function InputsPage() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const data = JSON.parse(String(reader.result));
+        const data = projectImportSchema.parse(JSON.parse(String(reader.result)));
         if (data.line) setLine(data.line);
         if (data.wizard) setWizard(data.wizard);
         toast.success("Project imported");
       } catch {
-        toast.error("Invalid project file");
+        toast.error("Invalid project file. Check the JSON schema and try again.");
       }
     };
     reader.readAsText(f);
@@ -86,18 +108,35 @@ function InputsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="secondary" onClick={() => { loadSample(); toast.success("Sample data loaded"); }}>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => {
+                loadSample();
+                toast.success("Sample data loaded");
+              }}
+            >
               <DatabaseZap className="h-3.5 w-3.5 mr-1.5" /> Load Sample Data
             </Button>
             <Button
               size="sm"
               variant="outline"
-              onClick={() => { reset(); toast.success("All fields cleared"); }}
+              onClick={() => {
+                reset();
+                toast.success("All fields cleared");
+              }}
               className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive"
             >
               <Eraser className="h-3.5 w-3.5 mr-1.5" /> Clear All Fields
             </Button>
-            <Button size="sm" variant="outline" onClick={() => { saveProject(); toast.success("Project saved"); }}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                saveProject();
+                toast.success("Project saved");
+              }}
+            >
               <Save className="h-3.5 w-3.5 mr-1.5" /> Save Project
             </Button>
             <Button size="sm" variant="outline" onClick={handleExport}>
@@ -115,12 +154,26 @@ function InputsPage() {
               </div>
               <div className="space-y-1.5">
                 {savedProjects.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm">
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm"
+                  >
                     <div className="min-w-0 flex-1">
                       <div className="font-medium truncate">{p.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{new Date(p.savedAt).toLocaleString()}</div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {new Date(p.savedAt).toLocaleString()}
+                      </div>
                     </div>
-                    <Button size="sm" variant="ghost" onClick={() => { loadProject(p.id); toast.success("Project loaded"); }}>Load</Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        loadProject(p.id);
+                        toast.success("Project loaded");
+                      }}
+                    >
+                      Load
+                    </Button>
                     <Button size="sm" variant="ghost" onClick={() => deleteProject(p.id)}>
                       <Trash2 className="h-3.5 w-3.5 text-destructive" />
                     </Button>
@@ -138,14 +191,24 @@ function InputsPage() {
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <Field label="Project Name">
-            <Input value={line.projectName} onChange={(e) => setLine({ projectName: e.target.value })} placeholder="e.g. PX Revamp" />
+            <Input
+              value={line.projectName}
+              onChange={(e) => setLine({ projectName: e.target.value })}
+              placeholder="e.g. PX Revamp"
+            />
           </Field>
           <Field label="Area / Unit">
-            <Input value={line.area} onChange={(e) => setLine({ area: e.target.value })} placeholder="Unit 200" />
+            <Input
+              value={line.area}
+              onChange={(e) => setLine({ area: e.target.value })}
+              placeholder="Unit 200"
+            />
           </Field>
           <Field label="Phase">
             <Select value={line.phase} onValueChange={(v) => setLine({ phase: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="new-build">New Build</SelectItem>
                 <SelectItem value="brownfield">Brownfield</SelectItem>
@@ -162,7 +225,11 @@ function InputsPage() {
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <Field label="Line Number">
-            <Input value={line.lineNumber} onChange={(e) => setLine({ lineNumber: e.target.value })} placeholder='6"-P-1001-A1A' />
+            <Input
+              value={line.lineNumber}
+              onChange={(e) => setLine({ lineNumber: e.target.value })}
+              placeholder='6"-P-1001-A1A'
+            />
           </Field>
           <Field label="Pipe Size (NPS)">
             <Input value={line.pipeSize} onChange={(e) => setLine({ pipeSize: e.target.value })} />
@@ -171,23 +238,42 @@ function InputsPage() {
             <Input value={line.schedule} onChange={(e) => setLine({ schedule: e.target.value })} />
           </Field>
           <Field label="Material">
-            <Input value={line.material} onChange={(e) => setLine({ material: e.target.value })} placeholder="CS / SS316 / LTCS" />
+            <Input
+              value={line.material}
+              onChange={(e) => setLine({ material: e.target.value })}
+              placeholder="CS / SS316 / LTCS"
+            />
           </Field>
           <Field label="Fluid / Service">
-            <Input value={line.service} onChange={(e) => setLine({ service: e.target.value })} placeholder="Steam / Hydrocarbon / Pump suction…" />
+            <Input
+              value={line.service}
+              onChange={(e) => setLine({ service: e.target.value })}
+              placeholder="Steam / Hydrocarbon / Pump suction…"
+            />
           </Field>
           <Field label="Design Pressure (barg)">
-            <Input value={line.designPressure} onChange={(e) => setLine({ designPressure: e.target.value })} />
+            <Input
+              value={line.designPressure}
+              onChange={(e) => setLine({ designPressure: e.target.value })}
+            />
           </Field>
           <Field label="Design Temp (°C)">
-            <Input value={line.designTemp} onChange={(e) => setLine({ designTemp: e.target.value })} />
+            <Input
+              value={line.designTemp}
+              onChange={(e) => setLine({ designTemp: e.target.value })}
+            />
           </Field>
           <Field label="Operating Temp (°C)">
-            <Input value={line.operatingTemp} onChange={(e) => setLine({ operatingTemp: e.target.value })} />
+            <Input
+              value={line.operatingTemp}
+              onChange={(e) => setLine({ operatingTemp: e.target.value })}
+            />
           </Field>
           <Field label="Layout">
             <Select value={line.layout} onValueChange={(v) => setLine({ layout: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="aboveground">Aboveground</SelectItem>
                 <SelectItem value="pipe-rack">Pipe Rack</SelectItem>
@@ -199,8 +285,13 @@ function InputsPage() {
             </Select>
           </Field>
           <Field label="Insulation">
-            <Select value={line.insulation} onValueChange={(v) => setLine({ insulation: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={line.insulation}
+              onValueChange={(v) => setLine({ insulation: v as never })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Uninsulated</SelectItem>
                 <SelectItem value="hot">Hot Insulation</SelectItem>
@@ -211,13 +302,20 @@ function InputsPage() {
             </Select>
           </Field>
           <Field label="Insulation Thickness (mm)">
-            <Input value={line.insulationThickness} onChange={(e) => setLine({ insulationThickness: e.target.value })} />
+            <Input
+              value={line.insulationThickness}
+              onChange={(e) => setLine({ insulationThickness: e.target.value })}
+            />
           </Field>
         </CardContent>
       </Card>
 
       <FlowFooter
-        hint={line.projectName ? "Project context captured." : "Add at least project name and line number."}
+        hint={
+          line.projectName
+            ? "Project context captured."
+            : "Add at least project name and line number."
+        }
         primaryDisabled={!(line.projectName && line.lineNumber)}
       />
     </div>

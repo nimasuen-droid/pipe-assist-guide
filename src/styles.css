@@ -71,9 +71,9 @@
   /* Dark engineering palette inspired by reference (deep navy + sky-blue accent) */
   --background: oklch(0.16 0.02 240);
   --foreground: oklch(0.97 0.01 220);
-  --card: oklch(0.20 0.02 240);
+  --card: oklch(0.2 0.02 240);
   --card-foreground: oklch(0.97 0.01 220);
-  --popover: oklch(0.20 0.02 240);
+  --popover: oklch(0.2 0.02 240);
   --popover-foreground: oklch(0.97 0.01 220);
   --primary: oklch(0.78 0.14 195);
   --primary-foreground: oklch(0.15 0.03 240);

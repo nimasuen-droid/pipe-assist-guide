@@ -55,7 +55,14 @@ export function generateMTO(entry: SupportRegisterEntry): MTOItem[] {
     if (t.includes("cryogenic"))
       add("Cryo insulation block", "PUF / wood block", 1, "Nos", "Bought-out", "Low conductivity");
     if (entry.recommendation.movementAllowed.join(",").toLowerCase().includes("slid"))
-      add("PTFE sliding plate", `${dn * 25 + 80}×${120}×3 mm`, 1, "Nos", "Bought-out", "Low friction");
+      add(
+        "PTFE sliding plate",
+        `${dn * 25 + 80}×${120}×3 mm`,
+        1,
+        "Nos",
+        "Bought-out",
+        "Low friction",
+      );
   } else if (t.includes("guide")) {
     add("Guide plate", `100×${th}×${shoeH} mm`, 2, "Nos", "Fabricated");
     add("Base plate", `${dn * 25 + 100}×120×${th + 2} mm`, 1, "Nos", "Fabricated");
@@ -66,13 +73,26 @@ export function generateMTO(entry: SupportRegisterEntry): MTOItem[] {
     add("Anchor bolts", bolt, 6, "Nos", "Bought-out");
     add("Wear pad", `${dn * 30}×${dn * 30}×6 mm`, 1, "Nos", "Fabricated");
   } else if (t.includes("spring")) {
-    add("Spring can assembly", `Vendor sized — pipe DN${dn}`, 1, "Nos", "Bought-out", "Specify hot/cold loads & travel");
+    add(
+      "Spring can assembly",
+      `Vendor sized — pipe DN${dn}`,
+      1,
+      "Nos",
+      "Bought-out",
+      "Specify hot/cold loads & travel",
+    );
     add("Top rod", `${bolt} threaded rod`, 1, "Nos", "Bought-out");
     add("Bottom clamp", `DN${dn} pipe clamp`, 1, "Nos", "Bought-out");
     add("Turnbuckle", bolt, 1, "Nos", "Bought-out");
     add("Pins & connectors", "Vendor std", 1, "Set", "Bought-out");
   } else if (t.includes("trunnion")) {
-    add("Trunnion pipe", `DN${Math.max(2, Math.round(dn / 2))} × ${shoeH + 100} mm`, 1, "Nos", "Fabricated");
+    add(
+      "Trunnion pipe",
+      `DN${Math.max(2, Math.round(dn / 2))} × ${shoeH + 100} mm`,
+      1,
+      "Nos",
+      "Fabricated",
+    );
     add("Base plate", `${dn * 25 + 100}×${dn * 25 + 100}×${th + 2} mm`, 1, "Nos", "Fabricated");
     add("Stiffener plates", `100×100×${th} mm`, 4, "Nos", "Fabricated");
     add("Weld details (full pen)", "Per PFI ES-26", 1, "Lot", "Fabricated");
@@ -84,7 +104,14 @@ export function generateMTO(entry: SupportRegisterEntry): MTOItem[] {
     add("Pipe clamp", `DN${dn} 2-bolt clamp`, 1, "Nos", "Bought-out");
     add("Anchor bolts", bolt, 2, "Nos", "Bought-out");
   } else if (t.includes("snubber") || t.includes("vibration")) {
-    add("Snubber assembly", `Vendor — load class TBD`, 1, "Nos", "Bought-out", "Dynamic review required");
+    add(
+      "Snubber assembly",
+      `Vendor — load class TBD`,
+      1,
+      "Nos",
+      "Bought-out",
+      "Dynamic review required",
+    );
     add("Pipe clamp", `DN${dn}`, 1, "Nos", "Bought-out");
     add("Bracket", `Plate ${th} mm`, 1, "Nos", "Fabricated");
   } else if (t.includes("valve")) {
@@ -96,7 +123,14 @@ export function generateMTO(entry: SupportRegisterEntry): MTOItem[] {
     add("Bearing lugs", `Plate ${th + 2} mm`, 2, "Nos", "Fabricated");
   } else {
     add("Rest plate", `${dn * 25 + 80}×100×${th} mm`, 1, "Nos", "Fabricated");
-    add("Wear pad (optional)", `${dn * 30}×${dn * 30}×6 mm`, 1, "Nos", "Fabricated", "If insulated/hot");
+    add(
+      "Wear pad (optional)",
+      `${dn * 30}×${dn * 30}×6 mm`,
+      1,
+      "Nos",
+      "Fabricated",
+      "If insulated/hot",
+    );
   }
 
   return items;

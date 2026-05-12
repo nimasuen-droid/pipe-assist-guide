@@ -39,7 +39,15 @@ function Pipe({ cx = 100, cy = 40, r = 14 }: { cx?: number; cy?: number; r?: num
   return (
     <>
       <circle cx={cx} cy={cy} r={r} fill={PIPE_FILL} stroke={ACCENT} strokeWidth={1.8} />
-      <circle cx={cx} cy={cy} r={r - 4} fill="none" stroke={ACCENT} strokeWidth={0.8} opacity={0.6} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r - 4}
+        fill="none"
+        stroke={ACCENT}
+        strokeWidth={0.8}
+        opacity={0.6}
+      />
     </>
   );
 }
@@ -49,7 +57,15 @@ function GroundLine({ y = 80 }: { y?: number }) {
     <>
       <line x1={10} y1={y} x2={190} y2={y} stroke={STEEL} strokeWidth={1.5} />
       {Array.from({ length: 9 }).map((_, i) => (
-        <line key={i} x1={15 + i * 22} y1={y} x2={20 + i * 22} y2={y + 6} stroke={STEEL} strokeWidth={1} />
+        <line
+          key={i}
+          x1={15 + i * 22}
+          y1={y}
+          x2={20 + i * 22}
+          y2={y + 6}
+          stroke={STEEL}
+          strokeWidth={1}
+        />
       ))}
     </>
   );
@@ -124,7 +140,15 @@ function renderShape(id: string) {
         <>
           <Pipe cx={100} cy={32} r={14} />
           {/* trunnion stub welded to bottom */}
-          <rect x={94} y={46} width={12} height={26} fill={PIPE_FILL} stroke={ACCENT} strokeWidth={1.8} />
+          <rect
+            x={94}
+            y={46}
+            width={12}
+            height={26}
+            fill={PIPE_FILL}
+            stroke={ACCENT}
+            strokeWidth={1.8}
+          />
           <rect x={80} y={72} width={40} height={6} fill={STEEL} />
           <GroundLine />
         </>
@@ -135,7 +159,15 @@ function renderShape(id: string) {
           <Pipe cx={100} cy={62} r={12} />
           {/* hanger rod + spring can */}
           <line x1={100} y1={50} x2={100} y2={36} stroke={STEEL} strokeWidth={1.5} />
-          <rect x={86} y={14} width={28} height={22} fill="none" stroke={ACCENT} strokeWidth={1.8} />
+          <rect
+            x={86}
+            y={14}
+            width={28}
+            height={22}
+            fill="none"
+            stroke={ACCENT}
+            strokeWidth={1.8}
+          />
           <path d="M90 18 L110 22 L90 26 L110 30 L90 34" stroke={ACCENT} strokeWidth={1} />
           <line x1={100} y1={14} x2={100} y2={6} stroke={STEEL} />
           <line x1={88} y1={6} x2={112} y2={6} stroke={STEEL} strokeWidth={2} />
@@ -147,7 +179,15 @@ function renderShape(id: string) {
           <Pipe cx={100} cy={66} r={11} />
           <line x1={100} y1={55} x2={100} y2={42} stroke={STEEL} strokeWidth={1.5} />
           {/* constant-effort housing (rectangular box with lever) */}
-          <rect x={74} y={14} width={52} height={28} fill="none" stroke={ACCENT} strokeWidth={1.8} />
+          <rect
+            x={74}
+            y={14}
+            width={52}
+            height={28}
+            fill="none"
+            stroke={ACCENT}
+            strokeWidth={1.8}
+          />
           <line x1={80} y1={28} x2={120} y2={20} stroke={ACCENT} strokeWidth={1.5} />
           <circle cx={80} cy={28} r={2} fill={ACCENT} />
           <circle cx={120} cy={20} r={2} fill={ACCENT} />
@@ -161,7 +201,16 @@ function renderShape(id: string) {
           <Pipe cx={100} cy={40} r={13} />
           {/* hydraulic cylinder at angle */}
           <line x1={100} y1={53} x2={140} y2={75} stroke={STEEL} strokeWidth={2} />
-          <rect x={138} y={66} width={28} height={12} fill={PIPE_FILL} stroke={ACCENT} strokeWidth={1.8} transform="rotate(28 152 72)" />
+          <rect
+            x={138}
+            y={66}
+            width={28}
+            height={12}
+            fill={PIPE_FILL}
+            stroke={ACCENT}
+            strokeWidth={1.8}
+            transform="rotate(28 152 72)"
+          />
           <circle cx={100} cy={53} r={2.5} fill={ACCENT} />
           <circle cx={170} cy={82} r={2.5} fill={ACCENT} />
           <GroundLine />
@@ -227,7 +276,15 @@ function renderShape(id: string) {
           {/* wall hatching */}
           <line x1={20} y1={10} x2={20} y2={80} stroke={STEEL} strokeWidth={3} />
           {Array.from({ length: 7 }).map((_, i) => (
-            <line key={i} x1={10} y1={12 + i * 10} x2={20} y2={20 + i * 10} stroke={STEEL} strokeWidth={0.8} />
+            <line
+              key={i}
+              x1={10}
+              y1={12 + i * 10}
+              x2={20}
+              y2={20 + i * 10}
+              stroke={STEEL}
+              strokeWidth={0.8}
+            />
           ))}
           <rect x={20} y={36} width={120} height={6} fill={ACCENT} opacity={0.8} />
           <path d="M20 42 L40 42 L20 62 Z" fill={STEEL} opacity={0.4} stroke={STEEL} />
@@ -245,7 +302,9 @@ function renderShape(id: string) {
           {/* clamp connecting pipe to existing steel */}
           <line x1={92} y1={28} x2={92} y2={34} stroke={ACCENT} strokeWidth={2} />
           <line x1={108} y1={28} x2={108} y2={34} stroke={ACCENT} strokeWidth={2} />
-          <text x={150} y={78} fontSize={8} fill={STEEL} stroke="none">EXIST</text>
+          <text x={150} y={78} fontSize={8} fill={STEEL} stroke="none">
+            EXIST
+          </text>
         </>
       );
     case "str-pedestal":

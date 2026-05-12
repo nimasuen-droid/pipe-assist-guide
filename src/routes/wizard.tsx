@@ -20,7 +20,10 @@ export const Route = createFileRoute("/wizard")({
   head: () => ({
     meta: [
       { title: "Selection Wizard — Pipe Support Smart Assist" },
-      { name: "description", content: "Answer engineering questions to drive the support recommendation." },
+      {
+        name: "description",
+        content: "Answer engineering questions to drive the support recommendation.",
+      },
     ],
   }),
   component: WizardPage,
@@ -69,7 +72,9 @@ function WizardPage() {
     <div className="space-y-6 pb-24">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Support Selection Wizard</h1>
-        <p className="text-sm text-muted-foreground">Answer the practical questions a piping engineer would ask on site.</p>
+        <p className="text-sm text-muted-foreground">
+          Answer the practical questions a piping engineer would ask on site.
+        </p>
       </div>
 
       <Card className="border-accent/40 bg-accent/5">
@@ -87,7 +92,8 @@ function WizardPage() {
               </Label>
               <p className="text-xs text-muted-foreground mt-0.5 flex items-start gap-1.5">
                 <Info className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" />
-                Pick the support function from your isometric / GA / stress markup. The app will still recommend the actual hardware and run validation checks.
+                Pick the support function from your isometric / GA / stress markup. The app will
+                still recommend the actual hardware and run validation checks.
               </p>
             </div>
           </div>
@@ -95,12 +101,16 @@ function WizardPage() {
           {override && (
             <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-accent/30">
               <div>
-                <Label className="text-xs uppercase text-muted-foreground">Support function (from markup)</Label>
+                <Label className="text-xs uppercase text-muted-foreground">
+                  Support function (from markup)
+                </Label>
                 <Select
                   value={wizard.manualFunction ?? "rest"}
                   onValueChange={(v) => setWizard({ manualFunction: v as never })}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="rest">Rest</SelectItem>
                     <SelectItem value="guide">Guide</SelectItem>
@@ -114,12 +124,16 @@ function WizardPage() {
                 </Select>
               </div>
               <div>
-                <Label className="text-xs uppercase text-muted-foreground">Line orientation / location</Label>
+                <Label className="text-xs uppercase text-muted-foreground">
+                  Line orientation / location
+                </Label>
                 <Select
                   value={wizard.orientation}
                   onValueChange={(v) => setWizard({ orientation: v as never })}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="horizontal">Horizontal run</SelectItem>
                     <SelectItem value="vertical">Vertical run</SelectItem>
@@ -130,8 +144,13 @@ function WizardPage() {
               </div>
               <div className="sm:col-span-2">
                 <Label className="text-xs uppercase text-muted-foreground">At feature</Label>
-                <Select value={wizard.nearFeature} onValueChange={(v) => setWizard({ nearFeature: v as never })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                <Select
+                  value={wizard.nearFeature}
+                  onValueChange={(v) => setWizard({ nearFeature: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">Mid-run</SelectItem>
                     <SelectItem value="branch">Branch connection</SelectItem>
@@ -145,7 +164,9 @@ function WizardPage() {
                 </Select>
               </div>
               <p className="sm:col-span-2 text-xs text-muted-foreground italic">
-                Markup mode selects the intended support function only. Hardware, movement and validations are still derived from line data, insulation, temperature and structure availability.
+                Markup mode selects the intended support function only. Hardware, movement and
+                validations are still derived from line data, insulation, temperature and structure
+                availability.
               </p>
             </div>
           )}
@@ -154,98 +175,160 @@ function WizardPage() {
 
       {!override && (
         <>
-      <Card>
-        <CardHeader><CardTitle className="text-base">Geometry & location</CardTitle></CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <Label className="text-xs uppercase text-muted-foreground">Orientation</Label>
-            <Select value={wizard.orientation} onValueChange={(v) => setWizard({ orientation: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="horizontal">Horizontal</SelectItem>
-                <SelectItem value="vertical">Vertical</SelectItem>
-                <SelectItem value="sloped">Sloped</SelectItem>
-                <SelectItem value="change-direction">Changing Direction</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs uppercase text-muted-foreground">Near feature</Label>
-            <Select value={wizard.nearFeature} onValueChange={(v) => setWizard({ nearFeature: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">None / mid-run</SelectItem>
-                <SelectItem value="equipment-nozzle">Equipment Nozzle</SelectItem>
-                <SelectItem value="valve">Valve</SelectItem>
-                <SelectItem value="flange">Flange</SelectItem>
-                <SelectItem value="anchor-point">Anchor Point</SelectItem>
-                <SelectItem value="bend">Bend</SelectItem>
-                <SelectItem value="branch">Branch</SelectItem>
-                <SelectItem value="expansion-loop">Expansion Loop</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Geometry & location</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Orientation</Label>
+                <Select
+                  value={wizard.orientation}
+                  onValueChange={(v) => setWizard({ orientation: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="horizontal">Horizontal</SelectItem>
+                    <SelectItem value="vertical">Vertical</SelectItem>
+                    <SelectItem value="sloped">Sloped</SelectItem>
+                    <SelectItem value="change-direction">Changing Direction</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Near feature</Label>
+                <Select
+                  value={wizard.nearFeature}
+                  onValueChange={(v) => setWizard({ nearFeature: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None / mid-run</SelectItem>
+                    <SelectItem value="equipment-nozzle">Equipment Nozzle</SelectItem>
+                    <SelectItem value="valve">Valve</SelectItem>
+                    <SelectItem value="flange">Flange</SelectItem>
+                    <SelectItem value="anchor-point">Anchor Point</SelectItem>
+                    <SelectItem value="bend">Bend</SelectItem>
+                    <SelectItem value="branch">Branch</SelectItem>
+                    <SelectItem value="expansion-loop">Expansion Loop</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
 
-      <Card>
-        <CardHeader><CardTitle className="text-base">Movement & loading</CardTitle></CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
-          <Toggle label="Thermal movement expected" hint="Allow axial growth or restrain via stop/anchor." value={wizard.thermalMovement} onChange={(v) => setWizard({ thermalMovement: v })} />
-          <Toggle label="Uplift possible" hint="Two-phase / thermal bowing / vertical loops." value={wizard.upliftPossible} onChange={(v) => setWizard({ upliftPossible: v })} />
-          <Toggle label="Vibration / pulsation / dynamic" value={wizard.vibration} onChange={(v) => setWizard({ vibration: v })} />
-          <Toggle label="Vertical adjustment required" hint="Spring vs rigid hanger." value={wizard.verticalAdjustment} onChange={(v) => setWizard({ verticalAdjustment: v })} />
-          <div>
-            <Label className="text-xs uppercase text-muted-foreground">Axial movement</Label>
-            <Select value={wizard.axialMovement} onValueChange={(v) => setWizard({ axialMovement: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="allow">Allow</SelectItem>
-                <SelectItem value="restrain">Restrain</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs uppercase text-muted-foreground">Lateral movement</Label>
-            <Select value={wizard.lateralMovement} onValueChange={(v) => setWizard({ lateralMovement: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="allow">Allow</SelectItem>
-                <SelectItem value="restrain">Restrain</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Movement & loading</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2">
+              <Toggle
+                label="Thermal movement expected"
+                hint="Allow axial growth or restrain via stop/anchor."
+                value={wizard.thermalMovement}
+                onChange={(v) => setWizard({ thermalMovement: v })}
+              />
+              <Toggle
+                label="Uplift possible"
+                hint="Two-phase / thermal bowing / vertical loops."
+                value={wizard.upliftPossible}
+                onChange={(v) => setWizard({ upliftPossible: v })}
+              />
+              <Toggle
+                label="Vibration / pulsation / dynamic"
+                value={wizard.vibration}
+                onChange={(v) => setWizard({ vibration: v })}
+              />
+              <Toggle
+                label="Vertical adjustment required"
+                hint="Spring vs rigid hanger."
+                value={wizard.verticalAdjustment}
+                onChange={(v) => setWizard({ verticalAdjustment: v })}
+              />
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Axial movement</Label>
+                <Select
+                  value={wizard.axialMovement}
+                  onValueChange={(v) => setWizard({ axialMovement: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="allow">Allow</SelectItem>
+                    <SelectItem value="restrain">Restrain</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs uppercase text-muted-foreground">Lateral movement</Label>
+                <Select
+                  value={wizard.lateralMovement}
+                  onValueChange={(v) => setWizard({ lateralMovement: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="allow">Allow</SelectItem>
+                    <SelectItem value="restrain">Restrain</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
 
-      <Card>
-        <CardHeader><CardTitle className="text-base">Constructability & service</CardTitle></CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
-          <Toggle label="Permanent support" value={wizard.permanent} onChange={(v) => setWizard({ permanent: v })} />
-          <Toggle label="Welding to pipe permitted" value={wizard.weldingAllowed} onChange={(v) => setWizard({ weldingAllowed: v })} />
-          <div className="sm:col-span-2">
-            <Label className="text-xs uppercase text-muted-foreground">Special service</Label>
-            <Select value={wizard.specialService} onValueChange={(v) => setWizard({ specialService: v as never })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Standard</SelectItem>
-                <SelectItem value="cryogenic">Cryogenic</SelectItem>
-                <SelectItem value="hot">Hot Service</SelectItem>
-                <SelectItem value="sour">Sour</SelectItem>
-                <SelectItem value="corrosive">Corrosive</SelectItem>
-                <SelectItem value="firewater">Firewater</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Constructability & service</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2">
+              <Toggle
+                label="Permanent support"
+                value={wizard.permanent}
+                onChange={(v) => setWizard({ permanent: v })}
+              />
+              <Toggle
+                label="Welding to pipe permitted"
+                value={wizard.weldingAllowed}
+                onChange={(v) => setWizard({ weldingAllowed: v })}
+              />
+              <div className="sm:col-span-2">
+                <Label className="text-xs uppercase text-muted-foreground">Special service</Label>
+                <Select
+                  value={wizard.specialService}
+                  onValueChange={(v) => setWizard({ specialService: v as never })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Standard</SelectItem>
+                    <SelectItem value="cryogenic">Cryogenic</SelectItem>
+                    <SelectItem value="hot">Hot Service</SelectItem>
+                    <SelectItem value="sour">Sour</SelectItem>
+                    <SelectItem value="corrosive">Corrosive</SelectItem>
+                    <SelectItem value="firewater">Firewater</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
         </>
       )}
 
       <FlowFooter
         primaryLabel="Generate Recommendation"
         onPrimary={generate}
-        hint={override ? "Markup mode: app validates your selection and recommends hardware." : "Answers drive the recommendation engine."}
+        hint={
+          override
+            ? "Markup mode: app validates your selection and recommends hardware."
+            : "Answers drive the recommendation engine."
+        }
       />
     </div>
   );

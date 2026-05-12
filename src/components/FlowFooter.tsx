@@ -15,7 +15,13 @@ interface FlowFooterProps {
   secondary?: React.ReactNode;
 }
 
-export function FlowFooter({ primaryLabel, onPrimary, primaryDisabled, hint, secondary }: FlowFooterProps) {
+export function FlowFooter({
+  primaryLabel,
+  onPrimary,
+  primaryDisabled,
+  hint,
+  secondary,
+}: FlowFooterProps) {
   const loc = useLocation();
   if (!isFlowPath(loc.pathname)) return null;
   const prev = getPrevStep(loc.pathname);

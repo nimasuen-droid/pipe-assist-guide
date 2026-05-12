@@ -49,7 +49,8 @@ export function exportReportPDF(entry: SupportRegisterEntry) {
     body: mto.map((m) => [m.component, m.material, m.size, m.qty, m.unit, m.category]),
   });
 
-  const final = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 250;
+  const final =
+    (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 250;
   doc.setFontSize(8);
   doc.text(
     "Disclaimer: Decision support tool for preliminary support selection. Final design shall be verified against project specifications, stress analysis, structural capacity, site conditions, and applicable codes.",
@@ -61,9 +62,7 @@ export function exportReportPDF(entry: SupportRegisterEntry) {
 }
 
 function toCSV(rows: (string | number | boolean)[][]) {
-  return rows
-    .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
-    .join("\n");
+  return rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 function download(name: string, content: string, type = "text/csv") {
   const blob = new Blob([content], { type });
@@ -113,7 +112,18 @@ export function exportRegisterCSV(entries: SupportRegisterEntry[]) {
 
 export function exportMTOCSV(entries: SupportRegisterEntry[]) {
   const rows: (string | number | boolean)[][] = [
-    ["Tag", "Line", "Support Type", "Component", "Material", "Size", "Qty", "Unit", "Category", "Remarks"],
+    [
+      "Tag",
+      "Line",
+      "Support Type",
+      "Component",
+      "Material",
+      "Size",
+      "Qty",
+      "Unit",
+      "Category",
+      "Remarks",
+    ],
   ];
   entries.forEach((e) => {
     const items: MTOItem[] = generateMTO(e);

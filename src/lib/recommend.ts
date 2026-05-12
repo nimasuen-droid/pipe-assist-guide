@@ -17,10 +17,7 @@ const FUNCTION_LABEL: Record<SupportFunction, string> = {
   "vibration-restraint": "Vibration Restraint",
 };
 
-function recommendFromMarkup(
-  line: LineInput,
-  w: WizardInput,
-): SupportRecommendation {
+function recommendFromMarkup(line: LineInput, w: WizardInput): SupportRecommendation {
   const fn: SupportFunction = w.manualFunction ?? "rest";
   const tDes = parseFloat(line.designTemp || "0");
   const dn = parseFloat(line.pipeSize || "0");
@@ -49,7 +46,9 @@ function recommendFromMarkup(
         alternates.push("Lug + clamp", "Trunnion at base elbow");
         func = "Carry vertical pipe weight via clamp bearing on steel.";
         movementRestrained.push("Vertical (down)");
-        riskFlags.push("Standard horizontal shoe is not suitable on a vertical run — riser clamp required.");
+        riskFlags.push(
+          "Standard horizontal shoe is not suitable on a vertical run — riser clamp required.",
+        );
       } else if (ori === "change-direction") {
         primary = "Trunnion (Dummy Leg) at Elbow";
         alternates.push("Pipe shoe on adjacent run");
@@ -80,7 +79,9 @@ function recommendFromMarkup(
         movementRestrained.push("Lateral");
       }
       if (w.thermalMovement && w.axialMovement === "restrain") {
-        riskFlags.push("Guide selected but axial restraint also requested — confirm intent (guide allows axial growth).");
+        riskFlags.push(
+          "Guide selected but axial restraint also requested — confirm intent (guide allows axial growth).",
+        );
       }
       break;
 
@@ -91,8 +92,14 @@ function recommendFromMarkup(
       movementRestrained.push("Axial", "Lateral", "Vertical");
       verdict = "STRESS CHECK REQUIRED";
       riskFlags.push("Anchor selected: stress engineer approval and structural review required.");
-      followUpChecks.push("Confirm anchor loads and structural capacity.", "Verify expansion zone layout each side of anchor.");
-      if (w.thermalMovement) riskFlags.push("Thermal movement expected on this line — anchor will fully restrain growth and induce loads.");
+      followUpChecks.push(
+        "Confirm anchor loads and structural capacity.",
+        "Verify expansion zone layout each side of anchor.",
+      );
+      if (w.thermalMovement)
+        riskFlags.push(
+          "Thermal movement expected on this line — anchor will fully restrain growth and induce loads.",
+        );
       break;
 
     case "line-stop":
@@ -113,24 +120,38 @@ function recommendFromMarkup(
         movementAllowed.push("Axial");
         movementRestrained.push("Vertical (up)");
         if (dn >= 8 && insulated) {
-          riskFlags.push("U-bolt not recommended on large insulated lines — use hold-down clamp with saddle.");
+          riskFlags.push(
+            "U-bolt not recommended on large insulated lines — use hold-down clamp with saddle.",
+          );
         }
-        if (hot) riskFlags.push("Hot insulated line — avoid direct U-bolt contact; use shoe + hold-down clamp.");
+        if (hot)
+          riskFlags.push(
+            "Hot insulated line — avoid direct U-bolt contact; use shoe + hold-down clamp.",
+          );
       } else {
         primary = "Hold-Down Clamp (Vertical Application)";
-        riskFlags.push("Hold-down requested on a vertical/sloped run — verify intent (uplift restraint is typically a horizontal-line concept).");
+        riskFlags.push(
+          "Hold-down requested on a vertical/sloped run — verify intent (uplift restraint is typically a horizontal-line concept).",
+        );
       }
       break;
 
     case "spring":
-      primary = Math.abs(tDes) >= 200 || w.nearFeature === "equipment-nozzle"
-        ? "Constant Spring Support"
-        : "Variable Spring Support";
+      primary =
+        Math.abs(tDes) >= 200 || w.nearFeature === "equipment-nozzle"
+          ? "Constant Spring Support"
+          : "Variable Spring Support";
       func = "Carry sustained load through thermal vertical movement.";
       movementAllowed.push("Vertical (thermal travel)");
       verdict = "REVIEW REQUIRED";
-      followUpChecks.push("Provide hot/cold loads & travel from stress analysis.", "Confirm spring rate and travel range from vendor.");
-      if (!w.verticalAdjustment) riskFlags.push("Spring selected but vertical movement not flagged in inputs — confirm thermal travel is real.");
+      followUpChecks.push(
+        "Provide hot/cold loads & travel from stress analysis.",
+        "Confirm spring rate and travel range from vendor.",
+      );
+      if (!w.verticalAdjustment)
+        riskFlags.push(
+          "Spring selected but vertical movement not flagged in inputs — confirm thermal travel is real.",
+        );
       break;
 
     case "hanger":
@@ -140,7 +161,9 @@ function recommendFromMarkup(
       movementAllowed.push("Axial (swing)", "Lateral (swing)");
       movementRestrained.push("Vertical (down)");
       if (w.thermalMovement && Math.abs(tDes) >= 100) {
-        riskFlags.push("Significant thermal movement on rigid hanger — consider spring hanger to avoid load shift.");
+        riskFlags.push(
+          "Significant thermal movement on rigid hanger — consider spring hanger to avoid load shift.",
+        );
       }
       break;
 
@@ -151,7 +174,10 @@ function recommendFromMarkup(
       movementAllowed.push("Slow thermal");
       movementRestrained.push("Dynamic / shock");
       verdict = "REVIEW REQUIRED";
-      followUpChecks.push("Perform dynamic / pulsation analysis.", "Schedule periodic snubber functional test.");
+      followUpChecks.push(
+        "Perform dynamic / pulsation analysis.",
+        "Schedule periodic snubber functional test.",
+      );
       riskFlags.push("Dynamic restraint: dynamic / pulsation review required.");
       break;
   }
@@ -165,7 +191,9 @@ function recommendFromMarkup(
     designChecks.push("Shoe height ≥ insulation thickness + clearance.");
   }
   if (w.nearFeature === "equipment-nozzle") {
-    riskFlags.push("Located at equipment nozzle: nozzle allowable load check required (vendor data).");
+    riskFlags.push(
+      "Located at equipment nozzle: nozzle allowable load check required (vendor data).",
+    );
     followUpChecks.push("Verify nozzle allowable loads with vendor data sheet.");
     if (verdict === "ACCEPTABLE") verdict = "STRESS CHECK REQUIRED";
   }
@@ -192,12 +220,19 @@ function recommendFromMarkup(
   );
 
   refs.push(
-    { code: "ASME B31.3", note: "Process piping flexibility, allowable stresses, support spacing." },
+    {
+      code: "ASME B31.3",
+      note: "Process piping flexibility, allowable stresses, support spacing.",
+    },
     { code: "MSS SP-58", note: "Materials, design and manufacture of pipe hangers and supports." },
     { code: "MSS SP-69", note: "Selection and application of standard support types." },
     { code: "MSS SP-89", note: "Fabrication and installation practices for supports." },
   );
-  if (fn === "vibration-restraint") refs.push({ code: "MSS SP-127", note: "Bracing for piping subject to seismic & dynamic loads." });
+  if (fn === "vibration-restraint")
+    refs.push({
+      code: "MSS SP-127",
+      note: "Bracing for piping subject to seismic & dynamic loads.",
+    });
 
   why.push(
     `Markup mode: engineer-selected function "${FUNCTION_LABEL[fn]}" on a ${ori.replace("-", " ")} run.`,
@@ -221,10 +256,7 @@ function recommendFromMarkup(
   };
 }
 
-export function recommendSupport(
-  line: LineInput,
-  w: WizardInput,
-): SupportRecommendation {
+export function recommendSupport(line: LineInput, w: WizardInput): SupportRecommendation {
   if (w.overrideMode) return recommendFromMarkup(line, w);
   const tDes = parseFloat(line.designTemp || "0");
   const tOp = parseFloat(line.operatingTemp || "0");
@@ -254,12 +286,8 @@ export function recommendSupport(
     primary = "Equipment Nozzle Support / First Support";
     func =
       "Carry pipe weight close to nozzle so reaction loads on nozzle remain within vendor allowables.";
-    why.push(
-      "Support placed near nozzle reduces moment and shear on equipment connection.",
-    );
-    riskFlags.push(
-      "Equipment nozzle connection: nozzle load check required (vendor allowable).",
-    );
+    why.push("Support placed near nozzle reduces moment and shear on equipment connection.");
+    riskFlags.push("Equipment nozzle connection: nozzle load check required (vendor allowable).");
     followUpChecks.push("Confirm nozzle allowable loads with vendor data sheet.");
     verdict = "STRESS CHECK REQUIRED";
   } else if (w.nearFeature === "valve" && dn >= 6) {
@@ -268,7 +296,11 @@ export function recommendSupport(
     why.push("Large valves and actuators create local concentrated loads.");
     riskFlags.push("Large valve / actuator: independent valve support required.");
     verdict = "REVIEW REQUIRED";
-  } else if (w.vibration || line.service.toLowerCase().includes("pump") || line.service.toLowerCase().includes("compressor")) {
+  } else if (
+    w.vibration ||
+    line.service.toLowerCase().includes("pump") ||
+    line.service.toLowerCase().includes("compressor")
+  ) {
     primary = "Vibration Restraint / Snubber";
     alternates.push("U-bolt with elastomer", "Hold-down clamp");
     func = "Damp dynamic loads from pulsation, vibration or transient events.";
@@ -338,7 +370,11 @@ export function recommendSupport(
   }
 
   // Common additions
-  if (insulated && !primary.toLowerCase().includes("shoe") && !primary.toLowerCase().includes("cryo")) {
+  if (
+    insulated &&
+    !primary.toLowerCase().includes("shoe") &&
+    !primary.toLowerCase().includes("cryo")
+  ) {
     alternates.push("Shoe (raise pipe above insulation thickness)");
     designChecks.push("Shoe height ≥ insulation thickness + clearance.");
   }
@@ -352,8 +388,7 @@ export function recommendSupport(
   // Movement defaults if empty
   if (movementAllowed.length === 0)
     movementAllowed.push(w.thermalMovement ? "Axial sliding" : "Minor settling");
-  if (movementRestrained.length === 0)
-    movementRestrained.push("Vertical (downward)");
+  if (movementRestrained.length === 0) movementRestrained.push("Vertical (downward)");
 
   designChecks.push(
     "Sustained load capacity per MSS SP-58 component allowables.",
@@ -362,20 +397,37 @@ export function recommendSupport(
   );
 
   refs.push(
-    { code: "ASME B31.3", note: "Process piping flexibility, allowable stresses, support spacing." },
+    {
+      code: "ASME B31.3",
+      note: "Process piping flexibility, allowable stresses, support spacing.",
+    },
     { code: "MSS SP-58", note: "Materials, design and manufacture of pipe hangers and supports." },
     { code: "MSS SP-69", note: "Selection and application of standard support types." },
     { code: "MSS SP-89", note: "Fabrication and installation practices for supports." },
   );
-  if (w.vibration) refs.push({ code: "MSS SP-127", note: "Bracing for piping subject to seismic & dynamic loads." });
-  if (w.weldingAllowed) refs.push({ code: "PFI ES-26", note: "Welded load-bearing attachments to pressure-retaining piping." });
-  if (w.nearFeature === "equipment-nozzle") refs.push({ code: "Vendor Data", note: "Nozzle allowable loads (API 610 / NEMA SM-23 / vendor)." });
+  if (w.vibration)
+    refs.push({
+      code: "MSS SP-127",
+      note: "Bracing for piping subject to seismic & dynamic loads.",
+    });
+  if (w.weldingAllowed)
+    refs.push({
+      code: "PFI ES-26",
+      note: "Welded load-bearing attachments to pressure-retaining piping.",
+    });
+  if (w.nearFeature === "equipment-nozzle")
+    refs.push({
+      code: "Vendor Data",
+      note: "Nozzle allowable loads (API 610 / NEMA SM-23 / vendor).",
+    });
 
   return {
     primary,
     alternates,
     function: func,
-    why: why.length ? why : ["Selected based on orientation, service, restraint and constructability inputs."],
+    why: why.length
+      ? why
+      : ["Selected based on orientation, service, restraint and constructability inputs."],
     movementAllowed,
     movementRestrained,
     designChecks,
