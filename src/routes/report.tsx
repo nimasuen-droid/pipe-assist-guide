@@ -86,6 +86,12 @@ function ReportPage() {
 
   const buildEntry = (tag: string): SupportRegisterEntry | null => {
     if (!recommendation) return null;
+    const willShare = structureId !== "none"
+      ? register.filter((r) => r.structureId === structureId).length + 1 > 1
+      : false;
+    const needsStructural =
+      /anchor|trunnion|dummy|spring|riser|snubber/i.test(recommendation.primary) ||
+      willShare;
     return {
       id: crypto.randomUUID(),
       tag,
@@ -98,7 +104,7 @@ function ReportPage() {
       movementRestrained: recommendation.movementRestrained.join(", "),
       insulation: line.insulation,
       stressReview: recommendation.verdict.includes("STRESS"),
-      structuralReview: recommendation.primary.toLowerCase().includes("anchor"),
+      structuralReview: needsStructural,
       remarks: recommendation.riskFlags.join(" | "),
       line,
       wizard,

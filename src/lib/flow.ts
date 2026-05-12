@@ -62,6 +62,7 @@ export interface FlowState {
   hasRecommendation: boolean;
   hasRegister: boolean;
   hasStructures: boolean;
+  hasLinkedSupport?: boolean;
 }
 
 export function computeStepStatus(stepId: string, currentPath: string, s: FlowState): StepStatus {
@@ -79,7 +80,11 @@ export function computeStepStatus(stepId: string, currentPath: string, s: FlowSt
       return isCurrent ? "current" : s.hasRecommendation ? "complete" : "available";
     case "structure":
       if (!s.hasContext) return "blocked";
-      return isCurrent ? "current" : s.hasStructures ? "complete" : "available";
+      return isCurrent
+        ? "current"
+        : s.hasStructures && s.hasLinkedSupport
+        ? "complete"
+        : "available";
     case "review":
       if (!s.hasContext) return "blocked";
       return isCurrent ? "current" : "available";

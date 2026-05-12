@@ -16,6 +16,7 @@ export function FlowStepper() {
     hasRecommendation: Boolean(recommendation),
     hasRegister: register.length > 0,
     hasStructures: structures.length > 0,
+    hasLinkedSupport: register.some((r) => r.structureId),
   };
 
   const currentIdx = FLOW_STEPS.findIndex((s) => s.to === loc.pathname);

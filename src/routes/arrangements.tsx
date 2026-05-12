@@ -353,9 +353,7 @@ function ArrangementsPage() {
         <QuickAddDialog
           structure={quickAddFor}
           attachedCount={supportsByStructure.get(quickAddFor.id) ?? 0}
-          defaultLineNumber={line.lineNumber}
-          defaultArea={line.area}
-          defaultInsulation={line.insulation}
+          parentLine={line}
           onClose={() => setQuickAddFor(null)}
           onCreate={(entry) => {
             addToRegister(entry);
@@ -433,14 +431,12 @@ const PIPE_FUNCTIONS = ["Rest", "Guide", "Stop", "Anchor", "Hold-down"];
 const HARDWARE = ["Shoe", "Clamp", "U-bolt", "Wear Pad", "Sliding Plate", "Spring Hanger", "Trunnion"];
 
 function QuickAddDialog({
-  structure, attachedCount, defaultLineNumber, defaultArea, defaultInsulation,
+  structure, attachedCount, parentLine,
   onClose, onCreate, nextTag,
 }: {
   structure: Structure;
   attachedCount: number;
-  defaultLineNumber: string;
-  defaultArea: string;
-  defaultInsulation: string;
+  parentLine: import("@/lib/types").LineInput;
   onClose: () => void;
   onCreate: (e: SupportRegisterEntry) => void;
   nextTag: (supportType?: string) => string;
@@ -449,12 +445,14 @@ function QuickAddDialog({
   const elevation = structure.dimensions.find((d) => /post height|cantilever/i.test(d.label))?.value;
   const [pipeFunction, setPipeFunction] = useState("Rest");
   const [hardware, setHardware] = useState("Shoe");
-  const [lineNumber, setLineNumber] = useState(defaultLineNumber || "");
-  const [location, setLocation] = useState(`${defaultArea || structure.area || ""}${elevation ? ` @ ${elevation}` : ""}`);
+  const [lineNumber, setLineNumber] = useState(parentLine.lineNumber || "");
+  const [location, setLocation] = useState(`${parentLine.area || structure.area || ""}${elevation ? ` @ ${elevation}` : ""}`);
   const [remarks, setRemarks] = useState("");
 
   const submit = () => {
     const tag = nextTag(`${hardware} (${pipeFunction})`);
+    // Inherit the active project line so downstream MTO uses the real DN, material, temperature and insulation.
+    const inheritedLine = { ...parentLine, lineNumber: lineNumber || parentLine.lineNumber, area: parentLine.area || structure.area || "" };
     const entry: SupportRegisterEntry = {
       id: crypto.randomUUID(),
       tag,
@@ -465,18 +463,11 @@ function QuickAddDialog({
       loadClass: structure.loadClass,
       movementAllowed: pipeFunction === "Anchor" ? "" : "Axial",
       movementRestrained: pipeFunction === "Anchor" ? "All DoF" : "Vertical (down)",
-      insulation: defaultInsulation || "none",
+      insulation: parentLine.insulation || "none",
       stressReview: pipeFunction === "Anchor" || pipeFunction === "Stop",
       structuralReview: attachedCount + 1 > 1,
       remarks: remarks || `Created from structure ${structure.tag}`,
-      // Minimal line/wizard/recommendation stubs — full data set on Recommendation tab
-      line: {
-        projectName: "", area: defaultArea || structure.area || "", lineNumber: lineNumber || "",
-        pipeSize: "6", schedule: "STD", material: "CS A106 Gr.B", service: "",
-        designPressure: "10", designTemp: "150", operatingTemp: "120",
-        insulation: (defaultInsulation as never) || "none", insulationThickness: "50",
-        layout: "pipe-rack", phase: "new-build",
-      },
+      line: inheritedLine,
       wizard: {
         orientation: "horizontal", nearFeature: "none", thermalMovement: true,
         upliftPossible: false, vibration: false, axialMovement: "allow",
