@@ -353,9 +353,7 @@ function ArrangementsPage() {
         <QuickAddDialog
           structure={quickAddFor}
           attachedCount={supportsByStructure.get(quickAddFor.id) ?? 0}
-          defaultLineNumber={line.lineNumber}
-          defaultArea={line.area}
-          defaultInsulation={line.insulation}
+          parentLine={line}
           onClose={() => setQuickAddFor(null)}
           onCreate={(entry) => {
             addToRegister(entry);
