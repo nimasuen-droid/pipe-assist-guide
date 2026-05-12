@@ -14,6 +14,7 @@ import {
 import { FlowFooter } from "@/components/FlowFooter";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Info } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/wizard")({
   head: () => ({
@@ -52,6 +53,11 @@ function WizardPage() {
   const nav = useNavigate();
 
   const generate = () => {
+    if (!line.lineNumber || !line.projectName) {
+      toast.error("Add project name and line number first.");
+      nav({ to: "/inputs" });
+      return;
+    }
     const rec = recommendSupport(line, wizard);
     setRecommendation(rec);
     nav({ to: "/report" });
