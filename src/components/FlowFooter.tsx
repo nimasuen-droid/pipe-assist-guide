@@ -28,13 +28,16 @@ export function FlowFooter({
   const next = getNextStep(loc.pathname);
 
   return (
-    <div className="sticky bottom-0 -mx-4 md:-mx-8 px-4 md:px-8 py-3 border-t border-border bg-card/85 backdrop-blur z-20">
+    <nav
+      className="sticky bottom-0 -mx-4 md:-mx-8 px-4 md:px-8 py-3 border-t border-border bg-card/85 backdrop-blur z-20"
+      aria-label="Workflow actions"
+    >
       <div className="mx-auto max-w-[1600px] flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {prev ? (
             <Button asChild variant="outline" size="sm">
-              <Link to={prev.to}>
-                <ArrowLeft className="mr-1.5 h-4 w-4" /> {prev.label}
+              <Link to={prev.to} aria-label={`Back to ${prev.label}`}>
+                <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden="true" /> {prev.label}
               </Link>
             </Button>
           ) : (
@@ -42,22 +45,39 @@ export function FlowFooter({
           )}
         </div>
         <div className="flex items-center gap-3">
-          {hint && <span className="text-xs text-muted-foreground hidden sm:block">{hint}</span>}
+          {hint && (
+            <span className="text-xs text-muted-foreground hidden sm:block" aria-live="polite">
+              {hint}
+            </span>
+          )}
           {secondary}
           {onPrimary ? (
-            <Button size="sm" onClick={onPrimary} disabled={primaryDisabled}>
+            <Button
+              size="sm"
+              onClick={onPrimary}
+              disabled={primaryDisabled}
+              aria-disabled={primaryDisabled || undefined}
+            >
               {primaryLabel || (next ? `Next: ${next.label}` : "Continue")}
-              <ArrowRight className="ml-1.5 h-4 w-4" />
+              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
             </Button>
           ) : next ? (
             <Button asChild size="sm" disabled={primaryDisabled}>
-              <Link to={next.to}>
-                {primaryLabel || `Next: ${next.label}`} <ArrowRight className="ml-1.5 h-4 w-4" />
+              <Link
+                to={next.to}
+                aria-disabled={primaryDisabled || undefined}
+                tabIndex={primaryDisabled ? -1 : undefined}
+                onClick={(event) => {
+                  if (primaryDisabled) event.preventDefault();
+                }}
+              >
+                {primaryLabel || `Next: ${next.label}`}{" "}
+                <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
           ) : null}
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

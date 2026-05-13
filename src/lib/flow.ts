@@ -126,31 +126,28 @@ export function computeStepStatus(stepId: string, currentPath: string, s: FlowSt
   const step = FLOW_STEPS.find((x) => x.id === stepId);
   if (!step) return "blocked";
   const isCurrent = step.to === currentPath;
+  if (isCurrent) return "current";
   switch (stepId) {
     case "context":
-      return isCurrent ? "current" : s.hasContext ? "complete" : "available";
+      return s.hasContext ? "complete" : "available";
     case "select":
       if (!s.hasContext) return "blocked";
-      return isCurrent ? "current" : s.hasWizard ? "complete" : "available";
+      return s.hasWizard ? "complete" : "available";
     case "recommend":
       if (!s.hasContext) return "blocked";
-      return isCurrent ? "current" : s.hasRecommendation ? "complete" : "available";
+      return s.hasRecommendation ? "complete" : "available";
     case "structure":
       if (!s.hasContext) return "blocked";
-      return isCurrent
-        ? "current"
-        : s.hasStructures && s.hasLinkedSupport
-          ? "complete"
-          : "available";
+      return s.hasStructures && s.hasLinkedSupport ? "complete" : "available";
     case "review":
       if (!s.hasContext) return "blocked";
-      return isCurrent ? "current" : "available";
+      return "available";
     case "register":
       if (!s.hasContext) return "blocked";
-      return isCurrent ? "current" : s.hasRegister ? "complete" : "available";
+      return s.hasRegister ? "complete" : "available";
     case "output":
       if (!s.hasRegister) return "blocked";
-      return isCurrent ? "current" : "available";
+      return "available";
     default:
       return "available";
   }

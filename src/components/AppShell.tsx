@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import {
   Wrench,
   ListChecks,
@@ -14,11 +15,11 @@ import {
   Info,
   Building2,
   ClipboardCheck,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle } from "lucide-react";
 import { FlowStepper } from "@/components/FlowStepper";
 import { isFlowPath } from "@/lib/flow";
 import { StartupGate } from "@/components/StartupGate";
@@ -26,13 +27,13 @@ import { StartupGate } from "@/components/StartupGate";
 const homeNav = [{ to: "/", label: "Home", icon: Home }] as const;
 
 const flowNav = [
-  { to: "/inputs", label: "1 · Project Context", icon: Gauge },
-  { to: "/wizard", label: "2 · Selection Wizard", icon: Sparkles },
-  { to: "/report", label: "3 · Recommendation", icon: FileBarChart2 },
-  { to: "/arrangements", label: "4 · Structure & Linking", icon: Building2 },
-  { to: "/review", label: "5 · Review Inputs", icon: ClipboardCheck },
-  { to: "/register", label: "6 · Support Register", icon: ListChecks },
-  { to: "/mto", label: "7 · Material Take-Off", icon: Boxes },
+  { to: "/inputs", label: "1 - Project Context", icon: Gauge },
+  { to: "/wizard", label: "2 - Selection Wizard", icon: Sparkles },
+  { to: "/report", label: "3 - Recommendation", icon: FileBarChart2 },
+  { to: "/arrangements", label: "4 - Structure & Linking", icon: Building2 },
+  { to: "/review", label: "5 - Review Inputs", icon: ClipboardCheck },
+  { to: "/register", label: "6 - Support Register", icon: ListChecks },
+  { to: "/mto", label: "7 - Material Take-Off", icon: Boxes },
 ] as const;
 
 const toolsNav = [
@@ -43,23 +44,50 @@ const toolsNav = [
   { to: "/eula", label: "EULA & Disclaimer", icon: HardHat },
 ] as const;
 
+const mobileNav = [
+  { to: "/", label: "Project", icon: Home },
+  { to: "/wizard", label: "Wizard", icon: Wrench },
+  { to: "/report", label: "Report", icon: FileBarChart2 },
+  { to: "/register", label: "Register", icon: ListChecks },
+  { to: "/mto", label: "MTO", icon: Boxes },
+] as const;
+
 export function AppShell() {
   const loc = useLocation();
   const { line } = useApp();
   const inFlow = isFlowPath(loc.pathname);
+  const mainRef = useRef<HTMLElement>(null);
+  const pageTitle = [...homeNav, ...flowNav, ...toolsNav].find(
+    (item) => item.to === loc.pathname,
+  )?.label;
+
+  useEffect(() => {
+    mainRef.current?.focus({ preventScroll: true });
+  }, [loc.pathname]);
+
   return (
     <StartupGate>
       <div className="min-h-screen bg-background text-foreground flex flex-col">
-        {/* Top bar */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[120] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
+
         <header className="sticky top-0 z-30 h-12 border-b border-border bg-card/80 backdrop-blur flex items-center justify-between px-3 md:px-4">
-          <Link to="/" className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Pipe Support Smart Assist home"
+          >
             <div className="h-7 w-7 rounded-md bg-primary/15 text-primary grid place-items-center">
-              <Anchor className="h-4 w-4" />
+              <Anchor className="h-4 w-4" aria-hidden="true" />
             </div>
             <div className="leading-tight">
               <div className="text-sm font-semibold tracking-tight">Pipe Support Smart Assist</div>
               <div className="text-[11px] text-muted-foreground hidden sm:block">
-                by Lovable Engineering · MSS · ASME B31.3
+                by Lovable Engineering - MSS - ASME B31.3
               </div>
             </div>
           </Link>
@@ -67,33 +95,44 @@ export function AppShell() {
             <Badge
               variant="outline"
               className="hidden sm:inline-flex border-success/40 text-success bg-success/10 text-[11px]"
+              role="status"
             >
               Session active
             </Badge>
             <Badge
               variant="outline"
               className="border-primary/40 text-primary bg-primary/10 text-[11px]"
+              aria-live="polite"
+              aria-label={`Active line nominal pipe size ${line.pipeSize || "not set"}`}
             >
-              Active Line NPS: {line.pipeSize || "—"}"
+              Active Line NPS: {line.pipeSize || "-"}"
             </Badge>
           </div>
         </header>
 
         <div className="flex flex-1 min-h-0">
-          {/* Sidebar — fixed, does not scroll with main */}
           <aside className="hidden md:flex sticky top-12 self-start h-[calc(100vh-3rem)] w-60 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex-col">
-            <nav className="flex-1 p-2 overflow-y-auto">
+            <nav className="flex-1 p-2 overflow-y-auto" aria-label="Primary navigation">
               <NavGroup label="Start" items={homeNav} pathname={loc.pathname} />
               <NavGroup label="Workflow" items={flowNav} pathname={loc.pathname} />
               <NavGroup label="Library & Help" items={toolsNav} pathname={loc.pathname} />
             </nav>
             <div className="border-t border-sidebar-border p-3 text-[11px] text-muted-foreground">
-              Decision support tool · v1.0
+              Decision support tool - v1.0
             </div>
           </aside>
 
-          <main className="flex-1 min-w-0 px-4 md:px-8 py-6 pb-24 md:pb-10">
+          <main
+            id="main-content"
+            ref={mainRef}
+            tabIndex={-1}
+            aria-label={pageTitle ? `${pageTitle} page` : "Application content"}
+            className="flex-1 min-w-0 px-4 md:px-8 py-6 pb-24 md:pb-10 focus:outline-none"
+          >
             <div className="mx-auto max-w-[1600px] space-y-6">
+              <div className="sr-only" aria-live="polite" aria-atomic="true">
+                {pageTitle ? `${pageTitle} loaded` : "Page loaded"}
+              </div>
               {inFlow && <FlowStepper />}
               <Outlet />
               <DisclaimerBanner />
@@ -101,29 +140,27 @@ export function AppShell() {
           </main>
         </div>
 
-        {/* Mobile bottom nav */}
-        <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-border bg-card">
+        <nav
+          className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-border bg-card"
+          aria-label="Mobile primary navigation"
+        >
           <div className="grid grid-cols-5">
-            {[
-              { to: "/", label: "Project", icon: Home },
-              { to: "/wizard", label: "Wizard", icon: Wrench },
-              { to: "/report", label: "Report", icon: FileBarChart2 },
-              { to: "/register", label: "Register", icon: ListChecks },
-              { to: "/mto", label: "MTO", icon: Boxes },
-            ].map((t) => {
-              const Icon = t.icon;
-              const active = loc.pathname === t.to;
+            {mobileNav.map((item) => {
+              const Icon = item.icon;
+              const active = loc.pathname === item.to;
               return (
                 <Link
-                  key={t.to}
-                  to={t.to}
+                  key={item.to}
+                  to={item.to}
+                  aria-current={active ? "page" : undefined}
+                  aria-label={`${item.label}${active ? ", current page" : ""}`}
                   className={cn(
-                    "flex flex-col items-center justify-center py-2 text-[11px]",
+                    "flex min-h-14 flex-col items-center justify-center py-2 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
                     active ? "text-primary" : "text-muted-foreground",
                   )}
                 >
-                  <Icon className="h-5 w-5 mb-0.5" />
-                  {t.label}
+                  <Icon className="h-5 w-5 mb-0.5" aria-hidden="true" />
+                  {item.label}
                 </Link>
               );
             })}
@@ -160,14 +197,15 @@ function NavGroup({
             <Link
               key={item.to}
               to={item.to}
+              aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition",
+                "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar",
                 active
                   ? "bg-primary/15 text-primary"
                   : "text-sidebar-foreground/80 hover:bg-sidebar-accent",
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" />
+              <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span className="flex-1">{item.label}</span>
             </Link>
           );
@@ -179,8 +217,11 @@ function NavGroup({
 
 function DisclaimerBanner() {
   return (
-    <div className="rounded-md border border-warning/40 bg-warning/10 p-3 flex items-start gap-3 text-sm">
-      <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+    <aside
+      className="rounded-md border border-warning/40 bg-warning/10 p-3 flex items-start gap-3 text-sm"
+      aria-label="Engineering disclaimer"
+    >
+      <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" aria-hidden="true" />
       <p className="text-foreground/90">
         <b>For engineering support only.</b> Final support design shall be reviewed and approved by
         a qualified piping engineer against project specifications, stress analysis, structural
@@ -188,6 +229,6 @@ function DisclaimerBanner() {
         standards. This software is a decision-support tool and does not replace professional
         engineering judgement.
       </p>
-    </div>
+    </aside>
   );
 }

@@ -145,7 +145,14 @@ function InputsPage() {
             <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
               <FileUp className="h-3.5 w-3.5 mr-1.5" /> Import JSON
             </Button>
-            <input ref={fileRef} type="file" accept=".json" hidden onChange={handleImport} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".json"
+              hidden
+              aria-label="Import project JSON file"
+              onChange={handleImport}
+            />
           </div>
           {savedProjects.length > 0 && (
             <div className="border-t border-border pt-3">
@@ -175,7 +182,8 @@ function InputsPage() {
                       Load
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => deleteProject(p.id)}>
-                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" aria-hidden="true" />
+                      <span className="sr-only">Delete saved project {p.name}</span>
                     </Button>
                   </div>
                 ))}
@@ -192,6 +200,7 @@ function InputsPage() {
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <Field label="Project Name">
             <Input
+              aria-label="Project Name"
               value={line.projectName}
               onChange={(e) => setLine({ projectName: e.target.value })}
               placeholder="e.g. PX Revamp"
@@ -199,6 +208,7 @@ function InputsPage() {
           </Field>
           <Field label="Area / Unit">
             <Input
+              aria-label="Area or Unit"
               value={line.area}
               onChange={(e) => setLine({ area: e.target.value })}
               placeholder="Unit 200"
@@ -206,7 +216,7 @@ function InputsPage() {
           </Field>
           <Field label="Phase">
             <Select value={line.phase} onValueChange={(v) => setLine({ phase: v as never })}>
-              <SelectTrigger>
+              <SelectTrigger aria-label="Phase">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -226,19 +236,29 @@ function InputsPage() {
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <Field label="Line Number">
             <Input
+              aria-label="Line Number"
               value={line.lineNumber}
               onChange={(e) => setLine({ lineNumber: e.target.value })}
               placeholder='6"-P-1001-A1A'
             />
           </Field>
           <Field label="Pipe Size (NPS)">
-            <Input value={line.pipeSize} onChange={(e) => setLine({ pipeSize: e.target.value })} />
+            <Input
+              aria-label="Pipe Size NPS"
+              value={line.pipeSize}
+              onChange={(e) => setLine({ pipeSize: e.target.value })}
+            />
           </Field>
           <Field label="Schedule">
-            <Input value={line.schedule} onChange={(e) => setLine({ schedule: e.target.value })} />
+            <Input
+              aria-label="Schedule"
+              value={line.schedule}
+              onChange={(e) => setLine({ schedule: e.target.value })}
+            />
           </Field>
           <Field label="Material">
             <Input
+              aria-label="Material"
               value={line.material}
               onChange={(e) => setLine({ material: e.target.value })}
               placeholder="CS / SS316 / LTCS"
@@ -246,6 +266,7 @@ function InputsPage() {
           </Field>
           <Field label="Fluid / Service">
             <Input
+              aria-label="Fluid or Service"
               value={line.service}
               onChange={(e) => setLine({ service: e.target.value })}
               placeholder="Steam / Hydrocarbon / Pump suction…"
@@ -253,25 +274,28 @@ function InputsPage() {
           </Field>
           <Field label="Design Pressure (barg)">
             <Input
+              aria-label="Design Pressure in barg"
               value={line.designPressure}
               onChange={(e) => setLine({ designPressure: e.target.value })}
             />
           </Field>
           <Field label="Design Temp (°C)">
             <Input
+              aria-label="Design Temperature in degrees Celsius"
               value={line.designTemp}
               onChange={(e) => setLine({ designTemp: e.target.value })}
             />
           </Field>
           <Field label="Operating Temp (°C)">
             <Input
+              aria-label="Operating Temperature in degrees Celsius"
               value={line.operatingTemp}
               onChange={(e) => setLine({ operatingTemp: e.target.value })}
             />
           </Field>
           <Field label="Layout">
             <Select value={line.layout} onValueChange={(v) => setLine({ layout: v as never })}>
-              <SelectTrigger>
+              <SelectTrigger aria-label="Layout">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -289,7 +313,7 @@ function InputsPage() {
               value={line.insulation}
               onValueChange={(v) => setLine({ insulation: v as never })}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-label="Insulation">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -303,6 +327,7 @@ function InputsPage() {
           </Field>
           <Field label="Insulation Thickness (mm)">
             <Input
+              aria-label="Insulation Thickness in millimeters"
               value={line.insulationThickness}
               onChange={(e) => setLine({ insulationThickness: e.target.value })}
             />

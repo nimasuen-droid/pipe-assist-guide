@@ -168,20 +168,44 @@ function MTOPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setPreviewOpen(true)} disabled={!all.length}>
-            <Eye className="mr-2 h-4 w-4" /> Preview
+          <Button
+            variant="outline"
+            onClick={() => setPreviewOpen(true)}
+            disabled={!all.length}
+            aria-label="Preview detailed material take-off"
+          >
+            <Eye className="mr-2 h-4 w-4" aria-hidden="true" /> Preview
           </Button>
-          <Button variant="outline" onClick={() => setBomOpen(true)} disabled={!all.length}>
-            <Layers className="mr-2 h-4 w-4" /> Summary BOM
+          <Button
+            variant="outline"
+            onClick={() => setBomOpen(true)}
+            disabled={!all.length}
+            aria-label="Open summary bill of materials"
+          >
+            <Layers className="mr-2 h-4 w-4" aria-hidden="true" /> Summary BOM
           </Button>
-          <Button variant="outline" onClick={handlePrint} disabled={!all.length}>
-            <Printer className="mr-2 h-4 w-4" /> Print
+          <Button
+            variant="outline"
+            onClick={handlePrint}
+            disabled={!all.length}
+            aria-label="Print material take-off"
+          >
+            <Printer className="mr-2 h-4 w-4" aria-hidden="true" /> Print
           </Button>
-          <Button variant="outline" onClick={exportBOMCSV} disabled={!all.length}>
-            <FileText className="mr-2 h-4 w-4" /> Export BOM CSV
+          <Button
+            variant="outline"
+            onClick={exportBOMCSV}
+            disabled={!all.length}
+            aria-label="Export summary bill of materials as CSV"
+          >
+            <FileText className="mr-2 h-4 w-4" aria-hidden="true" /> Export BOM CSV
           </Button>
-          <Button onClick={() => exportMTOCSV(register)} disabled={!register.length}>
-            <Download className="mr-2 h-4 w-4" /> Export CSV
+          <Button
+            onClick={() => exportMTOCSV(register)}
+            disabled={!register.length}
+            aria-label="Export detailed material take-off as CSV"
+          >
+            <Download className="mr-2 h-4 w-4" aria-hidden="true" /> Export CSV
           </Button>
         </div>
       </div>
@@ -200,8 +224,15 @@ function MTOPage() {
                 {usedStructures.length} structure(s) - quantities count once per structure
               </span>
             </div>
-            <div className="overflow-x-auto">
+            <div
+              className="overflow-x-auto"
+              tabIndex={0}
+              aria-label="Horizontally scrollable shared structure material take-off table"
+            >
               <table className="w-full min-w-[760px] text-sm">
+                <caption className="sr-only">
+                  Shared structure material take-off. Quantities are counted once per structure.
+                </caption>
                 <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                   <tr>
                     {[
@@ -214,7 +245,7 @@ function MTOPage() {
                       "Size",
                       "Remarks",
                     ].map((h) => (
-                      <th key={h} className="px-3 py-2 text-left">
+                      <th key={h} scope="col" className="px-3 py-2 text-left">
                         {h}
                       </th>
                     ))}
@@ -248,7 +279,7 @@ function MTOPage() {
 
       {structureMtoRows.some((r) => r.shared) && (
         <p className="flex items-center gap-1.5 text-xs text-warning">
-          <AlertTriangle className="h-3.5 w-3.5" />
+          <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
           Multiple supports on a single structure require combined load verification by structural
           design.
         </p>
@@ -259,15 +290,22 @@ function MTOPage() {
       )}
       {all.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center text-muted-foreground">
+          <CardContent className="py-12 text-center text-muted-foreground" role="status">
             No items. Add supports to the register to populate the MTO.
           </CardContent>
         </Card>
       ) : (
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div
+              className="overflow-x-auto"
+              tabIndex={0}
+              aria-label="Horizontally scrollable detailed pipe support material take-off table"
+            >
               <table className="w-full min-w-[980px] text-sm">
+                <caption className="sr-only">
+                  Detailed material take-off for pipe support and linked structure components.
+                </caption>
                 <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                   <tr>
                     {[
@@ -282,7 +320,7 @@ function MTOPage() {
                       "Category",
                       "Remarks",
                     ].map((h) => (
-                      <th key={h} className="px-3 py-2 text-left">
+                      <th key={h} scope="col" className="px-3 py-2 text-left">
                         {h}
                       </th>
                     ))}
@@ -315,7 +353,7 @@ function MTOPage() {
       )}
 
       <p className="flex items-center gap-1.5 text-xs text-warning">
-        <AlertTriangle className="h-3.5 w-3.5" />
+        <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
         MTO quantities are preliminary and must be verified during detailed design and stress
         analysis.
       </p>
@@ -397,11 +435,16 @@ function MTOPage() {
           <DialogHeader>
             <DialogTitle>MTO Preview</DialogTitle>
           </DialogHeader>
-          <div className="mb-2 text-xs text-muted-foreground">
+          <div className="mb-2 text-xs text-muted-foreground" id="mto-preview-description">
             {all.length} components across {register.length} supports.
           </div>
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            tabIndex={0}
+            aria-label="Horizontally scrollable material take-off preview table"
+          >
             <table className="w-full min-w-[840px] border-collapse text-xs">
+              <caption className="sr-only">Material take-off preview</caption>
               <thead className="bg-muted/50">
                 <tr>
                   {[
@@ -415,7 +458,7 @@ function MTOPage() {
                     "Unit",
                     "Category",
                   ].map((h) => (
-                    <th key={h} className="border border-border px-2 py-1 text-left">
+                    <th key={h} scope="col" className="border border-border px-2 py-1 text-left">
                       {h}
                     </th>
                   ))}
@@ -440,11 +483,11 @@ function MTOPage() {
           </div>
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={handlePrint}>
-              <Printer className="mr-2 h-4 w-4" />
+              <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
               Print
             </Button>
             <Button onClick={exportBOMCSV}>
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="mr-2 h-4 w-4" aria-hidden="true" />
               Export BOM CSV
             </Button>
           </DialogFooter>
@@ -456,11 +499,16 @@ function MTOPage() {
           <DialogHeader>
             <DialogTitle>Summary BOM</DialogTitle>
           </DialogHeader>
-          <div className="mb-2 text-xs text-muted-foreground">
+          <div className="mb-2 text-xs text-muted-foreground" id="summary-bom-description">
             {bom.length} unique items aggregated by component / material / size.
           </div>
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            tabIndex={0}
+            aria-label="Horizontally scrollable summary bill of materials table"
+          >
             <table className="w-full min-w-[720px] border-collapse text-xs">
+              <caption className="sr-only">Summary bill of materials</caption>
               <thead className="bg-muted/50">
                 <tr>
                   {[
@@ -472,7 +520,7 @@ function MTOPage() {
                     "Category",
                     "Used in",
                   ].map((h) => (
-                    <th key={h} className="border border-border px-2 py-1 text-left">
+                    <th key={h} scope="col" className="border border-border px-2 py-1 text-left">
                       {h}
                     </th>
                   ))}
@@ -499,11 +547,11 @@ function MTOPage() {
           </div>
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={handlePrint}>
-              <Printer className="mr-2 h-4 w-4" />
+              <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
               Print
             </Button>
             <Button onClick={exportBOMCSV}>
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="mr-2 h-4 w-4" aria-hidden="true" />
               Export BOM CSV
             </Button>
           </DialogFooter>
