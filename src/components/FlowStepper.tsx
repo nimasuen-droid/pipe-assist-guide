@@ -24,8 +24,12 @@ export function FlowStepper() {
   return (
     <nav
       aria-label="Workflow progress"
+      aria-describedby="workflow-progress-help"
       className="rounded-lg border border-border bg-card/60 backdrop-blur px-3 py-2.5"
     >
+      <p id="workflow-progress-help" className="sr-only">
+        Workflow steps are links. Blocked steps are skipped until required earlier work is complete.
+      </p>
       <div className="flex items-center justify-between mb-2">
         <div
           className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium"
@@ -37,7 +41,7 @@ export function FlowStepper() {
           {FLOW_STEPS[currentIdx]?.blurb}
         </div>
       </div>
-      <ol className="flex items-stretch gap-1 overflow-x-auto">
+      <ol className="flex items-stretch gap-1 overflow-x-auto" aria-label="Workflow steps">
         {FLOW_STEPS.map((step, i) => {
           const status = computeStepStatus(step.id, loc.pathname, state);
           const isLast = i === FLOW_STEPS.length - 1;

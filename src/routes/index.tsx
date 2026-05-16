@@ -98,11 +98,6 @@ function HomePage() {
             maskImage: "radial-gradient(ellipse at 70% 30%, black 40%, transparent 75%)",
           }}
         />
-        <div
-          aria-hidden
-          className="absolute -top-24 -right-24 h-80 w-80 rounded-full blur-3xl opacity-40"
-          style={{ background: "var(--gradient-hero)" }}
-        />
         <div className="relative px-6 md:px-10 py-12 md:py-16 grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div className="space-y-6">
             <Badge variant="outline" className="border-primary/40 text-primary bg-primary/10">

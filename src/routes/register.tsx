@@ -98,11 +98,19 @@ function RegisterPage() {
         </Card>
       ) : (
         <Card>
-          <CardContent className="overflow-x-auto p-0">
+          <CardContent
+            className="overflow-x-auto p-0"
+            tabIndex={0}
+            aria-label="Support register table"
+          >
             <table className="w-full text-sm">
+              <caption className="sr-only">
+                Project support register with line, support type, structural assignment, review
+                flags, remarks, and row actions.
+              </caption>
               <thead className="text-xs uppercase text-muted-foreground bg-muted/50">
                 <tr>
-                  <th className="py-2 px-3 w-8">
+                  <th scope="col" className="py-2 px-3 w-8">
                     <Checkbox
                       checked={allChecked}
                       onCheckedChange={toggleAll}
@@ -125,7 +133,7 @@ function RegisterPage() {
                     "Remarks",
                     "",
                   ].map((h) => (
-                    <th key={h} className="text-left py-2 px-3">
+                    <th key={h} scope="col" className="text-left py-2 px-3">
                       {h}
                     </th>
                   ))}
@@ -186,7 +194,7 @@ function RegisterPage() {
                           size="icon"
                           variant="ghost"
                           onClick={() => setEditing(e)}
-                          aria-label="Edit"
+                          aria-label={`Edit support ${e.tag}`}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -194,7 +202,7 @@ function RegisterPage() {
                           size="icon"
                           variant="ghost"
                           onClick={() => removeFromRegister(e.id)}
-                          aria-label="Delete"
+                          aria-label={`Delete support ${e.tag}`}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

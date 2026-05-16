@@ -98,10 +98,11 @@ export function AppShell() {
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className="hidden sm:inline-flex max-w-[34vw] border-primary/40 text-primary bg-primary/10 text-[11px]"
+              className="hidden max-w-[34vw] truncate border-primary/40 bg-primary/10 text-[11px] text-primary sm:inline-flex"
               role="status"
+              aria-label={`Loaded project ${line.projectName || "not selected"}`}
             >
-              Project: {line.projectName || "Not selected"}
+              <span className="truncate">Project: {line.projectName || "Not selected"}</span>
             </Badge>
             <Badge
               variant="outline"
@@ -212,6 +213,8 @@ function ProjectStatusBanner({
     <section
       className="rounded-md border border-primary/30 bg-card p-3 shadow-sm"
       aria-label="Active project"
+      aria-live="polite"
+      role="status"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex min-w-0 items-start gap-2">

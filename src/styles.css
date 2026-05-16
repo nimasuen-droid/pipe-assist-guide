@@ -157,7 +157,34 @@
 
   :focus-visible {
     outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
+    outline-offset: 3px;
+  }
+
+  :target {
+    scroll-margin-top: 5rem;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [role="combobox"],
+  [role="tab"],
+  [role="checkbox"] {
+    touch-action: manipulation;
+  }
+
+  input,
+  textarea,
+  [role="combobox"] {
+    caret-color: var(--color-primary);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    opacity: 1;
   }
 
   ::selection {
@@ -174,5 +201,33 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --background: Canvas;
+    --foreground: CanvasText;
+    --card: Canvas;
+    --card-foreground: CanvasText;
+    --popover: Canvas;
+    --popover-foreground: CanvasText;
+    --primary: Highlight;
+    --primary-foreground: HighlightText;
+    --secondary: Canvas;
+    --secondary-foreground: CanvasText;
+    --muted: Canvas;
+    --muted-foreground: CanvasText;
+    --accent: Highlight;
+    --accent-foreground: HighlightText;
+    --destructive: Mark;
+    --destructive-foreground: MarkText;
+    --border: CanvasText;
+    --input: CanvasText;
+    --ring: Highlight;
+    --warning: Mark;
+    --warning-foreground: MarkText;
+    --success: Highlight;
+    --success-foreground: HighlightText;
   }
 }

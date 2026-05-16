@@ -198,13 +198,21 @@ function LineSupportDialog({
             then add the support with a structural carrier.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-md border border-border">
+          <div
+            className="overflow-x-auto rounded-md border border-border"
+            tabIndex={0}
+            aria-label={`Supports assigned to ${line.lineNumber}`}
+          >
             <table className="w-full min-w-[820px] text-sm">
+              <caption className="sr-only">
+                Supports assigned to the selected project line, including structure link, review
+                status, remarks, and edit actions.
+              </caption>
               <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                 <tr>
                   {["Tag", "Type", "Function", "Structure", "Review", "Remarks", "Actions"].map(
                     (heading) => (
-                      <th key={heading} className="px-3 py-2 text-left">
+                      <th key={heading} scope="col" className="px-3 py-2 text-left">
                         {heading}
                       </th>
                     ),
