@@ -27,6 +27,10 @@ const quickStartSteps = [
     title: "Build the deliverables",
     body: "Assign supports to structures, review inputs, manage the support register and generate the screening MTO for project review.",
   },
+  {
+    title: "Save project records locally",
+    body: "Choose a local records folder so each project is archived as reloadable app data plus CSV/TXT files that remain readable outside the app.",
+  },
 ];
 
 const manualCards = [
@@ -34,6 +38,11 @@ const manualCards = [
     title: "User manual",
     body: "The manual explains every workflow stage, the expected inputs, how outputs should be reviewed, and where project records are stored.",
     icon: BookOpen,
+  },
+  {
+    title: "Local records",
+    body: "Use Save to Local Folder after project setup. The app creates a project folder with app-project.json, line list, support register, MTO and summary files.",
+    icon: CheckCircle2,
   },
   {
     title: "Engineering disclaimer",
@@ -207,7 +216,7 @@ export function StartupGate({ children }: StartupGateProps) {
                 aria-labelledby="startup-tab-manual"
                 className="h-full overflow-y-auto px-4 py-4 sm:px-5"
               >
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   {manualCards.map((card) => {
                     const Icon = card.icon;
                     return (

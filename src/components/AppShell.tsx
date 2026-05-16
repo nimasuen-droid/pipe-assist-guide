@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { FlowStepper } from "@/components/FlowStepper";
 import { isFlowPath } from "@/lib/flow";
 import { StartupGate } from "@/components/StartupGate";
+import { LocalRecordsBar } from "@/components/LocalRecordsBar";
 
 const homeNav = [{ to: "/", label: "Home", icon: Home }] as const;
 
@@ -133,6 +134,7 @@ export function AppShell() {
               <div className="sr-only" aria-live="polite" aria-atomic="true">
                 {pageTitle ? `${pageTitle} loaded` : "Page loaded"}
               </div>
+              <LocalRecordsBar />
               {inFlow && <FlowStepper />}
               <Outlet />
               <DisclaimerBanner />

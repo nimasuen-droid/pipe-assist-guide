@@ -6,7 +6,10 @@ import type {
   SupportRecommendation,
   SupportRegisterEntry,
   Structure,
+  ProjectLine,
+  ProjectArchiveData,
 } from "./types";
+import { lineToProjectLine } from "./lineList";
 
 const defaultLine: LineInput = {
   projectName: "",
@@ -53,7 +56,11 @@ interface AppState {
     savedAt: string;
     line: LineInput;
     wizard: WizardInput;
+    lineList?: ProjectLine[];
+    activeLineId?: string | null;
   }[];
+  lineList: ProjectLine[];
+  activeLineId: string | null;
   eulaAccepted: boolean;
   tagging: TaggingConfig;
   tagCounter: number;
@@ -71,7 +78,13 @@ interface AppState {
   saveProject: () => void;
   loadProject: (id: string) => void;
   deleteProject: (id: string) => void;
-  loadSample: () => void;
+  loadSample: (scenarioId?: string) => void;
+  setActiveLine: (id: string) => void;
+  setActiveLineSection: (sectionName: string) => void;
+  addCurrentLineToList: (sectionName?: string) => void;
+  removeProjectLine: (id: string) => void;
+  importLineList: (lines: ProjectLine[]) => void;
+  loadProjectArchive: (data: ProjectArchiveData) => void;
   acceptEula: () => void;
   revokeEula: () => void;
   setTagging: (p: Partial<TaggingConfig>) => void;
@@ -384,6 +397,168 @@ const sampleWizard: WizardInput = {
   specialService: "hot",
 };
 
+export const sampleScenarios: {
+  id: string;
+  name: string;
+  line: LineInput;
+  wizard: WizardInput;
+}[] = [
+  {
+    id: "hot-steam-rack",
+    name: "Hot steam rack expansion",
+    line: sampleLine,
+    wizard: sampleWizard,
+  },
+  {
+    id: "pump-suction-vibration",
+    name: "Pump suction vibration restraint",
+    line: {
+      projectName: "Utilities Reliability Upgrade",
+      area: "Pump Alley",
+      lineNumber: '12"-W-1042-B1A',
+      pipeSize: "12",
+      schedule: "STD",
+      material: "CS A106 Gr.B",
+      service: "Cooling water pump suction",
+      designPressure: "12",
+      designTemp: "65",
+      operatingTemp: "38",
+      insulation: "none",
+      insulationThickness: "0",
+      layout: "equipment-piping",
+      phase: "retrofit",
+    },
+    wizard: {
+      orientation: "horizontal",
+      nearFeature: "equipment-nozzle",
+      thermalMovement: false,
+      upliftPossible: false,
+      vibration: true,
+      axialMovement: "allow",
+      lateralMovement: "restrain",
+      verticalAdjustment: true,
+      permanent: true,
+      weldingAllowed: false,
+      specialService: "none",
+    },
+  },
+  {
+    id: "cryogenic-transfer",
+    name: "Cryogenic transfer line",
+    line: {
+      projectName: "LNG Loading Study",
+      area: "Jetty",
+      lineNumber: '6"-LNG-3301-C1A-C',
+      pipeSize: "6",
+      schedule: "80",
+      material: "SS 304L",
+      service: "LNG transfer",
+      designPressure: "19",
+      designTemp: "-165",
+      operatingTemp: "-160",
+      insulation: "cryogenic",
+      insulationThickness: "150",
+      layout: "aboveground",
+      phase: "new-build",
+    },
+    wizard: {
+      orientation: "horizontal",
+      nearFeature: "valve",
+      thermalMovement: true,
+      upliftPossible: true,
+      vibration: false,
+      axialMovement: "allow",
+      lateralMovement: "restrain",
+      verticalAdjustment: true,
+      permanent: true,
+      weldingAllowed: false,
+      specialService: "cryogenic",
+    },
+  },
+  {
+    id: "firewater-main",
+    name: "Firewater main support",
+    line: {
+      projectName: "Tank Farm Firewater Upgrade",
+      area: "Tank Farm",
+      lineNumber: '10"-FW-5107-A1A',
+      pipeSize: "10",
+      schedule: "40",
+      material: "CS A53 Gr.B Galv",
+      service: "Firewater ring main",
+      designPressure: "16",
+      designTemp: "60",
+      operatingTemp: "32",
+      insulation: "none",
+      insulationThickness: "0",
+      layout: "aboveground",
+      phase: "new-build",
+    },
+    wizard: {
+      orientation: "horizontal",
+      nearFeature: "branch",
+      thermalMovement: false,
+      upliftPossible: false,
+      vibration: false,
+      axialMovement: "allow",
+      lateralMovement: "restrain",
+      verticalAdjustment: false,
+      permanent: true,
+      weldingAllowed: true,
+      specialService: "firewater",
+    },
+  },
+  {
+    id: "acid-skid",
+    name: "Corrosive chemical skid",
+    line: {
+      projectName: "Chemical Dosing Package",
+      area: "Skid 04",
+      lineNumber: '3"-ACD-7102-S1A',
+      pipeSize: "3",
+      schedule: "40S",
+      material: "SS316L",
+      service: "Sulfuric acid dosing",
+      designPressure: "8",
+      designTemp: "80",
+      operatingTemp: "45",
+      insulation: "personnel",
+      insulationThickness: "25",
+      layout: "skid",
+      phase: "new-build",
+    },
+    wizard: {
+      orientation: "change-direction",
+      nearFeature: "bend",
+      thermalMovement: true,
+      upliftPossible: false,
+      vibration: false,
+      axialMovement: "restrain",
+      lateralMovement: "restrain",
+      verticalAdjustment: false,
+      permanent: true,
+      weldingAllowed: false,
+      specialService: "corrosive",
+    },
+  },
+];
+
+const sampleLineList: ProjectLine[] = sampleScenarios.map((scenario) => ({
+  ...scenario.line,
+  id: scenario.id,
+  sectionName:
+    scenario.id === "hot-steam-rack"
+      ? "Rack bay A"
+      : scenario.id === "pump-suction-vibration"
+        ? "Pump nozzle bay"
+        : scenario.id === "cryogenic-transfer"
+          ? "Jetty approach"
+          : scenario.id === "firewater-main"
+            ? "Tank farm north"
+            : "Skid module",
+  notes: scenario.name,
+}));
+
 export const useApp = create<AppState>()(
   persist(
     (set, get) => ({
@@ -393,14 +568,38 @@ export const useApp = create<AppState>()(
       register: [],
       structures: [],
       savedProjects: [],
+      lineList: [],
+      activeLineId: null,
       eulaAccepted: false,
       tagging: defaultTagging,
       tagCounter: defaultTagging.startIndex,
       standards: defaultStandards,
-      setLine: (p) => set((s) => ({ line: { ...s.line, ...p } })),
+      setLine: (p) =>
+        set((s) => {
+          const line = { ...s.line, ...p };
+          return {
+            line,
+            lineList: s.activeLineId
+              ? s.lineList.map((item) => (item.id === s.activeLineId ? { ...item, ...line } : item))
+              : s.lineList,
+          };
+        }),
       setWizard: (p) => set((s) => ({ wizard: { ...s.wizard, ...p } })),
       setRecommendation: (r) => set({ recommendation: r }),
-      addToRegister: (e) => set((s) => ({ register: [...s.register, e] })),
+      addToRegister: (e) =>
+        set((s) => {
+          const activeLine = s.lineList.find((item) => item.id === s.activeLineId);
+          return {
+            register: [
+              ...s.register,
+              {
+                ...e,
+                projectLineId: e.projectLineId ?? activeLine?.id,
+                sectionName: e.sectionName ?? activeLine?.sectionName,
+              },
+            ],
+          };
+        }),
       removeFromRegister: (id) => set((s) => ({ register: s.register.filter((x) => x.id !== id) })),
       updateRegisterEntry: (id, p) =>
         set((s) => ({ register: s.register.map((x) => (x.id === id ? { ...x, ...p } : x)) })),
@@ -430,17 +629,103 @@ export const useApp = create<AppState>()(
               savedAt: new Date().toISOString(),
               line: s.line,
               wizard: s.wizard,
+              lineList: s.lineList,
+              activeLineId: s.activeLineId,
             },
           ],
         })),
       loadProject: (id) =>
         set((s) => {
           const p = s.savedProjects.find((x) => x.id === id);
-          return p ? { line: p.line, wizard: p.wizard } : {};
+          return p
+            ? {
+                line: p.line,
+                wizard: p.wizard,
+                lineList: p.lineList ?? [],
+                activeLineId: p.activeLineId ?? null,
+              }
+            : {};
         }),
       deleteProject: (id) =>
         set((s) => ({ savedProjects: s.savedProjects.filter((p) => p.id !== id) })),
-      loadSample: () => set({ line: sampleLine, wizard: sampleWizard }),
+      loadSample: (scenarioId) =>
+        set(() => {
+          const scenario =
+            sampleScenarios.find((item) => item.id === scenarioId) ?? sampleScenarios[0];
+          return {
+            line: scenario.line,
+            wizard: scenario.wizard,
+            recommendation: null,
+            lineList: sampleLineList,
+            activeLineId: scenario.id,
+          };
+        }),
+      setActiveLine: (id) =>
+        set((s) => {
+          const line = s.lineList.find((item) => item.id === id);
+          return line ? { activeLineId: id, line, recommendation: null } : {};
+        }),
+      setActiveLineSection: (sectionName) =>
+        set((s) => ({
+          lineList: s.activeLineId
+            ? s.lineList.map((item) =>
+                item.id === s.activeLineId ? { ...item, sectionName } : item,
+              )
+            : s.lineList,
+        })),
+      addCurrentLineToList: (sectionNameOverride) =>
+        set((s) => {
+          const active = s.lineList.find((item) => item.id === s.activeLineId);
+          const sectionName =
+            sectionNameOverride ||
+            active?.sectionName ||
+            [s.line.area, s.line.layout.replace(/-/g, " ")].filter(Boolean).join(" / ");
+          const existing =
+            active ??
+            s.lineList.find(
+              (item) =>
+                item.lineNumber === s.line.lineNumber &&
+                (item.sectionName || "") === (sectionName || ""),
+            );
+          const id = existing?.id ?? crypto.randomUUID();
+          const nextLine = { ...lineToProjectLine(s.line, id), sectionName };
+          return {
+            activeLineId: id,
+            lineList: existing
+              ? s.lineList.map((item) => (item.id === id ? { ...item, ...nextLine } : item))
+              : [...s.lineList, nextLine],
+          };
+        }),
+      removeProjectLine: (id) =>
+        set((s) => {
+          const lineList = s.lineList.filter((item) => item.id !== id);
+          return {
+            lineList,
+            activeLineId: s.activeLineId === id ? null : s.activeLineId,
+          };
+        }),
+      importLineList: (lines) =>
+        set(() => {
+          const first = lines[0];
+          return {
+            lineList: lines,
+            activeLineId: first?.id ?? null,
+            line: first ?? defaultLine,
+            recommendation: null,
+          };
+        }),
+      loadProjectArchive: (data) =>
+        set({
+          line: data.line,
+          wizard: data.wizard,
+          lineList: data.lineList,
+          activeLineId: data.activeLineId,
+          register: data.register,
+          structures: data.structures,
+          tagging: data.tagging,
+          tagCounter: data.tagCounter,
+          recommendation: null,
+        }),
       acceptEula: () => set({ eulaAccepted: true }),
       revokeEula: () => set({ eulaAccepted: false }),
       setTagging: (p) =>
@@ -471,7 +756,14 @@ export const useApp = create<AppState>()(
           standards: s.standards.map((x) => (x.id === id ? { ...x, ...p } : x)),
         })),
       resetStandards: () => set({ standards: defaultStandards }),
-      reset: () => set({ line: defaultLine, wizard: defaultWizard, recommendation: null }),
+      reset: () =>
+        set({
+          line: defaultLine,
+          wizard: defaultWizard,
+          recommendation: null,
+          lineList: [],
+          activeLineId: null,
+        }),
     }),
     {
       name: "pipe-support-smart-assist",

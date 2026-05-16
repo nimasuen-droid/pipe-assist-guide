@@ -24,6 +24,12 @@ export const lineInputSchema = z.object({
   phase: z.enum(["new-build", "brownfield", "retrofit"]),
 });
 
+export const projectLineSchema = lineInputSchema.extend({
+  id: z.string(),
+  sectionName: z.string().optional(),
+  notes: z.string().optional(),
+});
+
 export const wizardInputSchema = z.object({
   orientation: z.enum(["horizontal", "vertical", "sloped", "change-direction"]),
   nearFeature: z.enum([
@@ -63,4 +69,6 @@ export const wizardInputSchema = z.object({
 export const projectImportSchema = z.object({
   line: lineInputSchema.optional(),
   wizard: wizardInputSchema.optional(),
+  lineList: z.array(projectLineSchema).optional(),
+  activeLineId: z.string().nullable().optional(),
 });

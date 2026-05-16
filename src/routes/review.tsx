@@ -13,6 +13,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { FlowFooter } from "@/components/FlowFooter";
+import type { LineInput, ProjectLine, SupportRegisterEntry } from "@/lib/types";
 
 export const Route = createFileRoute("/review")({
   head: () => ({
@@ -34,12 +35,14 @@ function StatusRow({
   detail,
   href,
   icon: Icon,
+  actionLabel = "Edit",
 }: {
   ok: boolean;
   label: string;
   detail: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
+  actionLabel?: string;
 }) {
   return (
     <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
@@ -77,15 +80,72 @@ function StatusRow({
       </div>
       <Button asChild size="sm" variant="ghost">
         <Link to={href}>
-          <Pencil className="h-3.5 w-3.5 mr-1.5" /> Edit
+          <Pencil className="h-3.5 w-3.5 mr-1.5" /> {actionLabel}
         </Link>
       </Button>
     </div>
   );
 }
 
+function getMaterialContinuityIssues({
+  line,
+  lineList,
+  activeLineId,
+  register,
+}: {
+  line: LineInput;
+  lineList: ProjectLine[];
+  activeLineId: string | null;
+  register: SupportRegisterEntry[];
+}) {
+  const issues: string[] = [];
+  const activeProjectLine = lineList.find((item) => item.id === activeLineId);
+  if (
+    activeProjectLine &&
+    normalizeMaterial(activeProjectLine.material) !== normalizeMaterial(line.material)
+  ) {
+    issues.push(
+      `Active line material (${line.material}) differs from loaded line-list row (${activeProjectLine.material}).`,
+    );
+  }
+
+  const materialsByLine = new Map<string, Set<string>>();
+  lineList.forEach((item) => {
+    const key = item.lineNumber.trim();
+    if (!key) return;
+    const materials = materialsByLine.get(key) ?? new Set<string>();
+    materials.add(normalizeMaterial(item.material));
+    materialsByLine.set(key, materials);
+  });
+  materialsByLine.forEach((materials, lineNumber) => {
+    if (materials.size > 1) {
+      issues.push(`Line ${lineNumber} has multiple materials across line-list sections.`);
+    }
+  });
+
+  register.forEach((entry) => {
+    const reference =
+      lineList.find((item) => item.id === entry.projectLineId) ??
+      lineList.find((item) => item.lineNumber === entry.lineNumber);
+    if (
+      reference &&
+      normalizeMaterial(reference.material) !== normalizeMaterial(entry.line.material)
+    ) {
+      issues.push(
+        `Support ${entry.tag} stores ${entry.line.material}, but line list has ${reference.material}.`,
+      );
+    }
+  });
+
+  return issues;
+}
+
+function normalizeMaterial(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 function ReviewPage() {
-  const { line, wizard, recommendation, register, structures } = useApp();
+  const { line, wizard, recommendation, register, structures, lineList, activeLineId } = useApp();
 
   const ctxOk = Boolean(line.projectName && line.lineNumber && line.pipeSize);
   const wizOk = Boolean(wizard.orientation);
@@ -93,16 +153,20 @@ function ReviewPage() {
   const regOk = register.length > 0;
   const strOk = structures.length > 0;
   const unlinked = register.filter((r) => !r.structureId).length;
+  const materialIssues = getMaterialContinuityIssues({ line, lineList, activeLineId, register });
+  const materialOk = materialIssues.length === 0;
 
   const blockers: string[] = [];
   if (!ctxOk) blockers.push("Project context incomplete");
-  if (!regOk) blockers.push("No supports added to register");
+  if (!regOk) blockers.push("No supports added to register from the recommendation page");
 
   const warnings: string[] = [];
   if (!strOk)
     warnings.push("No structures defined — supports will not be grouped to racks/pedestals.");
   if (unlinked > 0) warnings.push(`${unlinked} support(s) not linked to a structure.`);
   if (!recOk) warnings.push("No recommendation generated yet.");
+
+  materialIssues.forEach((issue) => warnings.push(issue));
 
   const canGenerate = blockers.length === 0;
 
@@ -190,19 +254,33 @@ function ReviewPage() {
                 ? `${register.length} support(s) recorded${unlinked ? `, ${unlinked} unlinked` : ""}.`
                 : "No supports yet — generate a recommendation and add it to the register."
             }
-            href="/register"
+            href={recOk ? "/report" : "/wizard"}
             icon={ListChecks}
+            actionLabel={recOk ? "Add support" : "Run wizard"}
           />
           <StatusRow
-            ok={strOk}
+            ok={strOk && unlinked === 0}
             label="Structures & arrangements"
             detail={
-              strOk
-                ? `${structures.length} structure(s) defined.`
-                : "Optional: define racks/pedestals so supports can be grouped."
+              strOk && unlinked === 0
+                ? `${structures.length} structure(s) defined and supports linked.`
+                : "Each support should be assigned to a structure or grade pedestal. Use Structure & Linking to edit carriers."
             }
             href="/arrangements"
             icon={Building2}
+            actionLabel="Link supports"
+          />
+          <StatusRow
+            ok={materialOk}
+            label="Material continuity"
+            detail={
+              materialOk
+                ? "Active line, line list, and registered support snapshots use consistent material records."
+                : materialIssues.slice(0, 2).join(" ")
+            }
+            href="/inputs"
+            icon={CheckCircle2}
+            actionLabel="Fix inputs"
           />
         </CardContent>
       </Card>
@@ -236,7 +314,13 @@ function ReviewPage() {
 
       <FlowFooter
         primaryDisabled={!canGenerate}
-        hint={canGenerate ? "All required inputs present." : "Resolve blockers above to continue."}
+        hint={
+          canGenerate
+            ? "All required inputs present."
+            : recOk
+              ? "Open Recommendation and add assigned supports."
+              : "Run the wizard, then add supports from Recommendation."
+        }
       />
     </div>
   );

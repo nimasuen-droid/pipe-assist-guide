@@ -41,6 +41,12 @@ export interface LineInput {
   phase: ProjectPhase;
 }
 
+export interface ProjectLine extends LineInput {
+  id: string;
+  sectionName?: string;
+  notes?: string;
+}
+
 export interface WizardInput {
   orientation: Orientation;
   nearFeature:
@@ -84,6 +90,8 @@ export interface SupportRegisterEntry {
   id: string;
   tag: string;
   lineNumber: string;
+  projectLineId?: string;
+  sectionName?: string;
   location: string;
   supportType: string;
   function: string;
@@ -142,4 +150,24 @@ export interface Structure {
   mto: StructureMtoLine[]; // empty for existing-steel
   maxSupports: number; // soft limit (1 for inverted-l default)
   notes: string;
+}
+
+export interface ProjectArchiveData {
+  app: "pipe-support-smart-assist";
+  schemaVersion: 1;
+  exportedAt: string;
+  line: LineInput;
+  wizard: WizardInput;
+  lineList: ProjectLine[];
+  activeLineId: string | null;
+  register: SupportRegisterEntry[];
+  structures: Structure[];
+  tagging: {
+    prefix: string;
+    separator: string;
+    includeLine: boolean;
+    padding: number;
+    startIndex: number;
+  };
+  tagCounter: number;
 }
