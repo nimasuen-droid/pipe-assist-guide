@@ -20,6 +20,8 @@ export function FlowStepper() {
   };
 
   const currentIdx = FLOW_STEPS.findIndex((s) => s.to === loc.pathname);
+  const currentStep = FLOW_STEPS[currentIdx];
+  const progress = ((currentIdx + 1) / FLOW_STEPS.length) * 100;
 
   return (
     <nav
@@ -41,7 +43,31 @@ export function FlowStepper() {
           {FLOW_STEPS[currentIdx]?.blurb}
         </div>
       </div>
-      <ol className="flex items-stretch gap-1 overflow-x-auto" aria-label="Workflow steps">
+      <div className="sm:hidden" aria-label="Current workflow step">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold">{currentStep?.label}</div>
+            <div className="truncate text-xs text-muted-foreground">{currentStep?.blurb}</div>
+          </div>
+          <div className="shrink-0 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
+            {currentIdx + 1}/{FLOW_STEPS.length}
+          </div>
+        </div>
+        <div
+          className="mt-3 h-2 overflow-hidden rounded-full bg-muted"
+          role="progressbar"
+          aria-label="Workflow progress"
+          aria-valuemin={1}
+          aria-valuemax={FLOW_STEPS.length}
+          aria-valuenow={currentIdx + 1}
+        >
+          <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+      <ol
+        className="hidden items-stretch gap-1 overflow-x-auto sm:flex"
+        aria-label="Workflow steps"
+      >
         {FLOW_STEPS.map((step, i) => {
           const status = computeStepStatus(step.id, loc.pathname, state);
           const isLast = i === FLOW_STEPS.length - 1;

@@ -146,7 +146,7 @@ export function AppShell() {
                 savedProjects={savedProjects}
                 activeProjectId={activeProjectId}
               />
-              <LocalRecordsBar />
+              {(loc.pathname === "/" || loc.pathname === "/inputs") && <LocalRecordsBar />}
               {inFlow && <FlowStepper />}
               <Outlet />
               <DisclaimerBanner />

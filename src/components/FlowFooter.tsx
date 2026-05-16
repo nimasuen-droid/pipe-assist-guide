@@ -29,13 +29,13 @@ export function FlowFooter({
 
   return (
     <nav
-      className="sticky bottom-0 -mx-4 md:-mx-8 px-4 md:px-8 py-3 border-t border-border bg-card/85 backdrop-blur z-20"
+      className="-mx-4 border-t border-border bg-card/95 px-4 py-3 backdrop-blur md:sticky md:bottom-0 md:z-20 md:-mx-8 md:px-8"
       aria-label="Workflow actions"
     >
-      <div className="mx-auto max-w-[1600px] flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex items-center gap-2 order-2 sm:order-1">
           {prev ? (
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
               <Link to={prev.to} aria-label={`Back to ${prev.label}`}>
                 <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden="true" /> {prev.label}
               </Link>
@@ -44,7 +44,7 @@ export function FlowFooter({
             <span />
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="order-1 flex flex-col gap-2 sm:order-2 sm:flex-row sm:items-center sm:gap-3">
           {hint && (
             <span className="text-xs text-muted-foreground hidden sm:block" aria-live="polite">
               {hint}
@@ -54,6 +54,7 @@ export function FlowFooter({
           {onPrimary ? (
             <Button
               size="sm"
+              className="w-full sm:w-auto"
               onClick={onPrimary}
               disabled={primaryDisabled}
               aria-disabled={primaryDisabled || undefined}
@@ -62,7 +63,7 @@ export function FlowFooter({
               <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
             </Button>
           ) : next ? (
-            <Button asChild size="sm" disabled={primaryDisabled}>
+            <Button asChild size="sm" disabled={primaryDisabled} className="w-full sm:w-auto">
               <Link
                 to={next.to}
                 aria-disabled={primaryDisabled || undefined}
