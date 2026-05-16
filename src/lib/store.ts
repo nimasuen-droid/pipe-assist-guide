@@ -59,6 +59,7 @@ interface AppState {
     lineList?: ProjectLine[];
     activeLineId?: string | null;
   }[];
+  activeProjectId: string | null;
   lineList: ProjectLine[];
   activeLineId: string | null;
   eulaAccepted: boolean;
@@ -568,6 +569,7 @@ export const useApp = create<AppState>()(
       register: [],
       structures: [],
       savedProjects: [],
+      activeProjectId: null,
       lineList: [],
       activeLineId: null,
       eulaAccepted: false,
@@ -620,25 +622,30 @@ export const useApp = create<AppState>()(
           ),
         })),
       saveProject: () =>
-        set((s) => ({
-          savedProjects: [
-            ...s.savedProjects.filter((p) => p.name !== (s.line.projectName || "Untitled")),
-            {
-              id: crypto.randomUUID(),
-              name: s.line.projectName || "Untitled",
-              savedAt: new Date().toISOString(),
-              line: s.line,
-              wizard: s.wizard,
-              lineList: s.lineList,
-              activeLineId: s.activeLineId,
-            },
-          ],
-        })),
+        set((s) => {
+          const name = s.line.projectName || "Untitled";
+          const existing = s.savedProjects.find((p) => p.name === name);
+          const projectId = existing?.id ?? crypto.randomUUID();
+          const saved = {
+            id: projectId,
+            name,
+            savedAt: new Date().toISOString(),
+            line: s.line,
+            wizard: s.wizard,
+            lineList: s.lineList,
+            activeLineId: s.activeLineId,
+          };
+          return {
+            activeProjectId: projectId,
+            savedProjects: [...s.savedProjects.filter((p) => p.id !== projectId), saved],
+          };
+        }),
       loadProject: (id) =>
         set((s) => {
           const p = s.savedProjects.find((x) => x.id === id);
           return p
             ? {
+                activeProjectId: p.id,
                 line: p.line,
                 wizard: p.wizard,
                 lineList: p.lineList ?? [],
@@ -647,12 +654,16 @@ export const useApp = create<AppState>()(
             : {};
         }),
       deleteProject: (id) =>
-        set((s) => ({ savedProjects: s.savedProjects.filter((p) => p.id !== id) })),
+        set((s) => ({
+          activeProjectId: s.activeProjectId === id ? null : s.activeProjectId,
+          savedProjects: s.savedProjects.filter((p) => p.id !== id),
+        })),
       loadSample: (scenarioId) =>
         set(() => {
           const scenario =
             sampleScenarios.find((item) => item.id === scenarioId) ?? sampleScenarios[0];
           return {
+            activeProjectId: null,
             line: scenario.line,
             wizard: scenario.wizard,
             recommendation: null,
@@ -708,6 +719,7 @@ export const useApp = create<AppState>()(
         set(() => {
           const first = lines[0];
           return {
+            activeProjectId: null,
             lineList: lines,
             activeLineId: first?.id ?? null,
             line: first ?? defaultLine,
@@ -716,6 +728,7 @@ export const useApp = create<AppState>()(
         }),
       loadProjectArchive: (data) =>
         set({
+          activeProjectId: null,
           line: data.line,
           wizard: data.wizard,
           lineList: data.lineList,
@@ -758,6 +771,7 @@ export const useApp = create<AppState>()(
       resetStandards: () => set({ standards: defaultStandards }),
       reset: () =>
         set({
+          activeProjectId: null,
           line: defaultLine,
           wizard: defaultWizard,
           recommendation: null,

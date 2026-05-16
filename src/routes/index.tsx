@@ -1,8 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useApp } from "@/lib/store";
+import { sampleScenarios, useApp } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FLOW_STEPS } from "@/lib/flow";
+import {
+  confirmBeforeReplacingProject,
+  getActiveSavedProject,
+  hasUnsavedProjectChanges,
+} from "@/lib/projectStatus";
 import {
   ArrowRight,
   ShieldCheck,
@@ -16,7 +21,11 @@ import {
   Layers,
   AlertTriangle,
   Sparkles,
+  Save,
+  FolderOpen,
+  DatabaseZap,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,10 +42,39 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { line, register, recommendation } = useApp();
+  const {
+    line,
+    wizard,
+    register,
+    recommendation,
+    savedProjects,
+    activeProjectId,
+    lineList,
+    activeLineId,
+    saveProject,
+    loadProject,
+    loadSample,
+  } = useApp();
   const nav = useNavigate();
   const warnings = recommendation?.riskFlags.length ?? 0;
   const hasSession = Boolean(line.lineNumber) || register.length > 0;
+  const activeSavedProject = getActiveSavedProject(
+    savedProjects,
+    activeProjectId,
+    line.projectName,
+  );
+  const hasUnsavedChanges = hasUnsavedProjectChanges({
+    line,
+    wizard,
+    lineList,
+    activeLineId,
+    savedProject: activeSavedProject,
+  });
+  const confirmProjectReplacement = () =>
+    confirmBeforeReplacingProject({
+      projectName: line.projectName,
+      hasUnsavedChanges,
+    });
   const resumeStep = !line.lineNumber
     ? FLOW_STEPS[0]
     : !recommendation
@@ -153,6 +191,123 @@ function HomePage() {
                   decisions — ready for engineering review.
                 </span>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-4" aria-labelledby="project-selection-heading">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <div className="text-xs uppercase tracking-wider text-primary font-semibold flex items-center gap-1.5">
+              <FolderOpen className="h-3.5 w-3.5" /> Project selection
+            </div>
+            <h2
+              id="project-selection-heading"
+              className="text-2xl font-semibold tracking-tight mt-1"
+            >
+              Choose the project before entering the workflow.
+            </h2>
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => {
+              saveProject();
+              toast.success("Project saved");
+            }}
+          >
+            <Save className="mr-2 h-4 w-4" />
+            Save Current Project
+          </Button>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold">Saved browser projects</h3>
+                <p className="text-xs text-muted-foreground">
+                  Loading a different project will first prompt you to save this one.
+                </p>
+              </div>
+              <Badge variant="outline">{savedProjects.length}</Badge>
+            </div>
+            {savedProjects.length ? (
+              <div className="space-y-2">
+                {savedProjects.map((project) => {
+                  const active = project.id === activeSavedProject?.id;
+                  return (
+                    <div
+                      key={project.id}
+                      className={`flex flex-col gap-3 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between ${
+                        active ? "border-primary bg-primary/10" : "border-border bg-muted/20"
+                      }`}
+                    >
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-medium">{project.name}</span>
+                          {active && <Badge className="text-[10px]">Loaded</Badge>}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {project.line.lineNumber || "No line selected"} · saved{" "}
+                          {new Date(project.savedAt).toLocaleString()}
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant={active ? "secondary" : "outline"}
+                        onClick={() => {
+                          if (active) {
+                            nav({ to: resumeStep.to });
+                            return;
+                          }
+                          if (!confirmProjectReplacement()) return;
+                          loadProject(project.id);
+                          toast.success(`Loaded project: ${project.name}`);
+                        }}
+                      >
+                        {active ? "Resume" : "Load"}
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                No saved browser projects yet. Save the current project or load a sample to create
+                one.
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="mb-3">
+              <h3 className="text-sm font-semibold">Sample project scenarios</h3>
+              <p className="text-xs text-muted-foreground">
+                Use these to validate workflows or demonstrate common support cases.
+              </p>
+            </div>
+            <div className="space-y-2">
+              {sampleScenarios.map((scenario) => (
+                <button
+                  key={scenario.id}
+                  type="button"
+                  onClick={() => {
+                    if (!confirmProjectReplacement()) return;
+                    loadSample(scenario.id);
+                    toast.success(`Loaded sample: ${scenario.name}`);
+                  }}
+                  className="flex w-full items-center justify-between gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-left text-sm transition hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{scenario.name}</span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      {scenario.line.projectName} · {scenario.line.lineNumber}
+                    </span>
+                  </span>
+                  <DatabaseZap className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                </button>
+              ))}
             </div>
           </div>
         </div>

@@ -7,6 +7,11 @@ import {
   loadProjectArchiveFromFile,
   saveProjectArchiveToFolder,
 } from "@/lib/localArchive";
+import {
+  confirmBeforeReplacingProject,
+  getActiveSavedProject,
+  hasUnsavedProjectChanges,
+} from "@/lib/projectStatus";
 
 export function LocalRecordsBar() {
   const {
@@ -18,8 +23,18 @@ export function LocalRecordsBar() {
     structures,
     tagging,
     tagCounter,
+    savedProjects,
+    activeProjectId,
     loadProjectArchive,
   } = useApp();
+  const savedProject = getActiveSavedProject(savedProjects, activeProjectId, line.projectName);
+  const unsaved = hasUnsavedProjectChanges({
+    line,
+    wizard,
+    lineList,
+    activeLineId,
+    savedProject,
+  });
 
   const archiveData = createProjectArchiveData({
     line,
@@ -45,6 +60,15 @@ export function LocalRecordsBar() {
   };
 
   const handleLoad = async () => {
+    if (
+      !confirmBeforeReplacingProject({
+        projectName: line.projectName,
+        hasUnsavedChanges: unsaved,
+      })
+    ) {
+      return;
+    }
+
     try {
       toast.info("Select app-project.json from the saved project folder.");
       const data = await loadProjectArchiveFromFile();

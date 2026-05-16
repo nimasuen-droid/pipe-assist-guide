@@ -42,6 +42,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FlowFooter } from "@/components/FlowFooter";
 import { projectImportSchema } from "@/lib/schemas";
 import { lineListTemplateRows, parseLineList, serializeLineList } from "@/lib/lineList";
+import {
+  confirmBeforeReplacingProject,
+  getActiveSavedProject,
+  hasUnsavedProjectChanges,
+} from "@/lib/projectStatus";
 import type { ProjectLine, Structure, SupportRegisterEntry } from "@/lib/types";
 
 const pipeSizeOptions = [
@@ -424,6 +429,7 @@ function InputsPage() {
     activeLineId,
     register,
     structures,
+    activeProjectId,
     saveProject,
     loadProject,
     deleteProject,
@@ -447,6 +453,20 @@ function InputsPage() {
   const [editingSupport, setEditingSupport] = useState<SupportRegisterEntry | null>(null);
 
   const activeProjectLine = lineList.find((item) => item.id === activeLineId);
+  const savedProject = getActiveSavedProject(savedProjects, activeProjectId, line.projectName);
+  const hasUnsavedChanges = hasUnsavedProjectChanges({
+    line,
+    wizard,
+    lineList,
+    activeLineId,
+    savedProject,
+  });
+
+  const confirmProjectReplacement = () =>
+    confirmBeforeReplacingProject({
+      projectName: line.projectName,
+      hasUnsavedChanges,
+    });
 
   useEffect(() => {
     setManualSectionName(activeProjectLine?.sectionName ?? "");
@@ -467,6 +487,10 @@ function InputsPage() {
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
+    if (!confirmProjectReplacement()) {
+      e.target.value = "";
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       try {
@@ -583,6 +607,7 @@ function InputsPage() {
               size="sm"
               variant="secondary"
               onClick={() => {
+                if (!confirmProjectReplacement()) return;
                 loadSample(sampleId);
                 toast.success("Sample project and line list loaded");
               }}
@@ -593,6 +618,7 @@ function InputsPage() {
               size="sm"
               variant="outline"
               onClick={() => {
+                if (!confirmProjectReplacement()) return;
                 reset();
                 toast.success("All fields cleared");
               }}
@@ -646,6 +672,7 @@ function InputsPage() {
                       size="sm"
                       variant="ghost"
                       onClick={() => {
+                        if (!confirmProjectReplacement()) return;
                         loadProject(p.id);
                         toast.success("Project loaded");
                       }}

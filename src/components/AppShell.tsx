@@ -16,6 +16,8 @@ import {
   Building2,
   ClipboardCheck,
   AlertTriangle,
+  FolderKanban,
+  Clock3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
@@ -24,6 +26,7 @@ import { FlowStepper } from "@/components/FlowStepper";
 import { isFlowPath } from "@/lib/flow";
 import { StartupGate } from "@/components/StartupGate";
 import { LocalRecordsBar } from "@/components/LocalRecordsBar";
+import { getActiveSavedProject, hasUnsavedProjectChanges } from "@/lib/projectStatus";
 
 const homeNav = [{ to: "/", label: "Home", icon: Home }] as const;
 
@@ -55,7 +58,7 @@ const mobileNav = [
 
 export function AppShell() {
   const loc = useLocation();
-  const { line } = useApp();
+  const { line, wizard, lineList, activeLineId, savedProjects, activeProjectId } = useApp();
   const inFlow = isFlowPath(loc.pathname);
   const mainRef = useRef<HTMLElement>(null);
   const pageTitle = [...homeNav, ...flowNav, ...toolsNav].find(
@@ -95,10 +98,10 @@ export function AppShell() {
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className="hidden sm:inline-flex border-success/40 text-success bg-success/10 text-[11px]"
+              className="hidden sm:inline-flex max-w-[34vw] border-primary/40 text-primary bg-primary/10 text-[11px]"
               role="status"
             >
-              Session active
+              Project: {line.projectName || "Not selected"}
             </Badge>
             <Badge
               variant="outline"
@@ -134,6 +137,14 @@ export function AppShell() {
               <div className="sr-only" aria-live="polite" aria-atomic="true">
                 {pageTitle ? `${pageTitle} loaded` : "Page loaded"}
               </div>
+              <ProjectStatusBanner
+                line={line}
+                wizard={wizard}
+                lineList={lineList}
+                activeLineId={activeLineId}
+                savedProjects={savedProjects}
+                activeProjectId={activeProjectId}
+              />
               <LocalRecordsBar />
               {inFlow && <FlowStepper />}
               <Outlet />
@@ -170,6 +181,87 @@ export function AppShell() {
         </nav>
       </div>
     </StartupGate>
+  );
+}
+
+function ProjectStatusBanner({
+  line,
+  wizard,
+  lineList,
+  activeLineId,
+  savedProjects,
+  activeProjectId,
+}: {
+  line: ReturnType<typeof useApp.getState>["line"];
+  wizard: ReturnType<typeof useApp.getState>["wizard"];
+  lineList: ReturnType<typeof useApp.getState>["lineList"];
+  activeLineId: ReturnType<typeof useApp.getState>["activeLineId"];
+  savedProjects: ReturnType<typeof useApp.getState>["savedProjects"];
+  activeProjectId: ReturnType<typeof useApp.getState>["activeProjectId"];
+}) {
+  const savedProject = getActiveSavedProject(savedProjects, activeProjectId, line.projectName);
+  const unsaved = hasUnsavedProjectChanges({
+    line,
+    wizard,
+    lineList,
+    activeLineId,
+    savedProject,
+  });
+
+  return (
+    <section
+      className="rounded-md border border-primary/30 bg-card p-3 shadow-sm"
+      aria-label="Active project"
+    >
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex min-w-0 items-start gap-2">
+          <div className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary/15 text-primary">
+            <FolderKanban className="h-4 w-4" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+              Loaded project
+            </div>
+            <h2 className="truncate text-base font-semibold">
+              {line.projectName || "No project selected"}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {line.lineNumber
+                ? `${line.lineNumber} · ${line.area || "Area not set"} · ${line.material || "Material not set"}`
+                : "Choose a project on Home or enter project inputs to begin."}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge
+            variant="outline"
+            className={
+              savedProject
+                ? "border-success/40 bg-success/10 text-success"
+                : "border-warning/40 bg-warning/10 text-warning"
+            }
+          >
+            {savedProject ? "Browser saved" : "Working copy"}
+          </Badge>
+          <Badge
+            variant="outline"
+            className={
+              unsaved
+                ? "border-warning/40 bg-warning/10 text-warning"
+                : "border-success/40 bg-success/10 text-success"
+            }
+          >
+            {unsaved ? "Unsaved changes" : "Saved"}
+          </Badge>
+          {savedProject && (
+            <Badge variant="outline" className="gap-1 text-muted-foreground">
+              <Clock3 className="h-3 w-3" aria-hidden="true" />
+              {new Date(savedProject.savedAt).toLocaleString()}
+            </Badge>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
