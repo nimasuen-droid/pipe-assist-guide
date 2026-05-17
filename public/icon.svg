@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pipe Support Smart Assist">
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <path d="M112 164h288v52H112z" fill="#5eead4"/>
+  <path d="M148 216h72v148h-72zM292 216h72v148h-72z" fill="#7dd3fc"/>
+  <path d="M104 348h304v44H104z" fill="#5eead4"/>
+  <path d="M184 120h144v44H184z" fill="#f8fafc"/>
+  <path d="M220 164h72v184h-72z" fill="#1e293b"/>
+  <path d="M112 164h288v52H112zM148 216h72v148h-72zM292 216h72v148h-72zM104 348h304v44H104z" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linejoin="round"/>
+</svg>

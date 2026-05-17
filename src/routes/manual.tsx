@@ -15,6 +15,7 @@ import {
   Lightbulb,
   AlertTriangle,
   Workflow,
+  MonitorDown,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
@@ -130,6 +131,32 @@ function ManualPage() {
                 All state is persisted locally under <code>pipe-support-smart-assist</code>. Back up
                 periodically by exporting JSON.
               </p>
+            </>
+          ),
+        },
+        {
+          icon: MonitorDown,
+          t: "1A. Offline desktop installation",
+          b: (
+            <>
+              Pipe Support Smart Assist can be installed from a supported desktop browser as an
+              offline-first app.
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Open the app in Chrome or Edge on the computer where it will be used.</li>
+                <li>
+                  On the Home screen, use <em>Install Desktop App</em>, or choose the browser menu
+                  option named <em>Install app</em>.
+                </li>
+                <li>
+                  The installed app opens in its own desktop window and caches the app shell for
+                  offline access.
+                </li>
+                <li>
+                  Continue using <em>Save to Local Folder</em> for each project. Offline
+                  installation keeps the app available; local project records keep the engineering
+                  data recoverable.
+                </li>
+              </ul>
             </>
           ),
         },

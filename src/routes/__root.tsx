@@ -1,6 +1,8 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/ui/sonner";
+import { useEffect } from "react";
+import { registerOfflineApp } from "@/lib/pwa";
 
 import appCss from "../styles.css?url";
 
@@ -38,6 +40,12 @@ export const Route = createRootRoute({
           "Industry-grade decision support for pipe support selection, recommendations, register and MTO.",
       },
       { name: "author", content: "Lovable" },
+      { name: "theme-color", content: "#0F172A" },
+      { name: "application-name", content: "Pipe Support Smart Assist" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Pipe Support" },
       { property: "og:title", content: "Pipe Support Smart Assist" },
       {
         property: "og:description",
@@ -69,6 +77,9 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/icon.svg" },
     ],
   }),
   shellComponent: RootShell,
@@ -91,6 +102,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  useEffect(() => {
+    registerOfflineApp();
+  }, []);
+
   return (
     <>
       <AppShell />

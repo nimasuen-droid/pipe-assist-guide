@@ -1,0 +1,25 @@
+{
+  "name": "Pipe Support Smart Assist",
+  "short_name": "Pipe Support",
+  "description": "Offline-first pipe support selection, register, structure linking, review, and MTO records for engineering workflows.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "categories": ["productivity", "utilities", "engineering"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

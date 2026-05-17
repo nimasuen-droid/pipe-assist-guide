@@ -3,6 +3,7 @@ import { sampleScenarios, useApp } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FLOW_STEPS } from "@/lib/flow";
+import { OfflineInstallCard } from "@/components/OfflineInstallCard";
 import {
   confirmBeforeReplacingProject,
   getActiveSavedProject,
@@ -190,6 +191,8 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <OfflineInstallCard />
 
       <section className="space-y-4" aria-labelledby="project-selection-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
